@@ -1,0 +1,2 @@
+# rustry
+Try some Rust
