@@ -1,0 +1,19 @@
+[package]
+name = "rustry"
+version = "0.0.1"
+authors = ["utensil <utensilcandel@gmail.com>"]
+
+[dependencies]
+tokio = "0.1"
+tokio-io = "0.1"
+futures = "0.2.1"
+bytes = "0.4"
+libloading = "0.5"
+libc = "0.2"
+rand = "0.3"
+quick-error = "1.2.1"
+
+[target.'cfg(windows)'.dependencies]
+kernel32-sys = "0.2.2"
+winapi = { version = "0.3.4", features = ["winuser", "shellapi"] }
+systray = "0.3.0"
