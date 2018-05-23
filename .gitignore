@@ -11,3 +11,4 @@ Cargo.lock
 
 #mine
 cpp_test
+config_*

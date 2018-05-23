@@ -8,6 +8,14 @@ extern crate rand;
 
 #[macro_use] extern crate quick_error;
 
+use std::fs::OpenOptions;
+extern crate serde;
+// extern crate serde_json;
+extern crate serde_yaml;
+
+#[macro_use]
+extern crate serde_derive;
+
 #[cfg(windows)] extern crate winapi;
 #[cfg(windows)] extern crate kernel32;
 #[cfg(windows)] extern crate systray;
@@ -106,6 +114,7 @@ fn print_help() -> Result<(), Box<Error>> {
     println!("cargo run tcp_proxy listen_ip listen_port forward_ip forward_port");
     println!("cargo run udp_proxy listen_ip listen_port forward_ip forward_port");
     println!("cargo run ping target_ip");
+    println!("cargo run tray");
 
     Ok(())
 }
@@ -248,6 +257,7 @@ fn tray_main() -> Result<(), Box<Error>> {
     
     let icon_path = to_absolute_path("res/SysReqMet.ico".to_string())?;
     println!("icon_path is {}", icon_path);
+    app.set_icon_from_file(&icon_path).ok();
 
     unsafe {
         struct MyWindowInfo {
@@ -487,6 +497,53 @@ fn ping_main() -> Result<(), Box<Error>> {
     Ok(())
 }
 
+#[derive(Serialize, Deserialize)]
+struct ForwardAddressPair {
+    listen_ip: String,
+    listen_port: i32,
+    forward_ip: String,
+    forward_port: i32
+}
+
+#[derive(Serialize, Deserialize)]
+enum ForwardProtocol {
+    TCP,
+    UDP
+}
+
+#[derive(Serialize, Deserialize)]
+struct ForwardItem {
+    proto : ForwardProtocol,
+    addr : ForwardAddressPair
+}
+
+impl ForwardItem {
+    
+    pub fn new(proto: ForwardProtocol, listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port: i32) -> ForwardItem {
+        ForwardItem {
+            proto,
+            addr : ForwardAddressPair {
+                listen_ip : listen_ip.to_string(),
+                listen_port,
+                forward_ip: forward_ip.to_string(),
+                forward_port
+            }
+        }
+    }
+
+    pub fn forward(&self)  -> Result<(), Box<Error>> {
+        let addr = &(self.addr);
+        match self.proto {
+            ForwardProtocol::TCP => {
+                tcp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port)
+            },
+            ForwardProtocol::UDP => {
+                Ok(udp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port))
+            }
+        }
+    }
+}
+
 // fn hosts_main -> Result<(), Box<Error>> {
 
 // }
@@ -495,19 +552,26 @@ fn ping_main() -> Result<(), Box<Error>> {
 fn tcp_proxy_main() -> Result<(), Box<Error>> {
     let listen_ip = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
     let listen_port_str = env::args().nth(3).unwrap_or("80".to_string());
+    let listen_port = listen_port_str.parse()?;
     let forward_ip = env::args().nth(4).unwrap_or("127.0.0.1".to_string());
     let forward_port_str = env::args().nth(5).unwrap_or("8080".to_string());
+    let forward_port = forward_port_str.parse()?;
 
-    let listen_addr_str = format!("{}:{}", listen_ip, listen_port_str);
+    let forward_item = ForwardItem::new(ForwardProtocol::TCP, &listen_ip, listen_port, &forward_ip, forward_port);
+    forward_item.forward()?;
+
+    Ok(())
+}
+
+fn tcp_forward(listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port: i32) -> Result<(), Box<Error>> {
+    let listen_addr_str = format!("{}:{}", listen_ip, listen_port);
     let listen_addr = with_context(listen_addr_str.parse::<SocketAddr>(), &listen_addr_str)?;
-
-    let forward_addr_str = format!("{}:{}", forward_ip, forward_port_str);
+    let forward_addr_str = format!("{}:{}", forward_ip, forward_port);
     let forward_addr = with_context(forward_addr_str.parse::<SocketAddr>(), &forward_addr_str)?;
 
     // Create a TCP listener which will listen for incoming connections.
     let listener = with_context(TcpListener::bind(&listen_addr), &listen_addr_str)?;
-    println!("Listening on: {}", listen_addr);
-    println!("Proxying to: {}", forward_addr);
+    println!("[TCP] {} -> {}", listen_addr, forward_addr);
 
     let done = listener.incoming()
         .map_err(|e| println!("error accepting socket; error = {:?}", e))
@@ -567,12 +631,64 @@ fn udp_proxy_main() -> Result<(), Box<Error>> {
     let forward_port_str = env::args().nth(5).unwrap_or("8080".to_string());
     let forward_port = forward_port_str.parse()?;
 
-    udp_forward(&listen_ip, listen_port, &forward_ip, forward_port);
+    let forward_item = ForwardItem::new(ForwardProtocol::UDP, &listen_ip, listen_port, &forward_ip, forward_port);
+    forward_item.forward()?;
 
     Ok(())
 }
 
 static mut REF_CHILD : Option<Shared<std::process::Child>> = None;
+
+fn proxies_main() -> Result<(), Box<Error>> {
+
+    // let tcp_listen_ip = "127.0.0.1";
+    // let tcp_forward_ip = "127.0.0.1";
+    // let udp_listen_ip = "127.0.0.1";
+    // let udp_forward_ip = "127.0.0.1";
+    // let tcp_listen_port = 80;
+    // let tcp_forward_port = 8080;
+    // let udp_listen_port = 81;
+    // let udp_forward_port = 8081;
+
+    // let forward_config = vec![
+    //     ForwardItem::new(ForwardProtocol::TCP, &tcp_listen_ip, tcp_listen_port, &tcp_forward_ip, tcp_forward_port),
+    //     ForwardItem::new(ForwardProtocol::UDP, &udp_listen_ip, udp_listen_port, &udp_forward_ip, udp_forward_port)
+    // ];
+
+    // let forward_config = vec![
+    //     ForwardItem::new(ForwardProtocol::TCP, "127.0.0.1", 80, "127.0.0.1", 8080),
+    //     ForwardItem::new(ForwardProtocol::UDP, "127.0.0.1", 81, "127.0.0.1", 8081)
+    // ];
+
+    // let file = OpenOptions::new()
+    //         .read(true)
+    //         .write(true)
+    //         .create(true)
+    //         .open("config.yml")?;
+
+    // serde_yaml::to_writer(&file, &forward_config)?;
+
+    let file_name = env::args().nth(2).unwrap_or("config.yml".to_string());
+
+    let file = OpenOptions::new()
+            .read(true)
+            .open(file_name)?;
+
+    let forward_config : Vec<ForwardItem> = 
+        serde_yaml::from_reader(file)?;
+
+    let threads = forward_config.into_iter().map(|forward_item| {
+        thread::spawn(move || {
+            forward_item.forward().unwrap()
+        })
+    }).collect::<Vec<_>>();
+
+    for t in threads {
+        t.join().unwrap();
+    }
+
+    Ok(())
+}
 
 fn spawn_main() -> Result<(), Box<Error>> {
     use std::process::Command;
@@ -634,6 +750,9 @@ fn main() {
         }
         "udp_proxy" => {
             udp_proxy_main()
+        }
+        "proxies" => {
+            proxies_main()
         }
         "hello" => {
             hello_main()
@@ -724,9 +843,10 @@ fn debug(msg: String) {
 fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port: i32) {
     let local_addr = format!("{}:{}", bind_addr, local_port);
     let local = UdpSocket::bind(&local_addr).expect(&format!("Unable to bind to {}", &local_addr));
-    println!("Listening on {}", local.local_addr().unwrap());
 
     let remote_addr = format!("{}:{}", remote_host, remote_port);
+
+    println!("[UDP] {} -> {}", local_addr, remote_addr);
 
     let responder = local
         .try_clone()
