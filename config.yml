@@ -4,13 +4,15 @@
     listen_ip: 127.0.0.1
     listen_port: 80
     forward_ip: 127.0.0.1
-    forward_port: 8080
-- proto: UDP
+    forward_port: 8081
+- proto: TCP
   addr:
     listen_ip: 127.0.0.1
     listen_port: 81
     forward_ip: 127.0.0.1
     forward_port: 8081
+  accepts:
+    - 128.0.0.1
 - proto: TCP
   addr:
     listen_ip: 127.0.0.1
@@ -23,3 +25,5 @@
     listen_port: 83
     forward_ip: 127.0.0.1
     forward_port: 8083
+  accepts:
+    - 128.0.0.1

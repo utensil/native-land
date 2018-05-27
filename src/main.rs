@@ -38,7 +38,7 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::prelude::*;
 use tokio::runtime::Runtime;
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::net::UdpSocket;
 use std::thread;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -511,15 +511,21 @@ enum ForwardProtocol {
     UDP
 }
 
+type Ips = Vec<std::net::IpAddr>;
+
 #[derive(Serialize, Deserialize)]
 struct ForwardItem {
     proto : ForwardProtocol,
-    addr : ForwardAddressPair
+    addr : ForwardAddressPair,
+    accepts : Option<Ips>
 }
 
 impl ForwardItem {
     
-    pub fn new(proto: ForwardProtocol, listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port: i32) -> ForwardItem {
+    pub fn new(proto: ForwardProtocol, 
+                listen_ip: &str, listen_port: i32,
+                forward_ip: &str, forward_port: i32,
+                accepts: &Option<Ips>) -> ForwardItem {
         ForwardItem {
             proto,
             addr : ForwardAddressPair {
@@ -527,7 +533,8 @@ impl ForwardItem {
                 listen_port,
                 forward_ip: forward_ip.to_string(),
                 forward_port
-            }
+            },
+            accepts: accepts.clone()
         }
     }
 
@@ -535,10 +542,10 @@ impl ForwardItem {
         let addr = &(self.addr);
         match self.proto {
             ForwardProtocol::TCP => {
-                tcp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port)
+                tcp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port, &self.accepts)
             },
             ForwardProtocol::UDP => {
-                Ok(udp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port))
+                Ok(udp_forward(&addr.listen_ip, addr.listen_port, &addr.forward_ip, addr.forward_port, &self.accepts))
             }
         }
     }
@@ -557,13 +564,15 @@ fn tcp_proxy_main() -> Result<(), Box<Error>> {
     let forward_port_str = env::args().nth(5).unwrap_or("8080".to_string());
     let forward_port = forward_port_str.parse()?;
 
-    let forward_item = ForwardItem::new(ForwardProtocol::TCP, &listen_ip, listen_port, &forward_ip, forward_port);
+    let forward_item = ForwardItem::new(ForwardProtocol::TCP, &listen_ip, listen_port, &forward_ip, forward_port, &None);
     forward_item.forward()?;
 
     Ok(())
 }
 
-fn tcp_forward(listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port: i32) -> Result<(), Box<Error>> {
+fn tcp_forward(listen_ip: &str, listen_port: i32, 
+                forward_ip: &str, forward_port: i32, 
+                accepts: &Option<Ips>) -> Result<(), Box<Error>> {
     let listen_addr_str = format!("{}:{}", listen_ip, listen_port);
     let listen_addr = with_context(listen_addr_str.parse::<SocketAddr>(), &listen_addr_str)?;
     let forward_addr_str = format!("{}:{}", forward_ip, forward_port);
@@ -571,50 +580,77 @@ fn tcp_forward(listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port
 
     // Create a TCP listener which will listen for incoming connections.
     let listener = with_context(TcpListener::bind(&listen_addr), &listen_addr_str)?;
-    println!("[TCP] {} -> {}", listen_addr, forward_addr);
+
+    let mut accepted_ips : HashSet<std::net::IpAddr> = HashSet::new();
+    let mut accepted_ips_desc = String::new();
+    if let Some(ref ips) = accepts {
+        accepted_ips_desc = format!("\nFor only: \n");
+        accepted_ips = ips.iter().map(|ip| { ip.clone() }).collect();        
+        accepted_ips.iter().for_each(|accepted_ip| {
+            accepted_ips_desc.push_str(&format!("- {}", &accepted_ip));
+        });
+    }
+
+    println!("[TCP] {} -> {}{}", listen_addr, forward_addr, accepted_ips_desc);
+
 
     let done = listener.incoming()
         .map_err(|e| println!("error accepting socket; error = {:?}", e))
         .for_each(move |client| {
-            let proxy = TcpStream::connect(&forward_addr).and_then(move |server| {
-                // Create separate read/write handles for the TCP clients that we're
-                // proxying data between. Note that typically you'd use
-                // `AsyncRead::split` for this operation, but we want our writer
-                // handles to have a custom implementation of `shutdown` which
-                // actually calls `TcpStream::shutdown` to ensure that EOF is
-                // transmitted properly across the proxied connection.
-                //
-                // As a result, we wrap up our client/server manually in arcs and
-                // use the impls below on our custom `MyTcpStream` type.
-                let client_reader = ProxyTcpStream::new(client);
-                let client_writer = client_reader.clone();
-                let server_reader = ProxyTcpStream::new(server);
-                let server_writer = server_reader.clone();
 
-                // Copy the data (in parallel) between the client and the server.
-                // After the copy is done we indicate to the remote side that we've
-                // finished by shutting down the connection.
-                let client_to_server = copy(client_reader, server_writer)
-                    .and_then(|(n, _, server_writer)| {
-                        shutdown(server_writer).map(move |_| n)
-                    });
+            let peer_ip = client.peer_addr().unwrap().ip().clone();
+            if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
+                let rejection = tokio::io::write_all(client, "HTTP/1.1 403 Forbidden
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 13
+Connection: close
 
-                let server_to_client = copy(server_reader, client_writer)
-                    .and_then(|(n, _, client_writer)| {
-                        shutdown(client_writer).map(move |_| n)
-                    });
+403 Forbidden").then(move |_res| {
+                    println!("Incoming client rejected: {:?}", peer_ip);
+                    Ok(())
+                });
 
-                client_to_server.join(server_to_client)
-            }).map(move |(from_client, from_server)| {
-                println!("client wrote {} bytes and received {} bytes",
-                         from_client, from_server);
-            }).map_err(|e| {
-                // Don't panic. Maybe the client just disconnected too soon.
-                println!("error: {}", e);
-            });
+                tokio::spawn(rejection);
+            } else {
+                let proxy = TcpStream::connect(&forward_addr).and_then(move |server| {
+                    // Create separate read/write handles for the TCP clients that we're
+                    // proxying data between. Note that typically you'd use
+                    // `AsyncRead::split` for this operation, but we want our writer
+                    // handles to have a custom implementation of `shutdown` which
+                    // actually calls `TcpStream::shutdown` to ensure that EOF is
+                    // transmitted properly across the proxied connection.
+                    //
+                    // As a result, we wrap up our client/server manually in arcs and
+                    // use the impls below on our custom `MyTcpStream` type.
+                    let client_reader = ProxyTcpStream::new(client);
+                    let client_writer = client_reader.clone();
+                    let server_reader = ProxyTcpStream::new(server);
+                    let server_writer = server_reader.clone();
 
-            tokio::spawn(proxy);
+                    // Copy the data (in parallel) between the client and the server.
+                    // After the copy is done we indicate to the remote side that we've
+                    // finished by shutting down the connection.
+                    let client_to_server = copy(client_reader, server_writer)
+                        .and_then(|(n, _, server_writer)| {
+                            shutdown(server_writer).map(move |_| n)
+                        });
 
+                    let server_to_client = copy(server_reader, client_writer)
+                        .and_then(|(n, _, client_writer)| {
+                            shutdown(client_writer).map(move |_| n)
+                        });
+
+                    client_to_server.join(server_to_client)
+                }).map(move |(from_client, from_server)| {
+                    println!("client wrote {} bytes and received {} bytes",
+                            from_client, from_server);
+                }).map_err(|e| {
+                    // Don't panic. Maybe the client just disconnected too soon.
+                    println!("error: {}", e);
+                });
+
+                tokio::spawn(proxy);
+            }
             Ok(())
         });
 
@@ -631,7 +667,7 @@ fn udp_proxy_main() -> Result<(), Box<Error>> {
     let forward_port_str = env::args().nth(5).unwrap_or("8080".to_string());
     let forward_port = forward_port_str.parse()?;
 
-    let forward_item = ForwardItem::new(ForwardProtocol::UDP, &listen_ip, listen_port, &forward_ip, forward_port);
+    let forward_item = ForwardItem::new(ForwardProtocol::UDP, &listen_ip, listen_port, &forward_ip, forward_port, &None);
     forward_item.forward()?;
 
     Ok(())
@@ -826,7 +862,7 @@ impl AsyncWrite for ProxyTcpStream {
 
 
 // The following are adapted from https://github.com/neosmart/udpproxy/blob/master/src/main.rs
-const TIMEOUT: u64 = 3 * 60 * 100; //3 minutes
+const TIMEOUT: u64 = 10 * 1000; // 10s
 static mut DEBUG: bool = true;
 
 fn debug(msg: String) {
@@ -840,13 +876,23 @@ fn debug(msg: String) {
     }
 }
 
-fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port: i32) {
-    let local_addr = format!("{}:{}", bind_addr, local_port);
-    let local = UdpSocket::bind(&local_addr).expect(&format!("Unable to bind to {}", &local_addr));
+fn udp_forward(listen_ip: &str, listen_port: i32, forward_ip: &str, forward_port: i32, accepts: &Option<Ips>) {
+    let listen_addr = format!("{}:{}", listen_ip, listen_port);
+    let local = UdpSocket::bind(&listen_addr).expect(&format!("Unable to bind to {}", &listen_addr));
 
-    let remote_addr = format!("{}:{}", remote_host, remote_port);
+    let forward_addr = format!("{}:{}", forward_ip, forward_port);
 
-    println!("[UDP] {} -> {}", local_addr, remote_addr);
+    let mut accepted_ips : HashSet<std::net::IpAddr> = HashSet::new();
+    let mut accepted_ips_desc = String::new();
+    if let Some(ref ips) = accepts {
+        accepted_ips_desc = format!("\nFor only: \n");
+        accepted_ips = ips.iter().map(|ip| { ip.clone() }).collect();        
+        accepted_ips.iter().for_each(|accepted_ip| {
+            accepted_ips_desc.push_str(&format!("- {}", &accepted_ip));
+        });
+    }
+
+    println!("[UDP] {} -> {}{}", listen_addr, forward_addr, accepted_ips_desc);
 
     let responder = local
         .try_clone()
@@ -854,7 +900,7 @@ fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port:
                         local.local_addr().unwrap()));
     let (main_sender, main_receiver) = channel::<(_, Vec<u8>)>();
     thread::spawn(move || {
-        debug(format!("Started new thread to deal out responses to clients"));
+        // debug(format!("Started new thread to deal out responses to clients"));
         loop {
             let (dest, buf) = main_receiver.recv().unwrap();
             let to_send = buf.as_slice();
@@ -869,6 +915,14 @@ fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port:
     let mut buf = [0; 64 * 1024];
     loop {
         let (num_bytes, src_addr) = local.recv_from(&mut buf).expect("Didn't receive data");
+
+        println!("{}", src_addr);
+
+        let peer_ip = src_addr.ip().clone();
+        if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
+            println!("Incoming client rejected: {:?}", peer_ip);
+            continue;
+        }
 
         //we create a new thread for each unique client
         let mut remove_existing = false;
@@ -889,7 +943,7 @@ fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port:
 
                 let local_send_queue = main_sender.clone();
                 let (sender, receiver) = channel::<Vec<u8>>();
-                let remote_addr_copy = remote_addr.clone();
+                let forward_addr_copy = forward_addr.clone();
                 thread::spawn(move|| {
                     //regardless of which port we are listening to, we don't know which interface or IP
                     //address the remote server is reachable via, so we bind the outgoing
@@ -928,7 +982,7 @@ fn udp_forward(bind_addr: &str, local_port: i32, remote_host: &str, remote_port:
                     loop {
                         match receiver.recv_timeout(Duration::from_millis(TIMEOUT)) {
                             Ok(from_client) =>  {
-                                upstream_send.send_to(from_client.as_slice(), &remote_addr_copy)
+                                upstream_send.send_to(from_client.as_slice(), &forward_addr_copy)
                                     .expect(&format!("Failed to forward packet from client {} to upstream server!", src_addr));
                                 timeouts = 0; //reset timeout count
                             },
