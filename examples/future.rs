@@ -11,6 +11,7 @@ use future_timeout::Timeout;
 use future_input::ReadLine;
 
 // Following the video https://www.youtube.com/watch?v=Yzvxnky7syM
+// Read also https://aturon.github.io/blog/2016/09/07/futures-design/
 fn main() {
   println!("May I have your name?");
 
