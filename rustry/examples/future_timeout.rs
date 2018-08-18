@@ -1,3 +1,5 @@
+extern crate futures;
+
 use std::io;
 use std::time::{Duration, Instant};
 use futures::{Future, Poll};
@@ -45,4 +47,9 @@ impl<T, E> Future for Timeout<T, E>
       Ok(Async::NotReady)
     }
   }
+}
+
+// suppress cargo test error E0601
+#[allow(dead_code)]
+fn main() {
 }

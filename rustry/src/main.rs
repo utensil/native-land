@@ -107,14 +107,14 @@ fn make_shared<T>(t : T) -> Shared<T> {
 
 fn print_help() -> Result<(), Box<Error>> {
     println!("Usage:");
-    println!("cargo run help");
-    println!("cargo run hello listen_ip listen_port_start listen_port_stop");
-    println!("cargo run hosts");
-    // println!("cargo run test dst_ip:dst_port");
-    println!("cargo run tcp_proxy listen_ip listen_port forward_ip forward_port");
-    println!("cargo run udp_proxy listen_ip listen_port forward_ip forward_port");
-    println!("cargo run ping target_ip");
-    println!("cargo run tray");
+    println!("rustry help");
+    println!("rustry hello listen_ip listen_port_start listen_port_stop");
+    println!("rustry hosts");
+    println!("rustry tcp_proxy listen_ip listen_port forward_ip forward_port");
+    println!("rustry udp_proxy listen_ip listen_port forward_ip forward_port");
+    println!("rustry ping target_ip");
+    println!("rustry tray");
+    // println!("rustry test dst_ip:dst_port");
 
     Ok(())
 }

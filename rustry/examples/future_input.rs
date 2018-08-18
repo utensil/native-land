@@ -1,3 +1,5 @@
+extern crate futures;
+
 use futures::{Future, Poll};
 use std::io;
 use std::thread;
@@ -49,4 +51,9 @@ fn read_line() -> io::Result<String> {
     Ok(_) => Ok(buf), 
     Err(e) => Err(e),
   }
+}
+
+// suppress cargo test error E0601
+#[allow(dead_code)]
+fn main() {
 }
