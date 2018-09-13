@@ -1,5 +1,6 @@
 [workspace]
 
+# run a member with `cargo run -p member`
 members = [
     "rustry",
     "rust_basics"
