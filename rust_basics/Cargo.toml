@@ -1,0 +1,9 @@
+[package]
+# [Rust: The Basics](https://stepik.org/lesson/9268/)
+name = "rust_basics"
+version = "0.0.1"
+authors = ["utensil <utensilcandel@gmail.com>"]
+
+[dependencies]
+assert_cli = "0.6.3"
+maplit = "1.0.1"

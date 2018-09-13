@@ -2,4 +2,5 @@
 
 members = [
     "rustry",
+    "rust_basics"
 ]
