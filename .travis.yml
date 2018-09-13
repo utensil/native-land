@@ -46,3 +46,6 @@ after_success:
         bash <(curl -s https://codecov.io/bash) &&
         echo "Uploaded code coverage"
       fi
+env:
+  matrix:
+    secure: hOu44g+bXzOucW/bKPhDoMIMJ2ITr2vk/9vqB1TNQnHMaKzrW4rwJMfqoOqSqk/FypnonournlYCOihi7k3+a3w12uXsAQd0NFo5e+llBQbyhwdp2e+cM4zsbagqMxW0mdeLxvOK5ZOzwvLTIYrJbLDaVeqpj0OFYwI0aDEypx+Xsm7uksqljn4PCbxsEjktE6gSEvdadCkEhgPEGP6aIJ5HrhisVJyRL427dgQYIWlCGCliIEczTKz5cuDCc5R664XO3iLuhKHKOHLYfftoUksUK1uXXZRRLA666VM3qgOfHHMdghAnODE6LDOr9YJOrHQOm08ctUcEU4t/7NElfB5TAPXIHuL4ND0omdNsI/8+Jjq/wv6AvT9kEb3YckqBxu/Ml1PT6AwFbaLu3prPidSr2A7G0iJrSoGY0jq6gjVYdOW/V0VNe/UR/k6pXo0/tmCzQsUaS2xJW3r4oirbBR06trBlUH658GqtW0uRuKRDZHMrO+K6CRMc86gk4LsxNOallvX+ysIL4Zm70nykJ4K0JJgrHOO4HdLDxIUhWKAWg1yJQA+JUNP2g0xugWYkRtEbeX+WiFV5CuzDVYG4wjNyjQjotvEgyj3CW/0Aqg71r0Ur7NHpafNDcpzTMm/LQbk6DZU8isjMFgBEAJRt1c3S9C35Ltasz4xDWG6kcpA=
