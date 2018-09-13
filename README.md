@@ -2,6 +2,8 @@
 
 Experimenting with Rust.
 
+[![Build Status](https://travis-ci.org/utensil/rust-playground.svg?branch=master)](https://travis-ci.org/utensil/rust-playground) [![codecov](https://codecov.io/gh/utensil/rust-playground/branch/master/graph/badge.svg)](https://codecov.io/gh/utensil/rust-playground)
+
 ## Resources
 
 - Getting Started
