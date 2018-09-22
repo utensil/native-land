@@ -7,7 +7,7 @@ mod compile_failure_test {
     #[test]
     fn change_immutable() {
         build("compile_failures/change_immutable.rs")
-            .fails_with(101)
+            .fails() // .fails_with(101) sometimes 1
             .stderr()
             .contains("error[E0596]: cannot borrow immutable borrowed content `*some_string` as mutable")
             .unwrap();
