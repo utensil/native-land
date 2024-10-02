@@ -1,0 +1,3 @@
+prep-dx:
+    cargo install dioxus-cli
+    @echo "create a new project: dx new"
