@@ -1,0 +1,55 @@
+name: Rust
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: 
+          - ubuntu-latest
+        #   - windows-latest
+        #   - macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    #   with:
+    #     fetch-depth: 2
+    - name: Install the stable toolchain
+      uses: dtolnay/rust-toolchain@stable
+    # - name: Install the nightly toolchain
+    #   uses: dtolnay/rust-toolchain@nightly
+      with:
+        components: rustfmt
+    # - name: Install latest nextest release
+    #   uses: taiki-e/install-action@nextest
+    - name: Set up cargo cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        prefix-key: "8"
+    # - name: Check examples
+    #   run: cargo check --examples
+    # - name: Lint
+    #   run: cargo clippy --workspace -- -D warnings
+    # - name: Format
+    #   run: cargo +nightly fmt --all --check -- --error-on-unformatted --unstable-features
+    - name: Run tests
+      run: cargo test --workspace
+    - name: Run coverage
+      if: runner.os == 'Linux'
+      run: |
+        rustup component add llvm-tools-preview 
+        curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf -
+        ./grcov . --binary-path ./target/debug/deps -s . -t lcov --branch --ignore-not-existing --ignore "../*" --ignore "/*" -o cov.lcov
+    # - uses: codecov/codecov-action@v4
+    #   if: runner.os == 'Linux'
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
