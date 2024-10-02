@@ -6,10 +6,6 @@ mod stdin_test {
 
     #[test]
     fn add_read_numbers() {
-        run_example("stdin")
-            .stdin("2 5")
-            .stdout()
-            .is("7")
-            .unwrap();
+        run_example("stdin").stdin("2 5").stdout().is("7").unwrap();
     }
 }

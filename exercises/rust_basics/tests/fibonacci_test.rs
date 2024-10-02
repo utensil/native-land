@@ -10,7 +10,7 @@ mod fibonacci_test {
     use rust_basics::fibonacci::*;
 
     fn fib_map() -> HashMap<i32, i64> {
-        hashmap!{
+        hashmap! {
             0 => 0,
             1 => 1,
             7 => 13

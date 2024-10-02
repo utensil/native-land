@@ -22,6 +22,9 @@ build-nightly:
 
 nightly: prep-nightly test-nightly
 
+format:
+    cargo fmt
+
 # clone-ex:
 #     #!/usr/bin/env bash
 #     if [[ ! -d archived/exercism ]]; then git clone https://github.com/utensil/exercism archived/exercism; fi
