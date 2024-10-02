@@ -1,10 +1,10 @@
-# Rust Playground
+# Rust Mono
 
-Experimenting with Rust.
+[![Build Status](https://github.com/utensil/rust-mono/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/rust-mono/actions/workflows/main.yml)
 
-<!-- [![Build Status](https://travis-ci.org/utensil/rust-playground.svg?branch=master)](https://travis-ci.org/utensil/rust-playground) [![codecov](https://codecov.io/gh/utensil/rust-playground/branch/master/graph/badge.svg)](https://codecov.io/gh/utensil/rust-playground) -->
+A monorepo for my Rust projects.
 
-## Resources
+## Learning Resources (maybe outdated)
 
 - Getting Started
   - [Learn Rust in Y Minutes](https://learnxinyminutes.com/docs/rust/)
