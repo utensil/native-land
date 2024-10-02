@@ -1,3 +1,11 @@
 prep-dx:
     cargo install dioxus-cli
     @echo "create a new project: dx new"
+
+dx-new:
+    dx new
+
+dx-css:
+    cd {{invocation_directory()}}; bunx tailwindcss -i ./input.css -o ./assets/tailwind.css --watch
+dx-dev:
+    cd {{invocation_directory()}}; dx serve --hot-reload --platform desktop
