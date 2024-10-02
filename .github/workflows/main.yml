@@ -1,4 +1,4 @@
-name: Rust
+name: Main
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-
+      fail-fast: false
     steps:
     - uses: actions/checkout@v4
     #   with:
@@ -43,7 +43,17 @@ jobs:
     - name: Install linux dependencies
       if: runner.os == 'Linux'
       run: |
-        sudo apt update && sudo apt install build-essential libssl-dev pkg-config
+        sudo apt update
+        sudo apt install libwebkit2gtk-4.1-dev \
+          build-essential \
+          pkg-config \
+          curl \
+          wget \
+          file \
+          libxdo-dev \
+          libssl-dev \
+          libayatana-appindicator3-dev \
+          librsvg2-dev
     # - name: Check examples
     #   run: cargo check --examples
     # - name: Lint
