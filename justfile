@@ -1,5 +1,8 @@
 build:
-    cargo build
+    cargo build --workspace
+
+test:
+    cargo test --workspace
 
 prep:
     # https://rust-analyzer.github.io/manual.html#installation
