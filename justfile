@@ -21,3 +21,11 @@ build-nightly:
     cargo +nightly build --workspace
 
 nightly: prep-nightly test-nightly
+
+# clone-ex:
+#     #!/usr/bin/env bash
+#     if [[ ! -d archived/exercism ]]; then git clone https://github.com/utensil/exercism archived/exercism; fi
+
+# can't fight with the workspace not exluded error
+# test-ex: clone-ex
+#     cd archived/exercism && git pull && ./verify_rs.sh

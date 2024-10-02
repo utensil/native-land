@@ -13,3 +13,4 @@ Cargo.lock
 cpp_test
 config_*
 **/target
+archived/exercism
