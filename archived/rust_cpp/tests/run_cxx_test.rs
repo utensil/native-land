@@ -1,9 +1,8 @@
-extern crate rust_basics;
 extern crate chrono;
 
 #[cfg(test)]
 mod run_cxx_test {
-    use rust_basics::run_cxx::*;
+    use rust_cpp::run_cxx::*;
     use chrono::Utc;
 
     #[test]

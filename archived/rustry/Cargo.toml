@@ -1,3 +1,4 @@
+[workspace]
 [package]
 name = "rustry"
 version = "0.0.1"
