@@ -3,7 +3,7 @@ name: Rust
 on:
   workflow_dispatch:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
 
 env:
@@ -28,8 +28,10 @@ jobs:
         just-version: 1.35.0
     - name: Install the stable toolchain
       uses: dtolnay/rust-toolchain@stable
-    # - name: Install the nightly toolchain
-    #   uses: dtolnay/rust-toolchain@nightly
+      with:
+        components: rustfmt
+    - name: Install the nightly toolchain
+      uses: dtolnay/rust-toolchain@nightly
       with:
         components: rustfmt
     # - name: Install latest nextest release
@@ -50,6 +52,8 @@ jobs:
     #   run: cargo +nightly fmt --all --check -- --error-on-unformatted --unstable-features
     - name: Run tests
       run: just test
+    - name: Run tests (nightly)
+      run: just test-nightly
     # - name: Run coverage
     #   if: runner.os == 'Linux'
     #   run: |
