@@ -1,3 +1,6 @@
+default:
+    just test
+
 test:
     cargo test --workspace
 
