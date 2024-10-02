@@ -7,9 +7,19 @@ resolver = "2"
 # run a member with `cargo run -p member`
 members = [
     "exercises/*",
-    "examples/*"
+    # "examples/*"
 ]
 
 exclude = [
     "archived/*"
 ]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+version = "0.0.1"
+
+[profile.dev]
+debug = 0     # Speed up compilation time and not necessary.
+opt-level = 2
