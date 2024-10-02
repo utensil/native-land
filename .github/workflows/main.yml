@@ -35,6 +35,10 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         prefix-key: "8"
+    - name: Install linux dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update && sudo apt install build-essential libssl-dev pkg-config
     # - name: Check examples
     #   run: cargo check --examples
     # - name: Lint
