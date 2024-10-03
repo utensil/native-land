@@ -1,10 +1,10 @@
-# Rust Mono
+# Native Land
 
-[![Build Status](https://github.com/utensil/rust-mono/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/rust-mono/actions/workflows/main.yml)
+[![Build Status](https://github.com/utensil/native-land/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/main.yml)
 
-A monorepo for my Rust projects.
+A monorepo for my native projects: Rust, Zig, C++...
 
-## Learning Resources (maybe outdated)
+## Learning Resources for Rust (maybe outdated)
 
 - Getting Started
   - [Learn Rust in Y Minutes](https://learnxinyminutes.com/docs/rust/)
