@@ -18,6 +18,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
+        python-version: ["3.11"]
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
@@ -74,3 +75,12 @@ jobs:
     #   if: runner.os == 'Linux'
     #   with:
     #     token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Install Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Test evcxr notebooks
+      run: |
+        cd notebooks
+        just prep
+        just test

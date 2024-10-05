@@ -1,0 +1,24 @@
+defaut: test
+
+test:
+    pytest -vv --durations=50 --nbval --nbval-kernel-name rust .
+
+kernels:
+    jupyter kernelspec list
+
+prep:
+    #!/usr/bin/env bash
+    set -e
+    # assuming pyenv is installed
+    echo "locally, run this first: pyenv shell 3.11"
+    python3 -m pip install ipykernel nbval jupyterlab
+    rustup component add rust-src
+    cargo install --locked evcxr_jupyter
+    evcxr_jupyter --install
+
+lab:
+    jupyter lab
+
+install-pyenv:
+    #!/usr/bin/env bash
+    curl https://pyenv.run | bash
