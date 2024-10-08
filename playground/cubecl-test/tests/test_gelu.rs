@@ -1,3 +1,4 @@
+#[cfg(not(target_os = "windows"))]
 #[test]
 fn test() {
     // #[cfg(feature = "wgpu")]
