@@ -19,4 +19,4 @@ dx-prep-test:
 
 cl-run:
     clear
-    cd {{invocation_directory()}}; cargo run cargo run --features wgpu
+    cd {{invocation_directory()}}; cargo run --example gelu --features wgpu

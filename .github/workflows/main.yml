@@ -6,7 +6,7 @@ on:
     branches: ["main"]
     paths-ignore:
       - "archived/**"
-      - "README.md"
+      - "**/README.md"
       - ".gitignore"
   pull_request:
 

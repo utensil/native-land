@@ -16,3 +16,4 @@ half = { version = "2.4.1", features = [
     "num-traits",
     "serde",
 ], default-features = false }
+pretty_assertions = "1.4.1"

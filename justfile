@@ -32,11 +32,7 @@ kill NAME:
     ps aux|grep {{NAME}}|grep -v grep|grep -v just|awk '{print $2}'|xargs kill -9
 
 status:
-    clear
-    git status
-
-watch:
-    watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- just status
+    watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- git status
 
 # clone-ex:
 #     #!/usr/bin/env bash

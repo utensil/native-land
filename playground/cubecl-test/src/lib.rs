@@ -16,7 +16,7 @@ fn gelu_scalar<F: Float>(x: Line<F>) -> Line<F> {
     x * (Line::erf(tmp) + 1.0) / 2.0
 }
 
-pub fn launch<R: Runtime>(device: &R::Device) {
+pub fn gelu_launch<R: Runtime>(device: &R::Device) -> Vec<f32> {
     let client = R::client(device);
     let input = &[-1., 0., 1., 5.];
     let vectorization = 4;
@@ -36,11 +36,5 @@ pub fn launch<R: Runtime>(device: &R::Device) {
     let bytes = client.read(output_handle.binding());
     let output = f32::from_bytes(&bytes);
 
-    // Should be [-0.1587,  0.0000,  0.8413,  5.0000]
-    println!("Executed gelu with runtime {:?} => {output:?}", R::name());
-}
-
-fn main() {
-    #[cfg(feature = "wgpu")]
-    launch::<cubecl::wgpu::WgpuRuntime>(&Default::default());
+    output.to_vec()
 }
