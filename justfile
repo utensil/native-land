@@ -28,6 +28,12 @@ nightly: prep-nightly test-nightly
 format:
     cargo fmt
 
+kill NAME:
+    ps aux|grep {{NAME}}|grep -v grep|grep -v just|awk '{print $2}'|xargs kill -9
+
+status:
+    watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- git status
+
 # clone-ex:
 #     #!/usr/bin/env bash
 #     if [[ ! -d archived/exercism ]]; then git clone https://github.com/utensil/exercism archived/exercism; fi
