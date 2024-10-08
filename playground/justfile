@@ -16,3 +16,7 @@ dx-test: dx-prep-test
     cd {{invocation_directory()}}; cargo test
 dx-prep-test:
     cd {{invocation_directory()}}; cargo add dioxus-ssr pretty_assertions futures
+
+cl-run:
+    clear
+    cd {{invocation_directory()}}; cargo run cargo run --features wgpu
