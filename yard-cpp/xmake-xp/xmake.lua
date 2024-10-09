@@ -2,6 +2,24 @@ add_rules("mode.debug") -- , "mode.release")
 -- https://xmake.io/#/guide/project_examples?id=integrating-the-c-modules-package
 set_languages("c++20")
 
+-- https://root.cern/install/#build-from-source
+-- https://xmake.io/#/package/remote_package?id=using-self-built-private-package-repository
+
+package("root")
+    -- set_urls("https://github.com/root-project/root.git")
+    set_urls("https://github.com/root-project/root/archive/refs/tags/$(version).tar.gz")
+
+    add_versions("v6-32-06", "01a98aa656c33898690f0d7b1bc667ebdd7a5f74b34c237b59ea49eca367c9ea")
+
+    on_install("macosx", "linux", function (package)
+        local configs = {}
+        table.insert(configs, "-Dbuiltin_glew=ON")
+        import("package.tools.cmake").install(package, configs)
+    end)
+package_end()
+
+add_requires("root")
+
 add_requires("stb")
 add_requires("boost")
 add_requires("sokol")
@@ -15,7 +33,7 @@ target("xmake-xp")
     add_packages("boost")
     add_packages("sokol")
     add_packages("raylib")
-    -- add_packages("root")
+    add_packages("root")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

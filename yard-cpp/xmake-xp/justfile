@@ -37,3 +37,6 @@ prep-conda:
 
 @fetch NAME:
     xmake require --fetch {{NAME}}
+
+@list:
+    xmake require --list

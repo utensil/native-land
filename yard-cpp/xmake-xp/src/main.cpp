@@ -5,7 +5,10 @@
 #define SOKOL_IMPL
 #include "sokol_time.h"
 #include "raylib.h"
-// #include "TMath.h"
+#include "Math/GenVector/Quaternion.h"
+#include <vector>
+
+using std::vector;
 
 int main(int argc, char** argv) {
     // use sokol_time
@@ -27,6 +30,16 @@ int main(int argc, char** argv) {
     boost::math::quaternion<double> q2(5, 6, 7, 8);
     boost::math::quaternion<double> q3 = q1 * q2;
     std::cout << q3 << std::endl;
+
+    {
+        using ROOT::Math::Quaternion;
+
+        Quaternion q4(1, 2, 3, 4);
+        Quaternion q5(5, 6, 7, 8);
+        Quaternion q6 = q4 * q5;
+        std::cout << q6.I() << ", " << q6.J() << ", " << q6.K() << ", " << q6.U() << std::endl; 
+
+    }
 
     InitWindow(800, 450, "raylib [core] example - basic window");
 
