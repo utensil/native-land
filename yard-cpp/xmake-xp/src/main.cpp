@@ -4,7 +4,7 @@
 #include <boost/math/quaternion.hpp>
 #define SOKOL_IMPL
 #include "sokol_time.h"
-#include "raylib.h"
+// #include "raylib.h"
 #include "Math/GenVector/Quaternion.h"
 #include <vector>
 
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
         std::cout << q6.I() << ", " << q6.J() << ", " << q6.K() << ", " << q6.U() << std::endl; 
 
     }
-
+    /*
     InitWindow(800, 450, "raylib [core] example - basic window");
 
     while (!WindowShouldClose())
@@ -52,6 +52,7 @@ int main(int argc, char** argv) {
     }
 
     CloseWindow();
+    */
 
     uint64_t elapsed = stm_since(start);
     std::cout << "elapsed: " << stm_sec(elapsed) << " seconds" << std::endl;

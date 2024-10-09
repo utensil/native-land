@@ -84,6 +84,16 @@ jobs:
         run: just test
       - name: Run tests (nightly)
         run: just test-nightly
+      - name: Setup xmake
+        if: runner.os == 'Mac'
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: '2.9.5'
+      - name: Run xmake project
+        if: runner.os == 'Mac'
+        run:
+          cd yard-cpp/xmake-xp
+          just
     # - name: Run coverage
     #   if: runner.os == 'Linux'
     #   run: |
