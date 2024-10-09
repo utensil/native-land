@@ -4,8 +4,33 @@ run:
 clean:
     xmake clean
 
-find NAME:
-    xmake require --search {{NAME}}
+prep-vcpkg:
+    git clone https://github.com/microsoft/vcpkg "$HOME/.vcpkghome"
+    cd "$HOME/.vcpkghome" && ./bootstrap-vcpkg.sh
+    @echo >> ~/.bashrc
+    @echo "export VCPKG_ROOT=$HOME/.vcpkghome" >> ~/.bashrc
+    @echo "export PATH=\$VCPKG_ROOT:\$PATH" >> ~/.bashrc
+    @echo "Run: source ~/.bashrc"
 
-info NAME:
+prep-conan:
+    brew install conan
+    # conan profile new default --detect
+    # conan profile update settings.compiler.libcxx=libstdc++11 default
+    # conan profile update settings.compiler.cppstd=20 default
+
+prep-conda:
+    brew install --cask miniforge
+    # brew install --cask miniconda
+    # brew install --cask anaconda
+    # brew install micromamba
+
+@find NAME:
+    xmake require --search {{NAME}} || true
+    xmake require --search "vcpkg::{{NAME}}" || true
+    xmake require --search "conan::{{NAME}}" || true
+    xmake require --search "conda::{{NAME}}" || true
+    # xmake require --search "clib::{{NAME}}" || true
+    # xmake require --search "brew::{{NAME}}" || true
+
+@info NAME:
     xmake require --info {{NAME}}

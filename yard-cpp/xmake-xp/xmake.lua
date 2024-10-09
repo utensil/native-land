@@ -1,8 +1,11 @@
 add_rules("mode.debug") -- , "mode.release")
+-- https://xmake.io/#/guide/project_examples?id=integrating-the-c-modules-package
+set_languages("c++20")
 
 add_requires("stb")
 add_requires("boost")
 add_requires("sokol")
+add_requires("raylib")
 
 target("xmake-xp")
     set_kind("binary")
@@ -10,7 +13,7 @@ target("xmake-xp")
     add_packages("stb")
     add_packages("boost")
     add_packages("sokol")
-    set_languages("c++20")
+    add_packages("raylib")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

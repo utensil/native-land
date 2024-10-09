@@ -4,6 +4,7 @@
 #include <boost/math/quaternion.hpp>
 #define SOKOL_IMPL
 #include "sokol_time.h"
+#include "raylib.h"
 
 int main(int argc, char** argv) {
     // use sokol_time
@@ -26,7 +27,19 @@ int main(int argc, char** argv) {
     boost::math::quaternion<double> q3 = q1 * q2;
     std::cout << q3 << std::endl;
 
+    InitWindow(800, 450, "raylib [core] example - basic window");
+
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+            ClearBackground(BLACK);
+            DrawText("Congrats for your first window!", 100, 200, 38, LIGHTGRAY);
+        EndDrawing();
+    }
+
+    CloseWindow();
+
     uint64_t elapsed = stm_since(start);
-    std::cout << "elapsed: " << stm_sec(elapsed) << std::endl;
+    std::cout << "elapsed: " << stm_sec(elapsed) << " seconds" << std::endl;
     return 0;
 }
