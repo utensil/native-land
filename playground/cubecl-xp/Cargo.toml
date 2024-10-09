@@ -1,5 +1,5 @@
 [package]
-name = "cubecl-test"
+name = "cubecl-xp"
 edition.workspace = true
 license.workspace = true
 readme.workspace = true
