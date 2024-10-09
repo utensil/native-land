@@ -15,3 +15,4 @@ config_*
 **/target
 archived/exercism
 **/.DS_Store
+.vscode/settings.json

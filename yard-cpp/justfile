@@ -1,0 +1,9 @@
+
+default:
+    just --list
+
+prep-xrepo:
+    curl -fsSL https://xmake.io/shget.text | bash
+
+new NAME:
+    xmake create -l c++ -P {{NAME}}
