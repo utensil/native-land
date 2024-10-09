@@ -34,6 +34,9 @@ kill NAME:
 status:
     watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- git status
 
+prep-xrepo:
+    curl -fsSL https://xmake.io/shget.text | bash
+
 # clone-ex:
 #     #!/usr/bin/env bash
 #     if [[ ! -d archived/exercism ]]; then git clone https://github.com/utensil/exercism archived/exercism; fi

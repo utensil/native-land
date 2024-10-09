@@ -6,9 +6,7 @@ resolver = "2"
 
 # run a member with `cargo run -p member`
 members = [
-    "exercises/*",
-    "playground/*",
-    # "examples/*"
+    "yard-rs/*",
 ]
 
 exclude = [
