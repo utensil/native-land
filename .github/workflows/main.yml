@@ -91,7 +91,7 @@ jobs:
           xmake-version: '2.9.5'
       - name: Run xmake project
         if: runner.os == 'macOS'
-        run:
+        run: |
           cd yard-cpp/xmake-xp
           just
     # - name: Run coverage
