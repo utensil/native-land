@@ -1,2 +1,11 @@
 run:
-    xmake && xmake run
+    xmake -y -v && xmake run
+
+clean:
+    xmake clean
+
+find NAME:
+    xmake require --search {{NAME}}
+
+info NAME:
+    xmake require --info {{NAME}}
