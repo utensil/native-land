@@ -34,3 +34,6 @@ prep-conda:
 
 @info NAME:
     xmake require --info {{NAME}}
+
+@fetch NAME:
+    xmake require --fetch {{NAME}}

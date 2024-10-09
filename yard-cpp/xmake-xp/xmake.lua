@@ -6,6 +6,7 @@ add_requires("stb")
 add_requires("boost")
 add_requires("sokol")
 add_requires("raylib")
+-- add_requires("conda::root", {alias = "root"})
 
 target("xmake-xp")
     set_kind("binary")
@@ -14,6 +15,7 @@ target("xmake-xp")
     add_packages("boost")
     add_packages("sokol")
     add_packages("raylib")
+    -- add_packages("root")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
