@@ -1,0 +1,9 @@
+[package]
+name = "bevy-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]
+bevy = "0.14.2"

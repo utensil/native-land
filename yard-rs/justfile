@@ -1,3 +1,5 @@
+example_xp := justfile_directory() / "example-xp"
+
 default:
     just --list
 
@@ -20,3 +22,21 @@ dx-prep-test:
 cl-run:
     clear
     cd {{invocation_directory()}}; cargo run --example gelu --features wgpu
+
+@prep-bevy:
+    #!/usr/bin/env bash
+    mkdir -p {{example_xp}}
+    cd {{example_xp}}
+    if [[ ! -d {{example_xp / "bevy"}} ]]; then
+        git clone https://github.com/bevyengine/bevy {{example_xp / "bevy"}}
+        cd {{example_xp / "bevy"}}
+        git checkout latest
+    fi
+
+# breakout
+try-bevy +PARAMS: prep-bevy
+    cd {{example_xp / "bevy"}} && cargo run --release --example {{PARAMS}}
+
+gltf:
+    just try-bevy scene_viewer {{ example_xp / "black_hole" / "scene.gltf" }}
+

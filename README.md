@@ -4,11 +4,12 @@
 
 A monorepo for my native projects: Rust, Zig, C++...
 
-The repo is organized as follows, strongly inspired by [Research Codebase Manifesto](https://www.moderndescartes.com/essays/research_code/):
+The repo is organized as follows, strongly inspired by [Research Codebase Manifesto](https://www.moderndescartes.com/essays/research_code/) with shorter names:
  
-- `yard-*`: experimental stuff per language
-- `proj-*`: projects per language
-- `core-*`: production-ready packages, applications per language
+- `yard-*`: experimental stuff per language, avoid dependencies between and upon them, some code might graduate to `proj*` and `pkg-*`
+- `proj`, `proj-*`: projects in general, or per language, may depend on `pkg-*`
+- `pkg-*`: production-ready packages per language
+  - in the case of Rust, it's named `crates` instead
 - `notebooks`: Jupyter notebooks, if there is a supported kernel
 - `archived`: old stuff, not maintained anymore
 

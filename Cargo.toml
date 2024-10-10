@@ -10,7 +10,8 @@ members = [
 ]
 
 exclude = [
-    "archived/*"
+    "archived/*",
+    "yard-rs/example-xp"
 ]
 
 [workspace.package]
