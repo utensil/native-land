@@ -28,6 +28,10 @@ set_languages("c++20")
 -- following https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/v/vcpkg/xmake.lua
 -- and https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/o/onnxruntime/xmake.lua?ref_type=heads
 package("root")
+    set_homepage("https://root.cern/")
+    set_description("ROOT is a unified software package for the storage, processing, and analysis of scientific data.")
+    set_license("LGPL-2.1")
+
     if is_plat("macosx") then
         if is_arch("arm64") then
             set_urls("https://root.cern/download/root_$(version).macos-15.0-arm64-clang160.tar.gz")
@@ -51,6 +55,9 @@ package("root")
 
     on_install("macosx", "linux", "windows", function (package)
         os.cp("*", package:installdir())
+        -- below not working
+        -- os.mv("include", package:installdir("include"))
+        -- os.mv("lib", package:installdir("lib"))
     end)
 
     -- test with `xmake require -v --check root`
