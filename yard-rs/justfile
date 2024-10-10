@@ -33,7 +33,7 @@ cl-run:
         git checkout latest
     fi
 
-# breakout
+# breakout scene_viewer
 try-bevy +PARAMS: prep-bevy
     cd {{example_xp / "bevy"}} && cargo run --release --example {{PARAMS}}
 

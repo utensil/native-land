@@ -73,7 +73,8 @@ jobs:
             libxdo-dev \
             libssl-dev \
             libayatana-appindicator3-dev \
-            librsvg2-dev
+            librsvg2-dev \
+            libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
       # - name: Check examples
       #   run: cargo check --examples
       # - name: Lint
@@ -97,7 +98,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            yard-cpp/xmake-xp/build/.build_cache
+            yard-cpp/xmake-xp/build/
+            yard-cpp/xmake-xp/.xmake/
           key: ${{ runner.os }}-xmake-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-xmake-
