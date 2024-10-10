@@ -39,4 +39,3 @@ try-bevy +PARAMS: prep-bevy
 
 gltf:
     just try-bevy scene_viewer {{ example_xp / "black_hole" / "scene.gltf" }}
-
