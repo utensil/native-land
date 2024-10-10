@@ -2,7 +2,7 @@ run:
     xmake -y -v && xmake run
 
 run-win:
-    xmake f -p windows
+    xmake f -y -p windows
     xmake -y -v && xmake run
 
 clean:
