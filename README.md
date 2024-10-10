@@ -1,6 +1,6 @@
 # Native Land
 
-[![Build Status](https://github.com/utensil/native-land/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/main.yml)
+[![CI (Rust)](https://github.com/utensil/native-land/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/main.yml) [![CI (C++)](https://github.com/utensil/native-land/actions/workflows/cpp.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/cpp.yml)
 
 A monorepo for my native projects: Rust, Zig, C++...
 
