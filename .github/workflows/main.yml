@@ -1,4 +1,4 @@
-name: CI
+name: CI (Rust)
 
 on:
   workflow_dispatch:
@@ -63,6 +63,8 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-test-  
       - name: Setup Linux for GPU
         if: runner.os == 'Linux'
         uses: tracel-ai/github-actions/setup-linux@v1
