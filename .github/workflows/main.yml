@@ -39,10 +39,10 @@ jobs:
       - uses: extractions/setup-just@v1
         with:
           just-version: 1.35.0
-      - name: Install the stable toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt
+      # - name: Install the stable toolchain
+      #   uses: dtolnay/rust-toolchain@stable
+      #   with:
+      #     components: rustfmt
       - name: Install the nightly toolchain
         uses: dtolnay/rust-toolchain@nightly
         with:
@@ -81,8 +81,8 @@ jobs:
       #   run: cargo clippy --workspace -- -D warnings
       # - name: Format
       #   run: cargo +nightly fmt --all --check -- --error-on-unformatted --unstable-features
-      - name: Run tests
-        run: just test
+      # - name: Run tests
+      #   run: just test
       - name: Run tests (nightly)
         run: just test-nightly
       - name: Setup xmake
