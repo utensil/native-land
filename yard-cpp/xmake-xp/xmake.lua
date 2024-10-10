@@ -53,6 +53,34 @@ package("root")
         os.cp("*", package:installdir())
     end)
 
+    -- test with `xmake require -v --check root`
+    on_check(function (package)
+        assert(package:check_cxxsnippets({test = [[
+#include <iostream>
+#include <vector>
+
+using std::vector;
+
+int main() {
+    // Generate a vector with 10 random numbers.
+    vector<double> v(10);
+    std::generate(v.begin(), v.end(), rand);
+
+    // Find the minimum value of the vector (iterator version).
+    vector<double>::iterator it;
+    it = TMath::LocMin(v.begin(), v.end());
+    std::cout << *it << std::endl;
+
+    // The same with the old-style version.
+    int i;
+    i = TMath::LocMin(10, &v[0]);
+    std::cout << v[i] << std::endl;
+
+    return 0;
+}
+        ]]}, {includes = {"TMath.h"}, configs = {languages = "c++20"}}))
+    end)
+
 package_end()
 
 -- configure: error: gmp library too old
