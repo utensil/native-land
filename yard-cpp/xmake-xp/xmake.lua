@@ -114,6 +114,8 @@ target("xmake-xp")
     add_packages("sokol")
     add_packages("raylib")
     add_packages("root")
+    -- https://hatchjs.com/fatal-error-lnk1169-one-or-more-multiply-defined-symbols-found/
+    add_ldflags("/ignore:4075", {force = true})
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
