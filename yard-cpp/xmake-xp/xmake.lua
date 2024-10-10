@@ -2,94 +2,6 @@ add_rules("mode.debug") -- , "mode.release")
 -- https://xmake.io/#/guide/project_examples?id=integrating-the-c-modules-package
 set_languages("c++20")
 
--- https://root.cern/install/#build-from-source
--- https://xmake.io/#/package/remote_package?id=using-self-built-private-package-repository
-
--- package("root")
---     -- set_urls("https://github.com/root-project/root.git")
---     set_urls("https://github.com/root-project/root/archive/refs/tags/$(version).tar.gz")
-
---     add_versions("v6-32-06", "01a98aa656c33898690f0d7b1bc667ebdd7a5f74b34c237b59ea49eca367c9ea")
-
---     on_install("macosx", "linux", function (package)
---         local configs = {}
---         table.insert(configs, "-Dbuiltin_glew=ON")
---         import("package.tools.cmake").install(package, configs)
---     end)
--- package_end()
---
--- add_requires("root")
-
--- https://xmake.io/#/package/system_package?id=find-using-system-packages
--- download and install from https://root.cern/install/#download-a-pre-compiled-binary-distribution
--- hhttps://root.cern/download/root_v6.32.06.macos-15.0-arm64-clang160.tar.gz
--- add_requires("root", {system = true})
-
--- following https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/v/vcpkg/xmake.lua
--- and https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/o/onnxruntime/xmake.lua?ref_type=heads
-package("root")
-    set_homepage("https://root.cern/")
-    set_description("ROOT is a unified software package for the storage, processing, and analysis of scientific data.")
-    set_license("LGPL-2.1")
-
-    if is_plat("macosx") then
-        if is_arch("arm64") then
-            set_urls("https://root.cern/download/root_$(version).macos-15.0-arm64-clang160.tar.gz")
-            add_versions("v6.32.06", "a9676809678b93ab96e198bb0654f32e2d74c6dd0a7536537a7bfee674f262bd")
-        end
-    end
-
-    if is_plat("linux") then
-        if is_arch("x86_64") then
-            set_urls("https://root.cern/download/root_$(version).Linux-ubuntu24.04-x86_64-gcc13.2.tar.gz")
-            add_versions("v6.32.06", "57dabc4f35f21141eadd0a9add59a7a381b63d22430fe7467077c8bd0f732383")
-        end
-    end
-
-    if is_plat("windows") then
-        if is_arch("x64") then
-            set_urls("https://root.cern/download/root_$(version).win64.vc17.zip")
-            add_versions("v6.32.06", "9cff19b57c32a6e8986f7c8934c33ab288aae11e001426d32781a0eac71f8ed3")
-        end
-    end
-
-    on_install("macosx", "linux", "windows", function (package)
-        os.cp("*", package:installdir())
-        -- below not working
-        -- os.mv("include", package:installdir("include"))
-        -- os.mv("lib", package:installdir("lib"))
-    end)
-
-    -- test with `xmake require -v --check root`
---     on_check(function (package)
---         assert(package:check_cxxsnippets({test = [[
--- #include <iostream>
--- #include <vector>
-
--- using std::vector;
-
--- int main() {
---     // Generate a vector with 10 random numbers.
---     vector<double> v(10);
---     std::generate(v.begin(), v.end(), rand);
-
---     // Find the minimum value of the vector (iterator version).
---     vector<double>::iterator it;
---     it = TMath::LocMin(v.begin(), v.end());
---     std::cout << *it << std::endl;
-
---     // The same with the old-style version.
---     int i;
---     i = TMath::LocMin(10, &v[0]);
---     std::cout << v[i] << std::endl;
-
---     return 0;
--- }
---         ]]}, {includes = {"TMath.h"}, configs = {languages = "c++20"}}))
---     end)
-
-package_end()
-
 -- configure: error: gmp library too old
 -- error: execv(./configure --enable-shared=yes --enable-static=no --with-pic --with-gmp-prefix=~/.xmake/packages/g/gmp/6.3.0/24f1b85cb6534fe7b7485121640f8f39 --prefix=~/.xmake/packages/l/libisl/0.22/09ec4ac2cc9e454ba813de282118dd79) failed(1)
 --   => install libisl 0.22 .. failed
@@ -98,13 +10,10 @@ package_end()
 -- add_requires("muslcc")
 -- set_toolchains("@muslcc")
 
-add_requires("root", {system = false})
-
 add_requires("stb")
 add_requires("boost")
 add_requires("sokol")
 add_requires("raylib")
--- add_requires("conda::root", {alias = "root"})
 
 target("xmake-xp")
     set_kind("binary")
@@ -113,9 +22,6 @@ target("xmake-xp")
     add_packages("boost")
     add_packages("sokol")
     add_packages("raylib")
-    add_packages("root")
-    -- https://hatchjs.com/fatal-error-lnk1169-one-or-more-multiply-defined-symbols-found/
-    add_ldflags("/ignore:4075") -- , {force = true})
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

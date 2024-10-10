@@ -1,0 +1,12 @@
+run:
+    xmake -y -v && xmake run
+
+run-win:
+    xmake f -y -v -p windows
+    xmake -y -v && xmake run
+
+clean:
+    xmake clean
+
+resume-clang:
+    xmake f --toolchain=clang -c
