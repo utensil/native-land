@@ -5,17 +5,39 @@ set_languages("c++20")
 -- https://root.cern/install/#build-from-source
 -- https://xmake.io/#/package/remote_package?id=using-self-built-private-package-repository
 
+-- package("root")
+--     -- set_urls("https://github.com/root-project/root.git")
+--     set_urls("https://github.com/root-project/root/archive/refs/tags/$(version).tar.gz")
+
+--     add_versions("v6-32-06", "01a98aa656c33898690f0d7b1bc667ebdd7a5f74b34c237b59ea49eca367c9ea")
+
+--     on_install("macosx", "linux", function (package)
+--         local configs = {}
+--         table.insert(configs, "-Dbuiltin_glew=ON")
+--         import("package.tools.cmake").install(package, configs)
+--     end)
+-- package_end()
+--
+-- add_requires("root")
+
+-- https://xmake.io/#/package/system_package?id=find-using-system-packages
+-- download and install from https://root.cern/install/#download-a-pre-compiled-binary-distribution
+-- hhttps://root.cern/download/root_v6.32.06.macos-15.0-arm64-clang160.tar.gz
+-- add_requires("root", {system = true})
+
+-- following https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/v/vcpkg/xmake.lua
 package("root")
-    -- set_urls("https://github.com/root-project/root.git")
-    set_urls("https://github.com/root-project/root/archive/refs/tags/$(version).tar.gz")
+    if is_plat("macosx") then
+        if is_arch("arm64") then
+            set_urls("https://root.cern/download/root_$(version).macos-15.0-arm64-clang160.tar.gz")
+            add_versions("v6.32.06", "a9676809678b93ab96e198bb0654f32e2d74c6dd0a7536537a7bfee674f262bd")
+        end
+    end
 
-    add_versions("v6-32-06", "01a98aa656c33898690f0d7b1bc667ebdd7a5f74b34c237b59ea49eca367c9ea")
-
-    on_install("macosx", "linux", function (package)
-        local configs = {}
-        table.insert(configs, "-Dbuiltin_glew=ON")
-        import("package.tools.cmake").install(package, configs)
+    on_install("macosx", function (package)
+        os.cp("*", package:installdir())
     end)
+
 package_end()
 
 add_requires("root")
