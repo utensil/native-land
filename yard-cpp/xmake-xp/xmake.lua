@@ -26,6 +26,7 @@ set_languages("c++20")
 -- add_requires("root", {system = true})
 
 -- following https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/v/vcpkg/xmake.lua
+-- and https://gitlab.com/tboox/xmake-repo/-/blob/master/packages/o/onnxruntime/xmake.lua?ref_type=heads
 package("root")
     if is_plat("macosx") then
         if is_arch("arm64") then
@@ -41,14 +42,14 @@ package("root")
         end
     end
 
-    if is_plat("windows") then
+    if is_plat("windows", "mingw") then
         if is_arch("x86_64") then
             set_urls("https://root.cern/download/root_$(version).win64.vc17.zip")
             add_versions("v6.32.06", "9cff19b57c32a6e8986f7c8934c33ab288aae11e001426d32781a0eac71f8ed3")
         end
     end
 
-    on_install("macosx", "linux", "windows", function (package)
+    on_install("macosx", "linux", "windows", "mingw", function (package)
         os.cp("*", package:installdir())
     end)
 

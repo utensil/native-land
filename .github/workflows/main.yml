@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
+    paths:
+      - "justfile"
+      - "*.toml"
+      - "yard-rs/**"
+      - ".github/workflows/main.yml"
     paths-ignore:
       - "archived/**"
       - "**/README.md"

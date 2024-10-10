@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
+    paths:
+      - "yard-cpp/**"
+      - ".github/workflows/cpp.yml"
     paths-ignore:
       - "archived/**"
       - "**/README.md"
@@ -92,7 +95,12 @@ jobs:
         with:
           xmake-version: '2.9.5'
       - name: Run xmake project
-        # if: runner.os == 'macOS' || runner.os == 'Linux'
+        if: runner.os == 'macOS' || runner.os == 'Linux'
+        run: |
+          cd yard-cpp/xmake-xp
+          just
+      - name: Run xmake project (Windows)
+        if: runner.os == 'Windows'
         run: |
           cd yard-cpp/xmake-xp
           just
