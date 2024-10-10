@@ -7,10 +7,10 @@ on:
     paths:
       - "yard-cpp/**"
       - ".github/workflows/cpp.yml"
-    paths-ignore:
-      - "archived/**"
-      - "**/README.md"
-      - ".gitignore"
+    # paths-ignore:
+    #   - "archived/**"
+    #   - "**/README.md"
+    #   - ".gitignore"
   pull_request:
 
 env:

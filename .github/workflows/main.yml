@@ -9,10 +9,10 @@ on:
       - "*.toml"
       - "yard-rs/**"
       - ".github/workflows/main.yml"
-    paths-ignore:
-      - "archived/**"
-      - "**/README.md"
-      - ".gitignore"
+    # paths-ignore:
+    #   - "archived/**"
+    #   - "**/README.md"
+    #   - ".gitignore"
   pull_request:
 
 env:
