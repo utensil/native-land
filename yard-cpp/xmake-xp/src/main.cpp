@@ -1,3 +1,5 @@
+// https://stackoverflow.com/a/27443191/200764
+#define NOMINMAX
 #include <iostream>
 #define STB_DS_IMPLEMENTATION
 #include "stb_ds.h"
