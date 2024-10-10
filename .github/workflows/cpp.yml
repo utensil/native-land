@@ -43,21 +43,21 @@ jobs:
       #   uses: dtolnay/rust-toolchain@stable
       #   with:
       #     components: rustfmt
-      - name: Install the nightly toolchain
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt
+      # - name: Install the nightly toolchain
+      #   uses: dtolnay/rust-toolchain@nightly
+      #   with:
+      #     components: rustfmt
       # - name: Install latest nextest release
       #   uses: taiki-e/install-action@nextest
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.cargo/bin/
+      #       ~/.cargo/registry/index/
+      #       ~/.cargo/registry/cache/
+      #       ~/.cargo/git/db/
+      #       target/
+      #     key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
       - name: Setup Linux for GPU
         if: runner.os == 'Linux'
         uses: tracel-ai/github-actions/setup-linux@v1
@@ -79,23 +79,19 @@ jobs:
             libssl-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
-            libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
-      # - name: Check examples
-      #   run: cargo check --examples
-      # - name: Lint
-      #   run: cargo clippy --workspace -- -D warnings
-      # - name: Format
-      #   run: cargo +nightly fmt --all --check -- --error-on-unformatted --unstable-features
+            libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 \
+            dpkg-dev libxext-dev libxft-dev libxpm-dev libtbb-dev libgif-dev
       # - name: Run tests
       #   run: just test
-      - name: Run tests (nightly)
-        run: just test-nightly
-    # - name: Install Python ${{ matrix.python-version }}
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
-    # - name: Test evcxr notebooks
-    #   run: |
-    #     cd notebooks
-    #     just prep
-    #     just test
+      # - name: Run tests (nightly)
+      #   run: just test-nightly
+      - name: Setup xmake
+        # if: runner.os == 'macOS' || runner.os == 'Linux'
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: '2.9.5'
+      - name: Run xmake project
+        # if: runner.os == 'macOS' || runner.os == 'Linux'
+        run: |
+          cd yard-cpp/xmake-xp
+          just
