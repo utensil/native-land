@@ -1,6 +1,10 @@
 run:
     xmake -y -v && xmake run
 
+run-win:
+    xmake f -p windows
+    xmake -y -v && xmake run
+
 clean:
     xmake clean
 
