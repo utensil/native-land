@@ -1,5 +1,5 @@
 default:
-    just test
+    just test-nightly
 
 test:
     cargo test --workspace
