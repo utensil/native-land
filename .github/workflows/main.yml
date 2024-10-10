@@ -80,7 +80,7 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 \
-            dpkg-dev libxext-dev libxft-dev libxpm-dev libtbb-dev libvdt-dev libgif-dev
+            dpkg-dev libxext-dev libxft-dev libxpm-dev libtbb-dev libgif-dev
       # - name: Check examples
       #   run: cargo check --examples
       # - name: Lint
