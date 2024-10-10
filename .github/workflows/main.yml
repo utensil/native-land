@@ -89,6 +89,18 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: '2.9.5'
+      - if: runner.os == 'macOS'
+        run: |
+          mkdir -p yard-cpp/xmake-xp/build/.build_cache
+      - name: xmake cache
+        if: runner.os == 'macOS'
+        uses: actions/cache@v4
+        with:
+          path: |
+            yard-cpp/xmake-xp/build/.build_cache
+          key: ${{ runner.os }}-xmake-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-xmake-
       - name: Run xmake project
         if: runner.os == 'macOS'
         run: |
