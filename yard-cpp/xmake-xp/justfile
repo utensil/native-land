@@ -7,10 +7,10 @@ clean:
 prep-vcpkg:
     git clone https://github.com/microsoft/vcpkg "$HOME/.vcpkghome"
     cd "$HOME/.vcpkghome" && ./bootstrap-vcpkg.sh
-    @echo >> ~/.bashrc
-    @echo "export VCPKG_ROOT=$HOME/.vcpkghome" >> ~/.bashrc
-    @echo "export PATH=\$VCPKG_ROOT:\$PATH" >> ~/.bashrc
-    @echo "Run: source ~/.bashrc"
+    @echo >> ~/.zshrc
+    @echo "export VCPKG_ROOT=$HOME/.vcpkghome" >> ~/.zshrc
+    @echo "export PATH=\$VCPKG_ROOT:\$PATH" >> ~/.zshrc
+    @echo "Run: source ~/.zshrc"
 
 prep-conan:
     brew install conan
@@ -25,10 +25,10 @@ prep-conda:
     # brew install micromamba
 
 @find NAME:
-    xmake require --search {{NAME}} || true
-    xmake require --search "vcpkg::{{NAME}}" || true
-    xmake require --search "conan::{{NAME}}" || true
-    xmake require --search "conda::{{NAME}}" || true
+    xmake require -v --search {{NAME}} || true
+    xmake require -v --search "vcpkg::{{NAME}}" || true
+    xmake require -v --search "conan::{{NAME}}" || true
+    xmake require -v --search "conda::{{NAME}}" || true
     # xmake require --search "clib::{{NAME}}" || true
     # xmake require --search "brew::{{NAME}}" || true
 

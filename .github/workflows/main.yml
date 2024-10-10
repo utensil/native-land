@@ -49,10 +49,15 @@ jobs:
           components: rustfmt
       # - name: Install latest nextest release
       #   uses: taiki-e/install-action@nextest
-      - name: Set up cargo cache
-        uses: Swatinem/rust-cache@v2
+      - uses: actions/cache@v4
         with:
-          prefix-key: "8"
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
       - name: Setup Linux for GPU
         if: runner.os == 'Linux'
         uses: tracel-ai/github-actions/setup-linux@v1
