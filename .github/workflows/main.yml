@@ -68,7 +68,7 @@ jobs:
       - name: Install linux dependencies
         if: runner.os == 'Linux'
         run: |
-          sudo apt update
+          # sudo apt update
           sudo apt install libwebkit2gtk-4.1-dev \
             build-essential \
             pkg-config \
@@ -79,7 +79,8 @@ jobs:
             libssl-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
-            libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
+            libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 \
+            dpkg-dev libxext-dev libxft-dev libxpm-dev libtbb-dev libvdt-dev libgif-dev
       # - name: Check examples
       #   run: cargo check --examples
       # - name: Lint
@@ -91,38 +92,15 @@ jobs:
       - name: Run tests (nightly)
         run: just test-nightly
       - name: Setup xmake
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' || runner.os == 'Linux'
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: '2.9.5'
-      # - if: runner.os == 'macOS'
-      #   run: |
-      #     mkdir -p yard-cpp/xmake-xp/build/.build_cache
-      # - name: xmake cache
-      #   if: runner.os == 'macOS'
-      #   uses: actions/cache@v4
-      #   with:
-      #     path: |
-      #       yard-cpp/xmake-xp/build/
-      #       yard-cpp/xmake-xp/.xmake/
-      #     key: ${{ runner.os }}-xmake-${{ github.run_id }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-xmake-
       - name: Run xmake project
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' || runner.os == 'Linux'
         run: |
           cd yard-cpp/xmake-xp
           just
-    # - name: Run coverage
-    #   if: runner.os == 'Linux'
-    #   run: |
-    #     rustup component add llvm-tools-preview
-    #     curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf -
-    #     ./grcov . --binary-path ./target/debug/deps -s . -t lcov --branch --ignore-not-existing --ignore "../*" --ignore "/*" -o cov.lcov
-    # - uses: codecov/codecov-action@v4
-    #   if: runner.os == 'Linux'
-    #   with:
-    #     token: ${{ secrets.CODECOV_TOKEN }}
     # - name: Install Python ${{ matrix.python-version }}
     #   uses: actions/setup-python@v5
     #   with:

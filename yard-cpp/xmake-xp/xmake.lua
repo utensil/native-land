@@ -34,7 +34,14 @@ package("root")
         end
     end
 
-    on_install("macosx", function (package)
+    if is_plat("linux") then
+        if is_arch("x86_64") then
+            set_urls("https://root.cern/download/root_$(version).Linux-ubuntu24.04-x86_64-gcc13.2.tar.gz")
+            add_versions("v6.32.06", "57dabc4f35f21141eadd0a9add59a7a381b63d22430fe7467077c8bd0f732383")
+        end
+    end
+
+    on_install("macosx", "linux" function (package)
         os.cp("*", package:installdir())
     end)
 
