@@ -41,11 +41,19 @@ package("root")
         end
     end
 
-    on_install("macosx", "linux" function (package)
+    on_install("macosx", "linux", function (package)
         os.cp("*", package:installdir())
     end)
 
 package_end()
+
+-- configure: error: gmp library too old
+-- error: execv(./configure --enable-shared=yes --enable-static=no --with-pic --with-gmp-prefix=~/.xmake/packages/g/gmp/6.3.0/24f1b85cb6534fe7b7485121640f8f39 --prefix=~/.xmake/packages/l/libisl/0.22/09ec4ac2cc9e454ba813de282118dd79) failed(1)
+--   => install libisl 0.22 .. failed
+-- error: install failed!
+-- error: Recipe `run` failed on line 2 with exit code 255
+-- add_requires("muslcc")
+-- set_toolchains("@muslcc")
 
 add_requires("root")
 

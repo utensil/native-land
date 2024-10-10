@@ -40,3 +40,32 @@ prep-conda:
 
 @list:
     xmake require --list
+
+prep-zig:
+    brew install zig
+
+# checking for zig cc ... ok
+# checking for flags (-fPIC) ... ok
+# checking for flags (-std=c++20) ... ok
+# [ 50%]: cache compiling.release src/main.cpp
+# "zig cc" -c -target aarch64-macos-none -std=c++20 -DGL_SILENCE_DEPRECATION -framework CoreVideo -framework CoreGraphics -framework AppKit -framework IOKit -framework CoreFoundation -framework Foundation -framework OpenGL -isystem /Users/utensil/.xmake/packages/s/stb/2024.06.01/02de83de61ce4f5fb77ee3a484b692aa/include -isystem /Users/utensil/.xmake/packages/s/stb/2024.06.01/02de83de61ce4f5fb77ee3a484b692aa/include/stb -isystem /Users/utensil/.xmake/packages/b/boost/1.86.0/eddb8bb783414aeab89ff7f52688dedf/include -isystem /Users/utensil/.xmake/packages/s/sokol/2024.07.10/773c9bae09744c1b9a42cd28b037b71c/include -isystem /Users/utensil/.xmake/packages/r/raylib/5.0/db7fa922ae0d4b6a8496788b114407b6/include -isystem /Users/utensil/.xmake/packages/r/root/v6.32.06/a8492a4511b14f9e91240da798ab8324/include -o build/.objs/xmake-xp/macosx/arm64/release/src/main.cpp.o src/main.cpp
+# checking for flags (-MMD -MF) ... ok
+# checking for flags (-fdiagnostics-color=always) ... ok
+# error: error: unable to find framework 'CoreVideo'. searched paths:  none
+# error: unable to find framework 'CoreGraphics'. searched paths:  none
+# error: unable to find framework 'AppKit'. searched paths:  none
+# error: unable to find framework 'IOKit'. searched paths:  none
+# error: unable to find framework 'CoreFoundation'. searched paths:  none
+# error: unable to find framework 'Foundation'. searched paths:  none
+# error: unable to find framework 'OpenGL'. searched paths:  none
+# error: Recipe `run` failed on line 2 with exit code 255
+# error: Recipe `run-zig` failed on line 49 with exit code 255
+
+run-zig:
+    xmake f --cc="zig cc" --cxx="zig cc" --ld="zig c++" -c
+    just run
+
+resume-clang:
+    xmake f --toolchain=clang -c
+
+# https://xmake.io/#/getting_started?id=automatically-fetch-remote-toolchain
