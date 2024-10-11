@@ -20,7 +20,6 @@ fn gelu_scalar<F: Float>(x: Line<F>) -> Line<F> {
 
 pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
     let client = R::client(device);
-    let output_handle = client.empty(1);
     let input_handle = client.empty(1);
 
     // adapted from
