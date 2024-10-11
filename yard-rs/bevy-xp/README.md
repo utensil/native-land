@@ -16,3 +16,14 @@ Should also check out:
 - https://github.com/nannou-org/nannou
 - https://github.com/bevyengine/bevy_github_ci_template
 - https://github.com/NiklasEi/bevy_game_template
+
+For rust-gpu, should check out:
+
+- https://embarkstudios.github.io/rust-gpu/book/writing-shader-crates.html
+- Bevy-Rust-GPU Compute example: https://github.com/Bevy-Rust-GPU/example-workspace/pull/22
+- documentation and examples for porting WGSL/GLSL shaders: https://github.com/EmbarkStudios/rust-gpu/issues/1096
+  - https://github.com/bevyengine/bevy/blob/main/assets/shaders/game_of_life.wgsl
+  - https://github.com/Bevy-Rust-GPU/example-workspace/pull/22#issuecomment-1796063937
+- Infrastructure for using ShaderToy as a test corpus https://github.com/EmbarkStudios/rust-gpu/issues/1104
+  - Add some more example shaders : https://github.com/EmbarkStudios/rust-gpu/pull/1146
+- https://github.com/EmbarkStudios/rust-gpu/issues?q=
