@@ -1,6 +1,6 @@
 #[cfg(not(target_os = "windows"))]
 #[test]
-fn test() {
+fn test_launch() {
     // #[cfg(feature = "wgpu")]
     let result = cubecl_xp::gelu_launch::<cubecl::wgpu::WgpuRuntime>(&Default::default());
     // pretty_assertions::assert_eq!(vec![-0.1587, 0.0000, 0.8413, 5.0000], result);
@@ -10,3 +10,9 @@ fn test() {
     }
 }
 
+#[cfg(not(target_os = "windows"))]
+#[test]
+fn test_shader() {
+    let wgsl = cubecl_xp::gelu_shader::<cubecl::wgpu::WgpuRuntime>(&Default::default());
+    assert_eq!(wgsl, include_str!("fixtures/gelu.wgsl"));
+}

@@ -23,6 +23,9 @@ cl-run:
     clear
     cd {{invocation_directory()}}; cargo run --example gelu --features wgpu
 
+cl-test:
+    cd {{invocation_directory()}}; cargo test
+
 @prep-ex URL DIR BRANCH:
     #!/usr/bin/env bash
     mkdir -p {{example_xp}}
