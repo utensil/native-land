@@ -34,8 +34,8 @@ cl-run:
     git checkout {{BRANCH}}
 
 # breakout scene_viewer
-# hello_world 
-try-bevy +PARAMS: (prep-ex "https://github.com/bevyengine/bevy" "bevy" "latest")
+# hello_world storage_buffer gpu_readback
+try-bevy +PARAMS: (prep-ex "https://github.com/bevyengine/bevy" "bevy" "main")
     cd {{example_xp / "bevy"}} && cargo run --release --example {{PARAMS}}
 
 gltf:
