@@ -1,21 +1,21 @@
 @group(0)
 @binding(0)
-var<storage, read_write> input_0_global: array<vec4<f32>>;
+var<storage, read_write> input_0_global: array<f32>;
 
 @group(0)
 @binding(1)
-var<storage, read_write> output_0_global: array<vec4<f32>>;
+var<storage, read_write> output_0_global: array<f32>;
 
 @group(0)
 @binding(2)
 var<storage, read_write> info: array<u32>;
 
-const WORKGROUP_SIZE_X = 4u;
+const WORKGROUP_SIZE_X = 1u;
 const WORKGROUP_SIZE_Y = 1u;
 const WORKGROUP_SIZE_Z = 1u;
 
 @compute
-@workgroup_size(4, 1, 1)
+@workgroup_size(1, 1, 1)
 fn main(
     @builtin(global_invocation_id) global_id: vec3<u32>,
     @builtin(num_workgroups) num_workgroups: vec3<u32>,
@@ -59,13 +59,8 @@ fn erf_scalar(x: f32) -> f32 {
     return erf_positive_scalar(x);
 }
 
-fn erf(x: vec4<f32>) -> vec4<f32> {
-    return vec4(
-       erf_scalar(x[0]),
-       erf_scalar(x[1]),
-       erf_scalar(x[2]),
-       erf_scalar(x[3]),
-    );
+fn erf(x: f32) -> f32 {
+   return erf_scalar(x);
 }
                 
 

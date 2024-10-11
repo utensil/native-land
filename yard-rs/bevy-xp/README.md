@@ -27,3 +27,7 @@ For rust-gpu, should check out:
 - Infrastructure for using ShaderToy as a test corpus https://github.com/EmbarkStudios/rust-gpu/issues/1104
   - Add some more example shaders : https://github.com/EmbarkStudios/rust-gpu/pull/1146
 - https://github.com/EmbarkStudios/rust-gpu/issues?q=
+
+For CubeCL, should check out:
+
+- [CubeCL Architecture Overview - Running Rust on your GPU (WebGPU, CUDA)](https://gist.github.com/nihalpasham/570d4fe01b403985e1eaf620b6613774)
