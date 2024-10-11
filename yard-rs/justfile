@@ -37,9 +37,18 @@ cl-test:
     git checkout {{BRANCH}}
 
 # breakout scene_viewer
-# hello_world storage_buffer gpu_readback
+# storage_buffer gpu_readback
+# low_power monitor_info screenshot transparent_window
+# 3d_viewport_to_world anisotropy camera_sub_view depth_of_field fog_volumes lightmaps
+# motion_blur pbr post_processing query_gltf_primitives reflection_probes render_to_texture
+# split_screen spotlight ssr tonemapping transmission two_passes volumetric_fog 
+# Not enough memory left: meshlet pbr_multi_layer_material_textures
+# custom_post_processing extended_material gpu_readback shader_prepass storage_buffer fps_overlay hot_asset_reloading asset_processing
+# headless_renderer
+# not working: loading_screen
+
 try-bevy +PARAMS: (prep-ex "https://github.com/bevyengine/bevy" "bevy" "main")
-    cd {{example_xp / "bevy"}} && cargo run --release --example {{PARAMS}}
+    cd {{example_xp / "bevy"}} && cargo run --features="jpeg pbr_anisotropy_texture bevy_dev_tools file_watcher" --release --example {{PARAMS}}
 
 gltf:
     just try-bevy scene_viewer {{ example_xp / "black_hole" / "scene.gltf" }}
@@ -48,7 +57,7 @@ try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_comp
     cd {{example_xp / "compute"}} && cargo run --release --example {{PARAMS}}
 
 # shaders/compute-shader runners/wgpu multibuilder 
-# not working:
+# not working: 
 # - runners/ash : path error
 # use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
 try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
