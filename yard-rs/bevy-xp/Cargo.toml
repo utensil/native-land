@@ -8,24 +8,15 @@ version.workspace = true
 # https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
 [dependencies]
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
-bevy_easy_compute = { git = "https://github.com/AnthonyTornetta/bevy_easy_compute", rev = "bbaa8b83472e96e035008bb06c88333023f63503" }
-# parking_lot = ">=0.12.3"
-# bytemuck = ">=1.16.1"
-# # The following are only needed to support the `pipeline_cache` "hack". See:
-# # https://github.com/AnthonyTornetta/bevy_easy_compute/issues/7
-# wgpu = { version = "0.20.1", features = ["naga"] }
-# naga = { version = "0.20.0", features = ["wgsl-in"] }
-# naga_oil = { version = "0.14.0", default-features = false, features = [
-#     "test_shader",
-# ] }
+bevy_easy_compute = "0.14.0" # { git = "https://github.com/AnthonyTornetta/bevy_easy_compute", rev = "bbaa8b83472e96e035008bb06c88333023f63503" }
 
 [dependencies.bevy]
-version = "0.14.1"
-default-features = false
-# See https://github.com/bevyengine/bevy/blob/main/docs/cargo_features.md
-features = [
-  "bevy_core_pipeline",
-  "multi_threaded",
-  "sysinfo_plugin",
-  "x11",
-]
+version = "0.14.2"
+# default-features = false
+# # See https://github.com/bevyengine/bevy/blob/main/docs/cargo_features.md
+# features = [
+#   "bevy_core_pipeline",
+#   "multi_threaded",
+#   "sysinfo_plugin",
+#   "x11",
+# ]
