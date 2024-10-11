@@ -23,19 +23,27 @@ cl-run:
     clear
     cd {{invocation_directory()}}; cargo run --example gelu --features wgpu
 
-@prep-bevy:
+@prep-ex URL DIR BRANCH:
     #!/usr/bin/env bash
     mkdir -p {{example_xp}}
     cd {{example_xp}}
-    if [[ ! -d {{example_xp / "bevy"}} ]]; then
-        git clone https://github.com/bevyengine/bevy {{example_xp / "bevy"}}
-        cd {{example_xp / "bevy"}}
-        git checkout latest
+    if [[ ! -d {{example_xp / DIR}} ]]; then
+        git clone {{URL}} {{example_xp / DIR}}
     fi
+    cd {{example_xp / DIR}}
+    git checkout {{BRANCH}}
 
 # breakout scene_viewer
-try-bevy +PARAMS: prep-bevy
+# hello_world 
+try-bevy +PARAMS: (prep-ex "https://github.com/bevyengine/bevy" "bevy" "latest")
     cd {{example_xp / "bevy"}} && cargo run --release --example {{PARAMS}}
 
 gltf:
     just try-bevy scene_viewer {{ example_xp / "black_hole" / "scene.gltf" }}
+
+try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_compute" "compute" "main")
+    cd {{example_xp / "compute"}} && cargo run --release --example {{PARAMS}}
+
+mp:
+    just try-compute multi_pass
+

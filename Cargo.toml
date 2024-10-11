@@ -29,9 +29,9 @@ opt-level = 1
 # Enable a large amount of optimization in the dev profile for dependencies.
 [profile.dev.package."*"]
 # 3:49.63 total, 3.9GiB total 
-# opt-level = 1
+opt-level = 1
 # 4:34.71 total, 4.5GiB total
-opt-level = 2
+# opt-level = 2
 # 5:06.65 total, 4.5GiB total
 # opt-level = 3
 
