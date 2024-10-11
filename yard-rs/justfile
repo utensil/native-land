@@ -44,6 +44,14 @@ gltf:
 try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_compute" "compute" "main")
     cd {{example_xp / "compute"}} && cargo run --release --example {{PARAMS}}
 
+# shaders/compute-shader runners/wgpu
+# use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
+try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
+    cd {{example_xp / "rust-gpu" / "examples" / EX }} && cargo run --release
+
+rm-ex NAME:
+    rm -rf {{example_xp / NAME}}
+
 mp:
     just try-compute multi_pass
 
