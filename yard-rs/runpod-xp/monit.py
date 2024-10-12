@@ -94,7 +94,7 @@ def monit_runpod(**kwargs):
                     log_info(msg)
             else:
                 log_info('No pod running, disabling monit')
-                pexpect.run('gh workflow disable monit-runpod')
+                pexpect.run('gh workflow disable runpod-monit.yml')
     except Exception as ex:
         log_error("Something went wrong with monit_runpod", exc_info=ex)
 

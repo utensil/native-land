@@ -3,3 +3,9 @@ prep:
 
 monit:
     python monit.py
+
+kill:
+    python kill.py
+
+test-kill:
+    RUNPOD_POD_ID=1 python kill.py
