@@ -24,9 +24,8 @@ cd /content/
 
 if [ ! -d "native-land" ]; then
   git clone https://github.com/utensil/native-land
-# don't update between run yet
-# else
-#   (cd native-land && git pull)
+else
+  (cd native-land && git pull)
 fi
 
 cd native-land
