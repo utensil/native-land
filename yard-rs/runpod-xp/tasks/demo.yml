@@ -58,3 +58,48 @@ runpod:
   log_eval: true
   env:
     CUDA_LAUNCH_BLOCKING: 1
+
+# 2024-10-12T14:47:35.342959379Z + cd yard-rs/bevy-xp
+# 2024-10-12T14:47:35.347219433Z + cargo test
+# 2024-10-12T14:47:39.122856076Z     Finished `test` profile [optimized + debuginfo] target(s) in 3.69s
+# 2024-10-12T14:47:39.143681496Z      Running unittests src/main.rs (/content/native-land/target/debug/deps/bevy_xp-097cf5cdae2b7827)
+# 2024-10-12T14:47:39.215458352Z 
+# 2024-10-12T14:47:39.215484792Z running 0 tests
+# 2024-10-12T14:47:39.216029315Z 
+# 2024-10-12T14:47:39.216043815Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+# 2024-10-12T14:47:39.231541144Z + cd yard-rs/cubecl-xp
+# 2024-10-12T14:47:39.234185880Z + cargo test
+# 2024-10-12T14:47:41.840204482Z     Finished `test` profile [optimized + debuginfo] target(s) in 2.54s
+# 2024-10-12T14:47:41.880788687Z      Running unittests src/lib.rs (/content/native-land/target/debug/deps/cubecl_xp-efd18c3ae8d2b870)
+# 2024-10-12T14:47:41.921110131Z 
+# 2024-10-12T14:47:41.921154400Z running 0 tests
+# 2024-10-12T14:47:41.922071926Z      Running tests/test_gelu.rs (/content/native-land/target/debug/deps/test_gelu-3a9ad9539548dd90)
+# 2024-10-12T14:47:41.922155207Z 
+# 2024-10-12T14:47:41.922185407Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+# 2024-10-12T14:47:41.922191317Z 
+# 2024-10-12T14:47:41.971033129Z 
+# 2024-10-12T14:47:41.971063960Z running 2 tests
+# 2024-10-12T14:47:42.049981266Z error: XDG_RUNTIME_DIR not set in the environment.
+# 2024-10-12T14:47:42.146334504Z test test_launch ... FAILED
+# 2024-10-12T14:47:42.148032974Z error: XDG_RUNTIME_DIR not set in the environment.
+# 2024-10-12T14:47:42.151253572Z test test_shader ... FAILED
+# 2024-10-12T14:47:42.151261023Z 
+# 2024-10-12T14:47:42.151266023Z failures:
+# 2024-10-12T14:47:42.151271503Z 
+# 2024-10-12T14:47:42.151276463Z ---- test_launch stdout ----
+# 2024-10-12T14:47:42.151327523Z thread 'test_launch' panicked at /root/.cargo/git/checkouts/cubecl-aa41a28b39b598f9/eda5864/crates/cubecl-wgpu/src/runtime.rs:312:17:
+# 2024-10-12T14:47:42.151340232Z No adapter found for graphics API AutoGraphicsApi
+# 2024-10-12T14:47:42.151345633Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+# 2024-10-12T14:47:42.151351284Z 
+# 2024-10-12T14:47:42.151356284Z ---- test_shader stdout ----
+# 2024-10-12T14:47:42.151361384Z thread 'test_shader' panicked at /root/.cargo/git/checkouts/cubecl-aa41a28b39b598f9/eda5864/crates/cubecl-wgpu/src/runtime.rs:312:17:
+# 2024-10-12T14:47:42.151366873Z No adapter found for graphics API AutoGraphicsApi
+# 2024-10-12T14:47:42.151371973Z 
+# 2024-10-12T14:47:42.151376933Z 
+# 2024-10-12T14:47:42.151381784Z failures:
+# 2024-10-12T14:47:42.151387224Z     test_launch
+# 2024-10-12T14:47:42.151392424Z     test_shader
+# 2024-10-12T14:47:42.151397353Z 
+# 2024-10-12T14:47:42.151402253Z test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+# 2024-10-12T14:47:42.151407873Z 
+# 2024-10-12T14:47:42.195014326Z error: test failed, to rerun pass `--test test_gelu`
