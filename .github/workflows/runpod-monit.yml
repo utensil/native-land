@@ -4,6 +4,7 @@ permissions:
     actions: write
 
 on:
+  workflow_dispatch:
   schedule:
   # https://stackoverflow.com/a/60095391/200764
   # The shortest interval you can run scheduled workflows is once every 5 minutes.
