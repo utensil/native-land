@@ -5,7 +5,7 @@ default:
     just test-nightly
 
 test:
-    cargo test --workspace
+    cargo test --workspace --features=wgpu
 
 build:
     cargo build --workspace
