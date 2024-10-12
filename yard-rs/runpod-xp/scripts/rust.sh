@@ -37,8 +37,8 @@ cd yard-rs/cubecl-xp
 cargo test --features=cuda
  cargo run --example gelu --features=cuda
 
-pip install runpod
 cd /content/native-land/yard-rs/runpod-xp
+pip install -r requirements-runpod.txt
 just kill
 
 sleep infinity
