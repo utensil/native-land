@@ -1,4 +1,4 @@
-name: monit-runpod
+name: runpod-monit
 
 permissions:
     actions: write
@@ -9,7 +9,6 @@ on:
 
 jobs:
   monit:
-    name: monit-runpod
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -23,8 +22,8 @@ jobs:
     - name: Monit
       run: |
         cd yard-rs/runpod-xp
-        just prep-runpod
-        just monit-runpod
+        just prep
+        just monit
       env:
         RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
