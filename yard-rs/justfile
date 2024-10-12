@@ -91,6 +91,12 @@ try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
 try-wg : (prep-ex "https://github.com/gfx-rs/wgpu" "wgpu" "trunk")
     cd {{example_xp / "wgpu" }} && cargo bench -p wgpu-benchmark --features tracy
 
+# need to change the version of tracy-client to match the tracy installed, see https://github.com/nagisa/rust_tracy_client
+# but still only CPU usage
+# press space generates a trace.json to view on https://ui.perfetto.dev/ but little info on GPU
+try-wp: (prep-ex "https://github.com/Wumpf/wgpu-profiler" "wgpu-profiler" "main")
+    cd {{example_xp / "wgpu-profiler" }} && cargo run --example demo
+
 rm-ex NAME:
     rm -rf {{example_xp / NAME}}
 
