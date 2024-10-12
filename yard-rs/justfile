@@ -30,13 +30,13 @@ prep-tr:
     brew install tracy
 
 tr-bevy:
-    @echo "open another terminal and run: cd {{invocation_directory()}}; cargo run --release --features bevy/trace_tracy"
+    @echo "open another terminal and run: cd {{invocation_directory()}}; cargo run --features bevy/trace_tracy"
     cd {{invocation_directory()}}; tracy-capture -f -o my_capture.tracy
     @eacho "run: tracy my_capture.tracy"
 
 tr-bevy-live:
     tracy -a 127.0.0.1 -p 8086 &
-    cd {{invocation_directory()}}; cargo run --release --features bevy/trace_tracy
+    cd {{invocation_directory()}}; RUST_LOG=info cargo run --features bevy/trace_tracy
 
 tbl: tr-bevy-live
 
@@ -84,6 +84,12 @@ try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_comp
 # use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
 try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
     cd {{example_xp / "rust-gpu" / "examples" / EX }} && cargo run --release
+
+# need to manually uncomment the features in Cargo.toml
+# and separately open: tracy -a 127.0.0.1 -p 8086
+# unfortunately, it seems to only trace CPU, not GPU
+try-wg : (prep-ex "https://github.com/gfx-rs/wgpu" "wgpu" "trunk")
+    cd {{example_xp / "wgpu" }} && cargo bench -p wgpu-benchmark --features tracy
 
 rm-ex NAME:
     rm -rf {{example_xp / NAME}}

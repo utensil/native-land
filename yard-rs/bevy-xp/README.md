@@ -40,6 +40,9 @@ For benchmarking and profiling, should check out:
   - https://github.com/mstange/samply/
 - https://github.com/wolfpld/tracy (seems to be the best, wide CPU/GPU support)
   - https://github.com/nagisa/rust_tracy_client
+    - https://github.com/Wumpf/wgpu-profiler/pull/35
+      - [doesn't support GPU profiling for Metal](https://github.com/Wumpf/wgpu-profiler/blob/920b845e3a9d5c86310b5bc0ea3d56dbb45eaeda/src/tracy.rs#L44)
   - https://github.com/tokio-rs/loom
 - https://github.com/Celtoys/Remotery
 - https://github.com/bevyengine/bevy/blob/main/docs/profiling.md (most informative on profiling)
+- https://github.com/mikesart/gpuvis
