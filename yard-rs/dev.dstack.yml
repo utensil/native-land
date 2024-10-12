@@ -1,0 +1,17 @@
+type: dev-environment
+# The name is optional, if not specified, generated randomly
+name: vscode    
+
+ide: vscode
+
+# Use either spot or on-demand instances
+# spot_policy accepts spot, on-demand, and auto
+spot_policy: auto
+
+# Use only listed backends
+backends: [runpod]
+
+resources:
+  gpu:
+    memory: 48GB
+    count: 1

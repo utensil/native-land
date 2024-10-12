@@ -1,0 +1,24 @@
+resources:
+  cloud: runpod 
+  accelerators: A40:1
+
+# Working directory (optional) containing the project codebase.
+# Its contents are synced to ~/sky_workdir/ on the cluster.
+# workdir: ../
+
+# Typical use: pip install -r requirements.txt
+# Invoked under the workdir (i.e., can use its files).
+setup: |
+  echo "Running setup."
+  curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y
+
+# Typical use: make use of resources, such as running training.
+# Invoked under the workdir (i.e., can use its files).
+run: |
+  # ls -r ~/sky_workdir/
+  cd ~/sky_workdir/
+  git clone https://github.com/utensil/native-land
+  cd native-land
+  just prep-linux
+  just test

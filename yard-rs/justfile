@@ -103,3 +103,49 @@ rm-ex NAME:
 mp:
     just try-compute multi_pass
 
+prep-dstack:
+    @echo "run this first: pyenv shell 3.11"
+    pip install "dstack[all]" -U
+
+# not a fan of the idea of needing a server or a registration on https://sky.dstack.ai/
+# only the latter works on CI
+# ds:
+#     nohup dstack server &
+
+@init-dstack:
+    echo "config backends on https://sky.dstack.ai/ then run dstack config --url https://sky.dstack.ai [more options]"
+    echo "then run: dstack init"
+    # need to setup backends in http://127.0.0.1:3000/projects/main first
+    # see https://dstack.ai/docs/reference/server/config.yml/#runpod
+
+# dstack seems to have extra difficulty requesting resources, it always takes a long time, and mostly fails
+
+gdev:
+    dstack apply -f dev.dstack.yml
+
+grun:
+    yes|dstack apply -f task.dstack.yml
+
+prep-sky:
+    @echo "run this first: pyenv shell 3.11"
+    pip install runpod
+    pip install "skypilot-nightly[runpod]"
+    runpod config
+    sky check runpod
+
+# https://skypilot.readthedocs.io/en/latest/examples/interactive-development.html
+# # -i 5 stop     Stopping not supported
+#  --use-spot     Catalog does not contain any instances satisfying the request
+# not a fan of using ForwardAgent, it's a dealbreaker
+# see https://github.com/skypilot-org/skypilot/blob/fdd68b209ee74f9282fac5c6834907d5fe72d255/sky/utils/command_runner.py#L57
+skyup:
+    cd {{justfile_directory()}}; yes|sky launch -c hello hello.sky.yml
+
+skydown:
+    cd {{justfile_directory()}}; yes|sky down hello
+
+skyrun +PARAMS:
+    cd {{justfile_directory()}}; sky exec hello {{PARAMS}}
+
+skyssh:
+    cd {{justfile_directory()}}; ssh hello

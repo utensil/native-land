@@ -1,3 +1,6 @@
+# to install just:
+# run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
 default:
     just test-nightly
 
@@ -33,6 +36,22 @@ kill NAME:
 
 status:
     watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- git status
+
+prep-linux:
+    #!/usr/bin/env bash
+    apt update
+    apt install libwebkit2gtk-4.1-dev \
+    build-essential \
+    pkg-config \
+    curl \
+    wget \
+    file \
+    libxdo-dev \
+    libssl-dev \
+    libayatana-appindicator3-dev \
+    librsvg2-dev \
+    libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
+
 
 # clone-ex:
 #     #!/usr/bin/env bash
