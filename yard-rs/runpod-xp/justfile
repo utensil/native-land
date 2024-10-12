@@ -1,3 +1,7 @@
+set dotenv-load
+
+apikey := env_var("RUNPOD_API_KEY")
+
 prep:
     pip install -r requirements-runpod.txt
 
@@ -7,5 +11,18 @@ monit:
 kill:
     python kill.py
 
-test-kill:
-    RUNPOD_POD_ID=1 python kill.py
+test-kill ID:
+    RUNPOD_POD_ID={{ID}} python kill.py
+
+run CONFIG:
+    python run.py {{ justfile_directory() / "tasks" / CONFIG }}
+
+test-run:
+    just run demo.yml
+
+gpus:
+    #!/usr/bin/env bash
+    curl --request POST \
+        --header 'content-type: application/json' \
+        --url 'https://api.runpod.io/graphql?api_key={{ apikey }}' \
+        --data '{"query": "query GpuTypes { gpuTypes { id displayName memoryInGb } }"}'| jq | tee gpus.json |jq ".data.gpuTypes[].id"

@@ -1,0 +1,60 @@
+task: 42
+runpod:
+  entry: |
+    bash -c "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/utensil/native-land/main/yard-rs/runpod-xp/scripts/rust.sh -sSf | bash"
+
+  # "AMD Instinct MI300X OAM"
+  # "NVIDIA A100 80GB PCIe"
+  # "NVIDIA A100-SXM4-80GB"
+  # "NVIDIA A30"
+  # "NVIDIA A40"
+  # "NVIDIA GeForce RTX 3070"
+  # "NVIDIA GeForce RTX 3080"
+  # "NVIDIA GeForce RTX 3080 Ti"
+  # "NVIDIA GeForce RTX 3090"
+  # "NVIDIA GeForce RTX 3090 Ti"
+  # "NVIDIA GeForce RTX 4070 Ti"
+  # "NVIDIA GeForce RTX 4080"
+  # "NVIDIA GeForce RTX 4080 SUPER"
+  # "NVIDIA GeForce RTX 4090"
+  # "NVIDIA H100 80GB HBM3"
+  # "NVIDIA H100 NVL"
+  # "NVIDIA H100 PCIe"
+  # "NVIDIA L4"
+  # "NVIDIA L40"
+  # "NVIDIA L40S"
+  # "NVIDIA RTX 2000 Ada Generation"
+  # "NVIDIA RTX 4000 Ada Generation"
+  # "NVIDIA RTX 4000 SFF Ada Generation"
+  # "NVIDIA RTX 5000 Ada Generation"
+  # "NVIDIA RTX 6000 Ada Generation"
+  # "NVIDIA RTX A2000"
+  # "NVIDIA RTX A4000"
+  # "NVIDIA RTX A4500"
+  # "NVIDIA RTX A5000"
+  # "NVIDIA RTX A6000"
+  # "Tesla V100-FHHL-16GB"
+  # "Tesla V100-PCIE-16GB"
+  # "Tesla V100-SXM2-16GB"
+  # "Tesla V100-SXM2-32GB"
+  gpu: NVIDIA RTX A5000 
+  # pod_type: INTERRUPTABLE
+  cloud_type: "ALL" # "ALL" "COMMUNITY" "SECURE"
+  max_bid_per_gpu: 2.0
+  # template_id: 758uq6u5fc
+  gpu_count: 1
+  container_disk_in_gb: 50
+  volume_in_gb: 200
+  min_vcpu_count: 8
+  min_memory_in_gb: 29
+  # min_download: 2000
+  # min_upload: 1500
+  # TODO: change this to longer
+  stop_after: 60 
+  terminate_after: -1
+  debug: false
+  # Set to false to stay running after training
+  one_shot: true
+  log_eval: true
+  env:
+    CUDA_LAUNCH_BLOCKING: 1

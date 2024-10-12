@@ -2,47 +2,16 @@
 import fire
 import logging
 import os
+import sys
 import runpod
-from discord import SyncWebhook
 import pexpect
-
-POLL_PERIOD = 5  # 5 seconds
-MAX_WAIT_TIME = 60 * 10  # 10 minutes
-
-# 15 minutes to prevent accidental starting a pod and forgot to stop
-DEFAULT_STOP_AFTER = 60 * 15
-# 24 hours to prevent accidental starting a pod and forgot to terminate
-DEFAULT_TERMINATE_AFTER = 60 * 60 * 24
-
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG"))
+sys.path.insert(0, ".")
+from common import log_info, log_error  # noqa: F403,E402
 
 # os.environ["RUNPOD_DEBUG"] = 'true'
 
 
-def notify_discord(msg):
-    webhook = SyncWebhook.from_url(os.getenv("DISCORD_WEBHOOK_URL"))
-    webhook.send(msg)
-
-
-def log_info(msg):
-    logging.info(msg)
-    notify_discord(msg)
-
-
-def log_error(msg, exc_info=None):
-    logging.error(msg, exc_info=exc_info)
-    if exc_info is not None:
-        notify_discord(f'{msg}: {exc_info}')
-    else:
-        notify_discord(msg)
-
-
-def terminate(pod):
-    runpod.terminate_pod(pod['id'])
-    log_info(f"Pod {pod['id']} terminated")
-
-
-def monit_runpod(**kwargs):
+def monit(**kwargs):
     runpod_api_key = os.getenv("RUNPOD_API_KEY")
 
     if runpod_api_key is None:
@@ -100,4 +69,4 @@ def monit_runpod(**kwargs):
 
 
 if __name__ == "__main__":
-    fire.Fire(monit_runpod)
+    fire.Fire(monit)

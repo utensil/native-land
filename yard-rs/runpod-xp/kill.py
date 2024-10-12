@@ -1,26 +1,14 @@
 import os
+import sys
 import runpod
-from discord import SyncWebhook
-import logging
-
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
-
-
-# TODO: avoid code dup
-def notify_discord(msg):
-    webhook = SyncWebhook.from_url(os.getenv("DISCORD_WEBHOOK_URL"))
-    webhook.send(msg)
-
-
-def log_info(msg):
-    logging.info(msg)
-    notify_discord(msg)
+sys.path.insert(0, ".")
+from common import log_info  # noqa: F403,E402
 
 
 runpod.api_key = os.getenv("RUNPOD_API_KEY")
 
 pod_id = os.getenv("RUNPOD_POD_ID")
 
-log_info(f"Pod {pod_id} terminated on train error")
+log_info(f"Pod {pod_id} terminated on train error")  # noqa: F405
 
 runpod.terminate_pod(pod_id)
