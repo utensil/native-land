@@ -1,0 +1,8 @@
+alias pr := prep-runpod
+alias mr := monit-runpod
+
+prep-runpod:
+    pip install -r requirements-runpod.txt
+
+monit-runpod:
+    python monit-runpod.py
