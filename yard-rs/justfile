@@ -124,7 +124,7 @@ gdev:
     dstack apply -f dev.dstack.yml
 
 grun:
-    yes|dstack apply -f task.dstack.yml
+    yes|dstack apply -y -f task.dstack.yml
 
 prep-sky:
     @echo "run this first: pyenv shell 3.11"
@@ -149,3 +149,14 @@ skyrun +PARAMS:
 
 skyssh:
     cd {{justfile_directory()}}; ssh hello
+
+skysee:
+    cd {{justfile_directory()}}; sky show-gpus -a|grep -i runpod|grep -F "$ 0."
+
+skykill:
+    #!/usr/bin/env python
+    import runpod
+    import os
+    runpod.api_key = os.getenv("RUNPOD_API_KEY")
+    pod_id = os.getenv("RUNPOD_POD_ID")
+    runpod.terminate_pod(pod_id)

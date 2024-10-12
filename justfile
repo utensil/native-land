@@ -50,7 +50,8 @@ prep-linux:
     libssl-dev \
     libayatana-appindicator3-dev \
     librsvg2-dev \
-    libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
+    libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 \
+    libgtk-3-dev libglib2.0-dev 
 
 
 # clone-ex:

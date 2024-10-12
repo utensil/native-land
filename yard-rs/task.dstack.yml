@@ -24,9 +24,9 @@ commands:
 
 resources:
   gpu:
-    memory: 48GB
+    memory: 10GB..48GB
     count: 1
 
 max_duration: 1h
-max_price: 0.5
+max_price: 1.0
 termination_idle_time: 5m
