@@ -17,6 +17,7 @@ cd $WORKSPACE
 
 curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin || which just
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y
+. "$HOME/.cargo/env"
 
 mkdir -p /content/
 cd /content/
