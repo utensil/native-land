@@ -35,7 +35,7 @@ cargo test
 cd ../../
 cd yard-rs/cubecl-xp
 cargo test --features=cuda
- cargo run --example gelu
+ cargo run --example gelu --features=cuda
 
 pip install runpod
 cd /content/native-land/yard-rs/runpod-xp
