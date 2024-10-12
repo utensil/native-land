@@ -31,3 +31,15 @@ For rust-gpu, should check out:
 For CubeCL, should check out:
 
 - [CubeCL Architecture Overview - Running Rust on your GPU (WebGPU, CUDA)](https://gist.github.com/nihalpasham/570d4fe01b403985e1eaf620b6613774)
+
+For benchmarking and profiling, should check out:
+
+- https://nnethercote.github.io/perf-book/benchmarking.html
+- https://nnethercote.github.io/perf-book/profiling.html
+  - https://github.com/flamegraph-rs/flamegraph
+  - https://github.com/mstange/samply/
+- https://github.com/wolfpld/tracy (seems to be the best, wide CPU/GPU support)
+  - https://github.com/nagisa/rust_tracy_client
+  - https://github.com/tokio-rs/loom
+- https://github.com/Celtoys/Remotery
+- https://github.com/bevyengine/bevy/blob/main/docs/profiling.md (most informative on profiling)

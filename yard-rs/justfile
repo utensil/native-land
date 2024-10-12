@@ -23,8 +23,30 @@ cl-run:
     clear
     cd {{invocation_directory()}}; cargo run --example gelu --features wgpu
 
-cl-test:
+test:
     cd {{invocation_directory()}}; cargo test
+
+prep-tr:
+    brew install tracy
+
+tr-bevy:
+    @echo "open another terminal and run: cd {{invocation_directory()}}; cargo run --release --features bevy/trace_tracy"
+    cd {{invocation_directory()}}; tracy-capture -f -o my_capture.tracy
+    @eacho "run: tracy my_capture.tracy"
+
+tr-bevy-live:
+    tracy -a 127.0.0.1 -p 8086 &
+    cd {{invocation_directory()}}; cargo run --release --features bevy/trace_tracy
+
+tbl: tr-bevy-live
+
+# not working
+ct-bevy:
+    cd {{invocation_directory()}}; cargo run --release --features bevy/trace_chrome
+
+# https://doc.rust-lang.org/nightly/cargo/reference/timings.html
+bt *PARAMS:
+    cd {{invocation_directory()}}; cargo build --timings {{PARAMS}}
 
 @prep-ex URL DIR BRANCH:
     #!/usr/bin/env bash
