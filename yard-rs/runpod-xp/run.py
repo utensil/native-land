@@ -67,7 +67,7 @@ def run(
 
     config = Path(config.strip())
     log_info(f"Setting up RunPod with config: {config}")
-    pexpect.run('gh workflow enable monit.yml')
+    pexpect.run('gh workflow enable runpod-monit.yml')
 
     # load the config from the yaml file
     # Mostly borrowed from https://github.com/utensil/axolotl/blob/local_dataset/scripts/finetune.py
