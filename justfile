@@ -40,7 +40,7 @@ status:
 prep-linux:
     #!/usr/bin/env bash
     apt update
-    apt install libwebkit2gtk-4.1-dev \
+    apt install -y libwebkit2gtk-4.1-dev \
     build-essential \
     pkg-config \
     curl \
