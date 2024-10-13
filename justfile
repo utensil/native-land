@@ -4,66 +4,67 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 
 default:
-    just --list
+    just list
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 test:
     just test-nightly
 
-[group('shared'), no-cd]
+[group('util'), no-cd]
 list:
     just --list
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 test-stable:
     cargo +stable test
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 build-stable:
     cargo +stable build
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 prep-stable:
     # https://rust-analyzer.github.io/manual.html#installation
     rustup toolchain install stable
     rustup component add rust-src
     rustup component add rust-analyzer
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 prep-nightly:
     rustup toolchain install nightly
     rustup component add rust-src --toolchain nightly
     rustup component add rust-analyzer --toolchain nightly
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 @test-nightly:
     # cargo +nightly build --all-targets --keep-going
     # cargo +nightly test --all-targets --no-fail-fast
     yes|cargo +nightly nextest run --all-targets --no-fail-fast --retries 2
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 cov: cov-nightly
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 cov-nightly:
     yes|cargo +nightly llvm-cov nextest --all-targets --no-fail-fast --retries 2
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 build-nightly:
     cargo +nightly build
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 nightly: prep-nightly test-nightly
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 fmt:
     cargo fmt
 
-[group('shared'), no-cd]
+[group('util'), no-cd]
 kill NAME:
     ps aux|grep {{NAME}}|grep -v grep|grep -v just|awk '{print $2}'|xargs kill -9
 
-_status:
+[private]
+status:
     watchexec --quiet --no-meta --debounce 500ms --project-origin . -w . --emit-events-to=stdio -- git status
 
 [linux]
@@ -84,19 +85,19 @@ prep-linux:
     libgtk-3-dev libglib2.0-dev
 
 
-[unix]
+[unix, private]
 @prep-binstall-unix:
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash 
 
-[macos]
+[macos, private]
 @prep-binstall:
     which cargo-binstall || (just prep-binstall-unix) || brew install cargo-binstall
 
-[windows]
+[windows, private]
 @prep-binstall:
     cargo install cargo-binstall
 
-[group('shared'), no-cd]
+[group('rust'), no-cd]
 @prep-test: prep-binstall
     which cargo-nextest || (yes|cargo binstall cargo-nextest --secure)
     which cargo-llvm-cov || (yes|cargo binstall cargo-llvm-cov --secure)
