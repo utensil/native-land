@@ -6,6 +6,9 @@ export HOMEBREW_NO_AUTO_UPDATE := "1"
 default:
     just list
 
+ci:
+    just cov
+
 [group('rust'), no-cd]
 test:
     just test-nightly
