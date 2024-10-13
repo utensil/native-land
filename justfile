@@ -27,7 +27,10 @@ prep-nightly:
 @test-nightly:
     # cargo +nightly build --all-targets --keep-going
     # cargo +nightly test --all-targets --no-fail-fast
-    cargo +nightly nextest run
+    yes|cargo +nightly nextest run --all-targets --no-fail-fast --retries 2
+
+cov-nightly:
+    yes|cargo +nightly llvm-cov nextest --all-targets --no-fail-fast --retries 2
 
 build-nightly:
     cargo +nightly build
@@ -67,7 +70,7 @@ prep-binstall:
 
 [macos]
 prep-binstall:
-    brew install cargo-binstall
+    cargo binstall -V || brew install cargo-binstall
 
 [windows]
 prep-binstall:
@@ -75,6 +78,7 @@ prep-binstall:
 
 prep-test: prep-binstall
     yes|cargo binstall cargo-nextest --secure
+    yes|cargo binstall cargo-llvm-cov --secure
 
 # clone-ex:
 #     #!/usr/bin/env bash

@@ -98,7 +98,7 @@ jobs:
       - name: Run tests (nightly)
         run: |
           just prep-test
-          just test-nightly
+          just cov-nightly
     # - name: Install Python ${{ matrix.python-version }}
     #   uses: actions/setup-python@v5
     #   with:
