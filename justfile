@@ -21,7 +21,8 @@ prep-nightly:
     rustup component add rust-analyzer --toolchain nightly
 
 test-nightly:
-    cargo +nightly test --workspace --features=wgpu
+    cargo +nightly build --workspace --features=wgpu --all-targets --keep-going
+    cargo +nightly test --workspace --features=wgpu --all-targets --no-fail-fast
 
 build-nightly:
     cargo +nightly build --workspace
