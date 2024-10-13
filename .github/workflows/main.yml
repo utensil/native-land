@@ -52,7 +52,7 @@ jobs:
           components: rustfmt
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.36.0,cargo-binstall,cargo-nextest,cargo-llvm-cov
+          tool: just@1.36.0,cargo-binstall,cargo-nextest,cargo-llvm-cov,deepsource
       - uses: actions/cache@v4
         with:
           path: |
@@ -94,9 +94,12 @@ jobs:
       #   run: cargo +nightly fmt --all --check -- --error-on-unformatted --unstable-features
       # - name: Run tests
       #   run: just test
-      - name: Run tests (nightly)
+      - name: Run CI
         run: |
           just ci
+          deepsource report --analyzer test-coverage --key rust --value-file lcov.info
+        env:
+          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
     # - name: Install Python ${{ matrix.python-version }}
     #   uses: actions/setup-python@v5
     #   with:
