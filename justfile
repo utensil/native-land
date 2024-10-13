@@ -39,14 +39,14 @@ prep-nightly:
 @test-nightly:
     # cargo +nightly build --all-targets --keep-going
     # cargo +nightly test --all-targets --no-fail-fast
-    yes|cargo +nightly nextest run --all-targets --no-fail-fast --retries 2
+    yes|cargo +nightly nextest run --no-fail-fast --retries 2
 
 [group('rust'), no-cd]
 cov: cov-nightly
 
 [group('rust'), no-cd]
 cov-nightly:
-    yes|cargo +nightly llvm-cov nextest --all-targets --no-fail-fast --retries 2
+    yes|cargo +nightly llvm-cov --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
 
 [group('rust'), no-cd]
 build-nightly:
@@ -89,13 +89,17 @@ prep-linux:
 @prep-binstall-unix:
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash 
 
+[linux, private]
+@prep-binstall:
+    which cargo-binstall || (just prep-binstall-unix)
+
 [macos, private]
 @prep-binstall:
     which cargo-binstall || (just prep-binstall-unix) || brew install cargo-binstall
 
 [windows, private]
 @prep-binstall:
-    cargo install cargo-binstall
+    which cargo-binstall || cargo install cargo-binstall
 
 [group('rust'), no-cd]
 @prep-test: prep-binstall
