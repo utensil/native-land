@@ -20,3 +20,4 @@ yard-rs/example-xp/
 yard-rs/nohup.out
 yard-rs/runpod-xp/.env
 yard-rs/runpod-xp/__pycache__/
+**/lcov.info

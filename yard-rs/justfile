@@ -1,53 +1,73 @@
+set fallback
+
 example_xp := justfile_directory() / "example-xp"
 
 default:
-    just --list
+    just list
 
+[group('dx')]
 prep-dx:
     cargo install dioxus-cli
     @echo "create a new project: dx new"
 
+[group('dx')]
 dx-new:
     dx new
 
+[group('dx'), no-cd]
 dx-css:
-    cd {{invocation_directory()}}; bunx tailwindcss -i ./input.css -o ./assets/tailwind.css --watch
-dx-dev:
-    cd {{invocation_directory()}}; dx serve --hot-reload --platform desktop
-dx-test: dx-prep-test
-    cd {{invocation_directory()}}; cargo test
-dx-prep-test:
-    cd {{invocation_directory()}}; cargo add dioxus-ssr pretty_assertions futures
+    bunx tailwindcss -i ./input.css -o ./assets/tailwind.css --watch
 
+[group('dx'), no-cd]
+dx-dev:
+    dx serve --hot-reload --platform desktop
+
+[group('dx'), no-cd]
+dx-test: dx-prep-test
+    just test
+
+[group('dx'), no-cd]
+dx-cov: dx-prep-test
+    just cov
+
+[group('dx'), no-cd]
+dx-prep-test:
+    cargo add dioxus-ssr pretty_assertions futures
+
+[group('cl'), no-cd]
 cl-run:
     clear
-    cd {{invocation_directory()}}; cargo run --example gelu --features wgpu
+    cargo run --example gelu --features wgpu
 
-test:
-    cd {{invocation_directory()}}; cargo test
-
+[group('tracy'), no-cd, macos]
 prep-tr:
     brew install tracy
 
+[group('tracy'), no-cd]
 tr-bevy:
     @echo "open another terminal and run: cd {{invocation_directory()}}; cargo run --features bevy/trace_tracy"
-    cd {{invocation_directory()}}; tracy-capture -f -o my_capture.tracy
+    tracy-capture -f -o my_capture.tracy
     @eacho "run: tracy my_capture.tracy"
 
+[group('tracy'), no-cd]
 tr-bevy-live:
     tracy -a 127.0.0.1 -p 8086 &
-    cd {{invocation_directory()}}; RUST_LOG=info cargo run --features bevy/trace_tracy
+    RUST_LOG=info cargo run --features bevy/trace_tracy
 
+[group('tracy'), no-cd]
 tbl: tr-bevy-live
 
 # not working
+[group('tracy'), no-cd, private]
 ct-bevy:
-    cd {{invocation_directory()}}; cargo run --release --features bevy/trace_chrome
+    cargo run --release --features bevy/trace_chrome
 
 # https://doc.rust-lang.org/nightly/cargo/reference/timings.html
+[group('tracy'), no-cd]
 bt *PARAMS:
-    cd {{invocation_directory()}}; cargo build --timings {{PARAMS}}
+    cargo build --timings {{PARAMS}}
 
+[group('ex')]
 @prep-ex URL DIR BRANCH:
     #!/usr/bin/env bash
     mkdir -p {{example_xp}}
@@ -69,12 +89,15 @@ bt *PARAMS:
 # headless_renderer
 # not working: loading_screen
 
+[group('ex')]
 try-bevy +PARAMS: (prep-ex "https://github.com/bevyengine/bevy" "bevy" "main")
     cd {{example_xp / "bevy"}} && cargo run --features="jpeg pbr_anisotropy_texture bevy_dev_tools file_watcher" --release --example {{PARAMS}}
 
+[group('ex')]
 gltf:
     just try-bevy scene_viewer {{ example_xp / "black_hole" / "scene.gltf" }}
 
+[group('ex')]
 try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_compute" "compute" "main")
     cd {{example_xp / "compute"}} && cargo run --release --example {{PARAMS}}
 
@@ -82,24 +105,29 @@ try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_comp
 # not working: 
 # - runners/ash : path error
 # use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
+[group('ex')]
 try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
     cd {{example_xp / "rust-gpu" / "examples" / EX }} && cargo run --release
 
 # need to manually uncomment the features in Cargo.toml
 # and separately open: tracy -a 127.0.0.1 -p 8086
 # unfortunately, it seems to only trace CPU, not GPU
+[group('ex')]
 try-wg : (prep-ex "https://github.com/gfx-rs/wgpu" "wgpu" "trunk")
     cd {{example_xp / "wgpu" }} && cargo bench -p wgpu-benchmark --features tracy
 
 # need to change the version of tracy-client to match the tracy installed, see https://github.com/nagisa/rust_tracy_client
 # but still only CPU usage
 # press space generates a trace.json to view on https://ui.perfetto.dev/ but little info on GPU
+[group('ex')]
 try-wp: (prep-ex "https://github.com/Wumpf/wgpu-profiler" "wgpu-profiler" "main")
     cd {{example_xp / "wgpu-profiler" }} && cargo run --example demo
 
+[group('ex')]
 rm-ex NAME:
     rm -rf {{example_xp / NAME}}
 
+[group('ex')]
 mp:
     just try-compute multi_pass
 
