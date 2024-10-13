@@ -24,7 +24,7 @@ prep-nightly:
     rustup component add rust-src --toolchain nightly
     rustup component add rust-analyzer --toolchain nightly
 
-test-nightly:
+@test-nightly:
     # cargo +nightly build --all-targets --keep-going
     # cargo +nightly test --all-targets --no-fail-fast
     cargo +nightly nextest run

@@ -34,8 +34,8 @@ cd yard-rs/bevy-xp
 cargo test
 cd ../../
 cd yard-rs/cubecl-xp
-cargo test --features=cuda
- cargo run --example gelu --features=cuda
+cargo test --no-default-features --features=cuda
+cargo run --example gelu --no-default-features --features=cuda
 
 cd /content/native-land/yard-rs/runpod-xp
 pip install -r requirements-runpod.txt

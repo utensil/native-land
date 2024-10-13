@@ -9,6 +9,6 @@ runpod.api_key = os.getenv("RUNPOD_API_KEY")
 
 pod_id = os.getenv("RUNPOD_POD_ID")
 
-log_info(f"Pod {pod_id} terminated on train error")  # noqa: F405
+log_info(f"Pod {pod_id} terminated")  # noqa: F405
 
 runpod.terminate_pod(pod_id)
