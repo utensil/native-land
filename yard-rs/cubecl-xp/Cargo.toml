@@ -6,7 +6,7 @@ readme.workspace = true
 version.workspace = true
 
 [features]
-default = []
+default = ["wgpu"]
 wgpu = ["cubecl/wgpu"]
 cuda = ["cubecl/cuda"]
 

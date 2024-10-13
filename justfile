@@ -8,7 +8,7 @@ list:
     just --list
 
 test-stable:
-    cargo +stable test --features=wgpu
+    cargo +stable test
 
 build-stable:
     cargo +stable build
@@ -25,8 +25,9 @@ prep-nightly:
     rustup component add rust-analyzer --toolchain nightly
 
 test-nightly:
-    # cargo +nightly build --features=wgpu --all-targets --keep-going
-    cargo +nightly test --features=wgpu --all-targets --no-fail-fast
+    # cargo +nightly build --all-targets --keep-going
+    # cargo +nightly test --all-targets --no-fail-fast
+    cargo +nightly nextest run
 
 build-nightly:
     cargo +nightly build
@@ -59,19 +60,20 @@ prep-linux:
     libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0 \
     libgtk-3-dev libglib2.0-dev
 
-# prep-test:
-#     cargo install cargo-nextest
 
-# Install binstall, nextest
 [linux]
-prep-test:
-    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-    yes|cargo binstall cargo-nextest --secure
+prep-binstall:
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash 
 
-# Install binstall, nextest
 [macos]
-prep-test:
+prep-binstall:
     brew install cargo-binstall
+
+[windows]
+prep-binstall:
+    cargo install cargo-binstall
+
+prep-test: prep-binstall
     yes|cargo binstall cargo-nextest --secure
 
 # clone-ex:
