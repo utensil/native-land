@@ -25,7 +25,7 @@ prep-nightly:
     rustup component add rust-analyzer --toolchain nightly
 
 test-nightly:
-    cargo +nightly build --features=wgpu --all-targets --keep-going
+    # cargo +nightly build --features=wgpu --all-targets --keep-going
     cargo +nightly test --features=wgpu --all-targets --no-fail-fast
 
 build-nightly:
@@ -66,13 +66,13 @@ prep-linux:
 [linux]
 prep-test:
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-    cargo binstall nextest
+    yes|cargo binstall cargo-nextest --secure
 
 # Install binstall, nextest
 [macos]
 prep-test:
     brew install cargo-binstall
-    yes|cargo binstall nextest
+    yes|cargo binstall cargo-nextest --secure
 
 # clone-ex:
 #     #!/usr/bin/env bash
