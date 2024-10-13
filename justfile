@@ -2,6 +2,7 @@
 # run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
 export HOMEBREW_NO_AUTO_UPDATE := "1"
+export BINSTALL_DISABLE_TELEMETRY := "true"
 
 default:
     just list
@@ -108,6 +109,7 @@ prep-linux:
 @prep-test: prep-binstall
     which cargo-nextest || (yes|cargo binstall cargo-nextest --secure)
     which cargo-llvm-cov || (yes|cargo binstall cargo-llvm-cov --secure)
+    which cargo-deny || (yes|cargo binstall cargo-deny --secure)
 
 # clone-ex:
 #     #!/usr/bin/env bash

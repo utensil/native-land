@@ -73,7 +73,7 @@ bt *PARAMS:
     mkdir -p {{example_xp}}
     cd {{example_xp}}
     if [[ ! -d {{example_xp / DIR}} ]]; then
-        git clone {{URL}} {{example_xp / DIR}}
+        git clone --depth=100 {{URL}} {{example_xp / DIR}}
     fi
     cd {{example_xp / DIR}}
     git checkout {{BRANCH}}
@@ -106,7 +106,7 @@ try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_comp
 # - runners/ash : path error
 # use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
 [group('ex')]
-try-rg EX: (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
+try-rg EX="runners/wgpu": (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
     cd {{example_xp / "rust-gpu" / "examples" / EX }} && cargo run --release
 
 # need to manually uncomment the features in Cargo.toml
