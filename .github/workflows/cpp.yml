@@ -5,6 +5,7 @@ on:
   push:
     branches: ["main"]
     paths:
+      - "justfile"
       - "yard-cpp/**"
       - ".github/workflows/cpp.yml"
     # paths-ignore:
@@ -41,7 +42,7 @@ jobs:
       #     fetch-depth: 2
       - uses: extractions/setup-just@v1
         with:
-          just-version: 1.35.0
+          just-version: 1.36.0
       # - name: Install the stable toolchain
       #   uses: dtolnay/rust-toolchain@stable
       #   with:
