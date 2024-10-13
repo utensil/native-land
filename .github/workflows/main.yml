@@ -9,6 +9,7 @@ on:
       - "*.toml"
       - "yard-rs/**"
       - ".github/workflows/main.yml"
+      - "!.deepsource.toml"
     # paths-ignore:
     #   - "archived/**"
     #   - "**/README.md"
