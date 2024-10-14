@@ -39,7 +39,11 @@ async fn task() -> Result<()> {
     let api = Api::new()?;
     let repo = api.model("bert-base-uncased".to_string());
 
+    println!("Downloading weights...");
+
     let weights_filename = repo.get("model.safetensors").await?;
+
+    println!("Downloaded weights to {}", weights_filename.display());
 
     let weights = if USE_MMAP {
         let file = fs::File::open(weights_filename)?;
