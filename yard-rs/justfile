@@ -1,7 +1,11 @@
 set fallback
 
 example_xp := justfile_directory() / "example-xp"
-export LIBTORCH := justfile_directory() / "tch-xp/micromamba/envs/tch-rs/lib/python3.11/site-packages/torch"
+
+export MAMBA_ROOT_PREFIX := justfile_directory() / ".." / ".." /  "micromamba"
+micromamba := env_var('HOME') / ".local/bin/micromamba"
+mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
+export LIBTORCH := mm_packages / "torch"
 
 default:
     just list
@@ -144,9 +148,7 @@ mp:
 
 # following https://github.com/ssoudan/tch-m1
 
-export MAMBA_ROOT_PREFIX := justfile_directory() / "tch-xp" /  "micromamba"
-micromamba := env_var('HOME') / ".local/bin/micromamba"
-mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
+
 
 [group('tch')]
 prep-tch:

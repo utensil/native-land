@@ -3,7 +3,11 @@
 
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
-export LIBTORCH := justfile_directory() / "yard-rs/tch-xp/micromamba/envs/tch-rs/lib/python3.11/site-packages/torch"
+
+export MAMBA_ROOT_PREFIX := justfile_directory() / ".." /  "micromamba"
+micromamba := env_var('HOME') / ".local/bin/micromamba"
+mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
+export LIBTORCH := mm_packages / "torch"
 
 default:
     just list
