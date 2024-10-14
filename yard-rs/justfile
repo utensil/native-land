@@ -7,7 +7,7 @@ example_xp := justfile_directory() / "example-xp"
 # export LIBTORCH := if os() == "windows" { "" } else { join(mm_packages , "torch") }
 
 LIBTORCH_PREFIX := clean(join(justfile_directory() , ".." , ".."))
-export LIBTORCH := if os() == "windows" { "" } else { join(LIBTORCH_PREFIX, "libtorch") }
+export LIBTORCH := join(LIBTORCH_PREFIX, "libtorch")
 env_sep := if os() == "windows" { ";" } else { ":" }
 export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
 
