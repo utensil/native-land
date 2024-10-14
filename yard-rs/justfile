@@ -2,10 +2,9 @@ set fallback
 
 example_xp := justfile_directory() / "example-xp"
 
-export MAMBA_ROOT_PREFIX := justfile_directory() / ".." / ".." /  "micromamba"
-# micromamba := env_var('HOME') / ".local/bin/micromamba"
-mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
-export LIBTORCH := mm_packages / "torch"
+export MAMBA_ROOT_PREFIX := join(justfile_directory(), ".." , ".." ,  "micromamba")
+mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
+export LIBTORCH := join(mm_packages , "torch")
 
 default:
     just list
@@ -154,4 +153,3 @@ mp:
 prep-tch:
     #!/usr/bin/env bash
     $HOME/.local/bin/micromamba env create -y -f tch-xp/environment.yml
-    ls {{mm_packages / "torch/lib"}}
