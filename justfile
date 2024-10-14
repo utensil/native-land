@@ -7,8 +7,14 @@ export BINSTALL_DISABLE_TELEMETRY := "true"
 default:
     just list
 
+[linux]
 ci:
     just cov
+
+[macos]
+[windows]
+ci:
+    just test
 
 [group('rust'), no-cd]
 test:
