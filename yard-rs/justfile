@@ -141,3 +141,14 @@ mp:
 #     brew install molten-vk
 
 
+# following https://github.com/ssoudan/tch-m1
+
+export MAMBA_ROOT_PREFIX := justfile_directory() / "tch-xp" /  "micromamba"
+micromamba := env_var('HOME') / ".local/bin/micromamba"
+mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
+
+[group('tch')]
+prep-tch:
+    #!/usr/bin/env bash
+    {{micromamba}} env create -y -f tch-xp/environment.yml
+    ls {{mm_packages / "torch/lib"}}

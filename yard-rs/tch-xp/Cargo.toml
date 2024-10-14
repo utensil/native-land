@@ -1,0 +1,9 @@
+[package]
+name = "tch-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]
+tch = "0.17.0"

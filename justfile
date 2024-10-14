@@ -145,3 +145,6 @@ prep-mm:
 
 # this could be used to do quick ad hoc checks in CI with little installed
 check: prep-mm
+
+prep-tch:
+    cd yard-rs/tch-xp && just prep-tch
