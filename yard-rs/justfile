@@ -123,6 +123,11 @@ try-wg : (prep-ex "https://github.com/gfx-rs/wgpu" "wgpu" "trunk")
 try-wp: (prep-ex "https://github.com/Wumpf/wgpu-profiler" "wgpu-profiler" "main")
     cd {{example_xp / "wgpu-profiler" }} && cargo run --example demo
 
+# fusing normalization sum_things
+[group('ex')]
+try-cl EX="gelu": (prep-ex "https://github.com/tracel-ai/cubecl" "cubecl" "main")
+    cd {{example_xp / "cubecl" }} && cargo run --release --example {{EX}}
+
 [group('ex')]
 rm-ex NAME:
     rm -rf {{example_xp / NAME}}
