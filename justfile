@@ -7,8 +7,8 @@ export BINSTALL_DISABLE_TELEMETRY := "true"
 export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
 mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
 export LIBTORCH := join(mm_packages , "torch")
-env_sep := if os() == "windows" { ";" } else { ":" }
-export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
+# env_sep := if os() == "windows" { ";" } else { ":" }
+# export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
 
 default:
     just list
@@ -16,7 +16,6 @@ default:
 # this could be used to do quick ad hoc checks in CI with little installed
 check:
     echo "LIBTORCH={{LIBTORCH}}"
-    echo "PATH={{PATH}}"
 
 prep-ci:
     just prep-mm

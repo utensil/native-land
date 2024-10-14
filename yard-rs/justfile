@@ -4,9 +4,9 @@ example_xp := justfile_directory() / "example-xp"
 
 export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), ".." , ".." ,  "micromamba"))
 mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
-export LIBTORCH := join(mm_packages , "torch")
-env_sep := if os() == "windows" { ";" } else { ":" }
-export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
+export LIBTORCH := if os() == "windows" { "" } else { join(mm_packages , "torch") }
+# env_sep := if os() == "windows" { ";" } else { ":" }
+# export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
 
 default:
     just list
