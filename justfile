@@ -4,21 +4,25 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 
-export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
-mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
-export LIBTORCH := join(mm_packages , "torch")
-# env_sep := if os() == "windows" { ";" } else { ":" }
-# export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
+# export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
+# mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
+# export LIBTORCH := join(mm_packages , "torch")
+
+LIBTORCH_PREFIX := clean(join(justfile_directory() , ".."))
+export LIBTORCH := join(LIBTORCH_PREFIX, "libtorch")
+env_sep := if os() == "windows" { ";" } else { ":" }
+export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
 
 default:
     just list
 
 # this could be used to do quick ad hoc checks in CI with little installed
 check:
-    echo "LIBTORCH={{LIBTORCH}}"
+    just
+    echo "LIBTORCH=$LIBTORCH"
+    echo "PATH=$PATH"
 
 prep-ci:
-    just prep-mm
     just prep-tch
 
 [linux]
@@ -152,11 +156,11 @@ prep-linux:
 # so mamba can be always called with $HOME/.local/bin/micromamba
 # the default MAMBA_ROOT_PREFIX is $HOME/micromamba 
 
-[group('tch')]
-prep-mm:
-    #!/usr/bin/env bash
-    curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
-    $HOME/.local/bin/micromamba --version
+# [group('tch')]
+# prep-mm:
+#     #!/usr/bin/env bash
+#     curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
+#     $HOME/.local/bin/micromamba --version
 
 [group('tch')]
 prep-tch:

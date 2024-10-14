@@ -2,11 +2,14 @@ set fallback
 
 example_xp := justfile_directory() / "example-xp"
 
-export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), ".." , ".." ,  "micromamba"))
-mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
-export LIBTORCH := if os() == "windows" { "" } else { join(mm_packages , "torch") }
-# env_sep := if os() == "windows" { ";" } else { ":" }
-# export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
+# export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), ".." , ".." ,  "micromamba"))
+# mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
+# export LIBTORCH := if os() == "windows" { "" } else { join(mm_packages , "torch") }
+
+LIBTORCH_PREFIX := clean(join(justfile_directory() , ".." , ".."))
+export LIBTORCH := if os() == "windows" { "" } else { join(LIBTORCH_PREFIX, "libtorch") }
+env_sep := if os() == "windows" { ";" } else { ":" }
+export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
 
 default:
     just list
@@ -149,9 +152,29 @@ mp:
 
 # following https://github.com/ssoudan/tch-m1
 
-
-
+LIBTORCH_FILENAME := if os() == "windows" {
+    "libtorch-win-shared-with-deps-2.4.0%2Bcpu.zip"
+} else if os() == "linux" {
+    "libtorch-cxx11-abi-shared-with-deps-2.4.0%2Bcpu.zip"
+} else if os() == "macos" {
+    if arch() == "aarch64" {
+        "libtorch-macos-arm64-2.4.0.zip"
+    } else {
+        "libtorch-{{os()}}-{{arch()}}-2.4.0.zip"
+    }
+} else {
+    ""
+}
+    
 [group('tch')]
 prep-tch:
     #!/usr/bin/env bash
-    $HOME/.local/bin/micromamba env create -y -f tch-xp/environment.yml
+    # $HOME/.local/bin/micromamba env create -y -f tch-xp/environment.yml
+    if [[ ! -f {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }} ]]; then
+        curl {{ "https://download.pytorch.org/libtorch/cpu" / LIBTORCH_FILENAME }} -o {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }}
+    fi
+    echo "Downloaded to {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }}"
+    if [[ ! -d {{ LIBTORCH_PREFIX / "libtorch" }} ]]; then
+        unzip -o {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }} -d {{ LIBTORCH_PREFIX }}
+    fi
+    echo "Unzipped to {{ LIBTORCH_PREFIX / "libtorch" }}"
