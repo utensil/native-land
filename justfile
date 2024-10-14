@@ -151,6 +151,7 @@ prep-linux:
 
 [group('tch')]
 prep-mm:
+    #!/usr/bin/env bash
     curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
     $HOME/.local/bin/micromamba --version
 

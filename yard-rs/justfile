@@ -153,5 +153,5 @@ mp:
 [group('tch')]
 prep-tch:
     #!/usr/bin/env bash
-    {{micromamba}} env create -y -f tch-xp/environment.yml
+    $HOME/.local/bin/micromamba env create -y -f tch-xp/environment.yml
     ls {{mm_packages / "torch/lib"}}
