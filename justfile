@@ -5,7 +5,7 @@ export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 
 export MAMBA_ROOT_PREFIX := justfile_directory() / ".." /  "micromamba"
-micromamba := env_var('HOME') / ".local/bin/micromamba"
+# micromamba := env_var('HOME') / ".local/bin/micromamba"
 mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
 export LIBTORCH := mm_packages / "torch"
 
@@ -16,15 +16,15 @@ default:
 check:
     echo "nothing to check now"
 
+prep-ci: prep-mm prep-tch
+
 [linux]
-ci:
-    just prep-mm
-    just prep-tch
+ci: prep-ci
     just cov
 
 [macos]
 [windows]
-ci:
+ci: prep-ci
     just test
 
 [group('rust'), no-cd]

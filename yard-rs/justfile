@@ -3,7 +3,7 @@ set fallback
 example_xp := justfile_directory() / "example-xp"
 
 export MAMBA_ROOT_PREFIX := justfile_directory() / ".." / ".." /  "micromamba"
-micromamba := env_var('HOME') / ".local/bin/micromamba"
+# micromamba := env_var('HOME') / ".local/bin/micromamba"
 mm_packages := MAMBA_ROOT_PREFIX / "envs/tch-rs/lib/python3.11/site-packages"
 export LIBTORCH := mm_packages / "torch"
 
