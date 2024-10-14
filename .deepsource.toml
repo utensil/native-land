@@ -1,6 +1,9 @@
 version = 1
 
-exclude_patterns = ["yard-rs/dx-xp/**"]
+exclude_patterns = [
+  "yard-rs/dx-xp/**",
+  "**/main.rs"
+]
 
 [[analyzers]]
 name = "test-coverage"
