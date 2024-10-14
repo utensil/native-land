@@ -43,7 +43,7 @@ fn read_line() -> io::Result<String> {
 
     let input = io::stdin();
     let mut locked = input.lock();
-    let mut buf = String::new();
+    let mut buf = String::default();
 
     match locked.read_line(&mut buf) {
         Ok(_) => Ok(buf),

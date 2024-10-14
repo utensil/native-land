@@ -136,7 +136,7 @@ def run(
 
         if runpod_cfg.debug:
             os.environ["RUNPOD_DEBUG"] = 'true'
-            logging.info(f"Debug mode enabled")
+            logging.info("Debug mode enabled")
 
         try:
             if runpod_cfg.pod_type == 'INTERRUPTABLE':
@@ -187,7 +187,7 @@ def run(
             log_error(f"Failed to create pod for {config}")
             return
 
-        def signal_handler(signal, frame):
+        def signal_handler(_signal, _frame):
             logging.info(f"Keyboard interrupt received, terminating pod {pod['id']}")
             terminate(pod)
             sys.exit(0)
@@ -208,9 +208,9 @@ def run(
 
             eta = CUSTOM_RUNPOD_IMAGE_SIZE * BITS_PER_BYTE / pod_info['machine']['maxDownloadSpeedMbps'] + CUSTOM_RUNPOD_IMAGE_SIZE / COMPRESSION_RATIO / pod_info['machine']['diskMBps']
 
-            logging.info(f" - Estimated time to download and extrace the image: {eta} seconds")
-            logging.info(f" - While you're waiting, you can check the status of the pod at https://www.runpod.io/console/pods ")
-            logging.info(f" - After started, use the following command to ssh into the pod: {ssh_command}")
+            logging.info(" - Estimated time to download and extrace the image: {eta} seconds")
+            logging.info(" - While you're waiting, you can check the status of the pod at https://www.runpod.io/console/pods ")
+            logging.info(" - After started, use the following command to ssh into the pod: {ssh_command}")
             # logging.info(f"     or the following command in CodeSpace: {codespace_ssh_command}")
 
             runtime = None
