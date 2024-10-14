@@ -1,0 +1,15 @@
+[package]
+name = "candle-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow = "1.0.89"
+# https://huggingface.github.io/candle/guide/installation.html
+candle-core = { git = "https://github.com/huggingface/candle.git", version = "0.7.2" }
+candle-nn = { git = "https://github.com/huggingface/candle.git", version = "0.7.2" } 
+# https://huggingface.github.io/candle/inference/hub.html
+hf-hub = { version = "0.3.2", features = ["tokio"] }
+memmap2 = "0.9.5"
