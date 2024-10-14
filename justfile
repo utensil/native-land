@@ -15,7 +15,9 @@ default:
 check:
     echo "nothing to check now"
 
-prep-ci: prep-mm prep-tch
+prep-ci:
+    just prep-mm
+    just prep-tch
 
 [linux]
 ci: prep-ci
