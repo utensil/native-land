@@ -32,18 +32,18 @@ test-stable:
 build-stable:
     cargo +stable build
 
-[group('rust'), no-cd]
-prep-stable:
-    # https://rust-analyzer.github.io/manual.html#installation
-    rustup toolchain install stable
-    rustup component add rust-src
-    rustup component add rust-analyzer
+# [group('rust'), no-cd]
+# prep-stable:
+#     # https://rust-analyzer.github.io/manual.html#installation
+#     rustup toolchain install stable
+#     rustup component add rust-src
+#     rustup component add rust-analyzer
 
-[group('rust'), no-cd]
-prep-nightly:
-    rustup toolchain install nightly
-    rustup component add rust-src --toolchain nightly
-    rustup component add rust-analyzer --toolchain nightly
+# [group('rust'), no-cd]
+# prep-nightly:
+#     rustup toolchain install nightly
+#     rustup component add rust-src --toolchain nightly
+#     rustup component add rust-analyzer --toolchain nightly
 
 [group('rust'), no-cd]
 @test-nightly:
@@ -65,8 +65,8 @@ vcov: cov
 build-nightly:
     cargo +nightly build
 
-[group('rust'), no-cd]
-nightly: prep-nightly test-nightly
+# [group('rust'), no-cd]
+# nightly: prep-nightly test-nightly
 
 [group('rust'), no-cd]
 fmt:

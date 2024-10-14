@@ -2,3 +2,12 @@
 channel = "nightly"
 # channel = "stable"
 profile = "default"
+components = [
+	"rust-src",
+	"rustc-dev",
+	"llvm-tools-preview",
+	"clippy",
+	"rustfmt",
+	"rustc",
+    "rust-analyzer"
+]
