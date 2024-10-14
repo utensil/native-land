@@ -52,9 +52,8 @@ cov: cov-nightly
 cov-nightly:
     yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
 
-vcov:
-    cargo +nightly llvm-cov report --html
-    open target/llvm-cov/html/index.html
+vcov: cov
+    cargo +nightly llvm-cov report --ignore-filename-regex main.rs --html --open
 
 [group('rust'), no-cd]
 build-nightly:

@@ -1,7 +1,10 @@
+#![cfg_attr(coverage_nightly, feature(coverage_attribute))]
+
 use cubecl::prelude::*;
 use cubecl::codegen::Compiler;
 use cubecl::ExecutionMode::Unchecked;
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 #[cube(launch_unchecked,create_dummy_kernel)]
 fn gelu_array<F: Float>(input: &Array<Line<F>>, output: &mut Array<Line<F>>) {
     if ABSOLUTE_POS < input.len() {
@@ -9,6 +12,7 @@ fn gelu_array<F: Float>(input: &Array<Line<F>>, output: &mut Array<Line<F>>) {
     }
 }
 
+#[cfg_attr(coverage_nightly, coverage(off))]
 #[cube]
 fn gelu_scalar<F: Float>(x: Line<F>) -> Line<F> {
     // Execute the sqrt function at comptime.
