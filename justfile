@@ -8,8 +8,14 @@ export LIBTORCH := justfile_directory() / "yard-rs/tch-xp/micromamba/envs/tch-rs
 default:
     just list
 
+# this could be used to do quick ad hoc checks in CI with little installed
+check:
+    echo "nothing to check now"
+
 [linux]
 ci:
+    just prep-mm
+    just prep-tch
     just cov
 
 [macos]
@@ -139,14 +145,12 @@ prep-linux:
 # so mamba can be always called with $HOME/.local/bin/micromamba
 # the default MAMBA_ROOT_PREFIX is $HOME/micromamba 
 
-[group('python')]
+[group('tch')]
 prep-mm:
     curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
     $HOME/.local/bin/micromamba --version
 
-# this could be used to do quick ad hoc checks in CI with little installed
-check: prep-mm
-
+[group('tch')]
 prep-tch:
     cd yard-rs/tch-xp && just prep-tch
 
