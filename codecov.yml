@@ -1,0 +1,3 @@
+ignore:
+  - "yard-rs/dx-xp/**"
+  - "**/main.rs"
