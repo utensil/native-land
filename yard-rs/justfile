@@ -160,21 +160,24 @@ LIBTORCH_FILENAME := if os() == "windows" {
     if arch() == "aarch64" {
         "libtorch-macos-arm64-2.4.0.zip"
     } else {
-        "libtorch-{{os()}}-{{arch()}}-2.4.0.zip"
+        "libtorch-macos-arm64-2.4.0.zip"
     }
 } else {
     ""
 }
+
+LIBTORCH_ZIP_PATH := clean(join(LIBTORCH_PREFIX, LIBTORCH_FILENAME))
+LIBTORCH_DIR := clean(join(LIBTORCH_PREFIX, "libtorch"))
     
 [group('tch')]
 prep-tch:
     #!/usr/bin/env bash
     # $HOME/.local/bin/micromamba env create -y -f tch-xp/environment.yml
     if [[ ! -f {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }} ]]; then
-        curl {{ "https://download.pytorch.org/libtorch/cpu" / LIBTORCH_FILENAME }} -o {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }}
+        curl {{ "https://download.pytorch.org/libtorch/cpu" / LIBTORCH_FILENAME }} -o {{ LIBTORCH_ZIP_PATH }}
     fi
-    echo "Downloaded to {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }}"
-    if [[ ! -d {{ LIBTORCH_PREFIX / "libtorch" }} ]]; then
-        unzip -o {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }} -d {{ LIBTORCH_PREFIX }}
+    echo "Downloaded to {{ LIBTORCH_ZIP_PATH }}"
+    if [[ ! -d {{ LIBTORCH_DIR }} ]]; then
+        unzip -o {{ LIBTORCH_ZIP_PATH }} -d {{ LIBTORCH_PREFIX }}
     fi
-    echo "Unzipped to {{ LIBTORCH_PREFIX / "libtorch" }}"
+    echo "Unzipped to {{ LIBTORCH_DIR }}"
