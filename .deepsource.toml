@@ -1,6 +1,7 @@
 version = 1
 
 exclude_patterns = [
+  "archived/**",
   "yard-rs/dx-xp/**",
   "**/main.rs"
 ]
