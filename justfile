@@ -13,7 +13,7 @@ default:
 
 # this could be used to do quick ad hoc checks in CI with little installed
 check:
-    echo "nothing to check now"
+    echo "LIBTORCH={{LIBTORCH}}"
 
 prep-ci:
     just prep-mm
