@@ -13,3 +13,4 @@ candle-nn = { git = "https://github.com/huggingface/candle.git", version = "0.7.
 # https://huggingface.github.io/candle/inference/hub.html
 hf-hub = { version = "0.3.2", features = ["tokio"] }
 memmap2 = "0.9.5"
+tokio = "1.40.0"

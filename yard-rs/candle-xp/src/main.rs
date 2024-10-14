@@ -4,7 +4,7 @@
 
 use anyhow::{anyhow, Result};
 use candle_core::{Device, Tensor, DType};
-use hf_hub::api::sync::Api;
+use hf_hub::api::tokio::Api;
 use candle_nn::{Linear, Module};
 use memmap2::Mmap;
 use std::fs;
@@ -23,7 +23,7 @@ impl Model {
 }
 const USE_MMAP : bool = true;
 
-fn main() -> Result<()> {
+async fn task() -> Result<()> {
     // Use Device::new_cuda(0)?; to use the GPU.
     let device = Device::Cpu;
 
@@ -39,7 +39,7 @@ fn main() -> Result<()> {
     let api = Api::new()?;
     let repo = api.model("bert-base-uncased".to_string());
 
-    let weights_filename = repo.get("model.safetensors")?;
+    let weights_filename = repo.get("model.safetensors").await?;
 
     let weights = if USE_MMAP {
         let file = fs::File::open(weights_filename)?;
@@ -62,4 +62,9 @@ fn main() -> Result<()> {
     println!("{:?}", output);
 
     Ok(())
+}
+
+fn main() -> Result<()> {
+    let rt = tokio::runtime::Runtime::new()?;
+    rt.block_on(task())
 }
