@@ -16,6 +16,7 @@ default:
 # this could be used to do quick ad hoc checks in CI with little installed
 check:
     echo "LIBTORCH={{LIBTORCH}}"
+    echo "PATH={{PATH}}"
 
 prep-ci:
     just prep-mm
