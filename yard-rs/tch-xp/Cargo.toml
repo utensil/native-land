@@ -7,3 +7,6 @@ version.workspace = true
 
 [dependencies]
 tch = "0.17.0"
+
+[target.'cfg(windows)'.dependencies]
+torch-sys = { version = "0.17.0", features = ["download-libtorch"] }
