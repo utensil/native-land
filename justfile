@@ -3,6 +3,7 @@
 
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
+export LIBTORCH := justfile_directory() / "yard-rs/tch-xp/micromamba/envs/tch-rs/lib/python3.11/site-packages/torch"
 
 default:
     just list
@@ -148,3 +149,4 @@ check: prep-mm
 
 prep-tch:
     cd yard-rs/tch-xp && just prep-tch
+

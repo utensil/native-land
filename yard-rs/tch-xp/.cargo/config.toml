@@ -1,3 +1,0 @@
-[env]
-LIBTORCH = { value = "micromamba/envs/tch-rs/lib/python3.11/site-packages/torch" , relative = true }
-DYLD_LIBRARY_PATH = { value = "micromamba/envs/tch-rs/lib/python3.11/site-packages/torch/lib" , relative = true }

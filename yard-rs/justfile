@@ -1,6 +1,7 @@
 set fallback
 
 example_xp := justfile_directory() / "example-xp"
+export LIBTORCH := justfile_directory() / "tch-xp/micromamba/envs/tch-rs/lib/python3.11/site-packages/torch"
 
 default:
     just list
