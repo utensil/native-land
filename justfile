@@ -127,3 +127,21 @@ prep-linux:
 # can't fight with the workspace not exluded error
 # test-ex: clone-ex
 #     cd archived/exercism && git pull && ./verify_rs.sh
+
+
+# [group('python')]
+# [macos]
+# prep-mm:
+#     brew install micromamba
+
+# by default this is installed to $HOME/.local/bin
+# so mamba can be always called with $HOME/.local/bin/micromamba
+# the default MAMBA_ROOT_PREFIX is $HOME/micromamba 
+
+[group('python')]
+prep-mm:
+    curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
+    $HOME/.local/bin/micromamba --version
+
+# this could be used to do quick ad hoc checks in CI with little installed
+check: prep-mm

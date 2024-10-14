@@ -68,6 +68,9 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: just@1.36.0,cargo-binstall,cargo-nextest,cargo-llvm-cov,deepsource
+      - name: quick check
+        run: |
+          just check
       - uses: actions/cache@v4
         with:
           path: |

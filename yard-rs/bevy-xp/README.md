@@ -32,6 +32,17 @@ For rust-gpu, should check out:
 For CubeCL, should check out:
 
 - [CubeCL Architecture Overview - Running Rust on your GPU (WebGPU, CUDA)](https://gist.github.com/nihalpasham/570d4fe01b403985e1eaf620b6613774)
+- https://github.com/nobuyuki83/floor_plan
+
+For candle, should check out:
+
+- https://github.com/ToluClassics/candle-tutorial
+- https://github.com/tomsanbear/candle-einops
+
+For tch-rs, should check out:
+
+- https://github.com/zurgl/makemore-rs
+- https://github.com/VasanthakumarV/einops
 
 For benchmarking and profiling, should check out:
 
