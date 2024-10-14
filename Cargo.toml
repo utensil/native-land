@@ -1,4 +1,5 @@
 [workspace]
+
 # Try
 # require version 2 to avoid "feature" additiveness for dev-dependencies
 # https://doc.rust-lang.org/cargo/reference/resolver.html#feature-resolver-version-2
@@ -6,13 +7,13 @@ resolver = "2"
 
 # run a member with `cargo run -p member`
 members = [
-    "yard-rs/*",
+    "yard-rs/*"
 ]
 
 exclude = [
     "archived/*",
     "yard-rs/example-xp",
-    "yard-rs/runpod-xp"
+    "yard-rs/runpod-xp",
 ]
 
 [workspace.package]

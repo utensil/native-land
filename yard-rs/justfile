@@ -131,4 +131,8 @@ rm-ex NAME:
 mp:
     just try-compute multi_pass
 
+# [macos]
+# prep-vk:
+#     brew install molten-vk
+
 

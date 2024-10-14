@@ -1,9 +1,8 @@
+[workspace]
+
 [package]
 name = "rsgpu-shaders"
-edition.workspace = true
-license.workspace = true
-readme.workspace = true
-version.workspace = true
+version = "0.1.0"
 
 [lib]
 crate-type = ["dylib", "lib"]
