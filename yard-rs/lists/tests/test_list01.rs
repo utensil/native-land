@@ -31,5 +31,9 @@ mod test_list01 {
         // Check exhaustion
         assert_eq!(list.pop(), Some(1));
         assert_eq!(list.pop(), None);
+
+        // To cover the multiple element Drop
+        list.push(1);
+        list.push(2);
     }
 }

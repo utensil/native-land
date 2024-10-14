@@ -2,14 +2,12 @@
 // use std::{cell::RefCell, sync::Arc};
 
 use dioxus::prelude::*;
+use dx_xp::hello_div;
 
 #[test]
 fn test() {
     assert_rsx_eq(
-        rsx! {
-            div { "Hello world" }
-            div { "Hello world" }
-        },
+        hello_div(),
         rsx! {
             for _ in 0..2 {
                 div { "Hello world" }
