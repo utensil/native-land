@@ -50,7 +50,11 @@ cov: cov-nightly
 
 [group('rust'), no-cd]
 cov-nightly:
-    yes|cargo +nightly llvm-cov --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+    yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+
+vcov:
+    cargo +nightly llvm-cov report --html
+    open target/llvm-cov/html/index.html
 
 [group('rust'), no-cd]
 build-nightly:
