@@ -1,0 +1,8 @@
+[package]
+name = "clifford-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]

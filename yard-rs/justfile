@@ -125,6 +125,7 @@ try-compute +PARAMS: (prep-ex "https://github.com/AnthonyTornetta/bevy_easy_comp
 # not working: 
 # - runners/ash : path error
 # use release to bypass https://github.com/Rust-GPU/rust-gpu/issues/29
+
 [group('ex')]
 try-rg EX="runners/wgpu": (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-gpu" "main")
     cd {{example_xp / "rust-gpu" / "examples" / EX }} && cargo run --release
