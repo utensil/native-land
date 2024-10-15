@@ -34,6 +34,11 @@ Numeric backends can be based on (not updated in 2 years are marked with the las
   - [diwalkerdev/GeometricAlgebra](https://github.com/diwalkerdev/GeometricAlgebra) (2022)
   - [TbGAL](https://github.com/Prograf-UFF/TbGAL) (2022)
   - [godefv/math](https://github.com/godefv/math) (2020)
+  - auto-diff
+    - [stan-dev/math](https://github.com/stan-dev/math)
+    - [Dr.Jit](https://github.com/mitsuba-renderer/drjit)
+    - [Aδ](https://github.com/yyuting/Adelta)
+    - [glsl-autodiff](https://github.com/sibaku/glsl-autodiff) in GLSL
 
 There are Zig/Julia backends to consider too, but I'll skip them for now, they are in the `ga.rs` star list.
 
@@ -42,6 +47,7 @@ And for PGA, there could also be
 - [emilk/pga](https://github.com/emilk/pga)
 - [jamen/klein-rs](https://github.com/jamen/klein-rs)
   - binding to [jeremyong/klein](https://github.com/jeremyong/klein) in C++
+- [Terathon-Math-Library](https://github.com/EricLengyel/Terathon-Math-Library)
 
 For GPU backends, there are:
 
@@ -57,18 +63,21 @@ For GPU backends, there are:
 - [mlx-rs](https://github.com/oxideai/mlx-rs)
 - [rai](https://github.com/cksac/rai) JAX-like
 - [krnl](https://github.com/charles-r-earp/krnl)
-- [gpu.cpp](https://github.com/AnswerDotAI/gpu.cpp)
 - [cudarc](https://github.com/coreylowman/cudarc)
+- [gpu.cpp](https://github.com/AnswerDotAI/gpu.cpp) in C++
+- [uwal](https://github.com/UstymUkhman/uwal) in JS
 
-Check out [bevy-xp README](../bevy-xp/README.md) for more on GPU backends.
+Check out [bevy-xp README](../bevy-xp/README.md) for more on GPU backends. See also star list [llm.rs](https://github.com/stars/utensil/lists/llm-rs) and [ad.gpu](https://github.com/stars/utensil/lists/ad-gpu).
 
-Nice benchmark setups:
+For benchmark, there are:
 
 - [bitshifter/mathbench-rs](https://github.com/bitshifter/mathbench-rs) for Rust and math
 - [ga-benchmark](https://github.com/loewt/ga-benchmark) for C++ and GA
   - see [paper gafro: Geometric Algebra for Robotics](https://arxiv.org/abs/2310.19090) for plots of results
 - [gafro_benchmarks](https://gitlab.com/gafro/gafro_benchmarks) for C++ and robotics
+- [gradbench](https://github.com/gradbench/gradbench) for auto-diff
 - [metal-benchmarks](https://github.com/philipturner/metal-benchmarks)
+- [wgpu-mm](https://github.com/FL33TW00D/wgpu-mm)
 
 I think I'll also use [criterion.rs](https://github.com/bheisler/criterion.rs).
 
