@@ -22,6 +22,7 @@ prep-conan:
     # conan profile update settings.compiler.libcxx=libstdc++11 default
     # conan profile update settings.compiler.cppstd=20 default
 
+[unix]
 prep-conda:
     brew install --cask miniforge
     # brew install --cask miniconda
