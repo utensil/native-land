@@ -14,6 +14,14 @@ fn test_launch() {
     }
 }
 
+// --- TRY 1 STDERR:        cubecl-xp::test_gelu test_shader ---
+// thread 'test_shader' panicked at /Users/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/wgpu-22.1.0/src/backend/wgpu_core.rs:3411:5:
+// wgpu error: Validation Error
+// 
+// Caused by:
+//   In Device::create_query_set
+//     Features Features(TIMESTAMP_QUERY) are required but not enabled on the device
+
 #[cfg(feature = "wgpu")]
 #[cfg(not(target_os = "windows"))]
 #[test]
