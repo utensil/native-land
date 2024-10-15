@@ -22,3 +22,4 @@ yard-rs/runpod-xp/.env
 yard-rs/runpod-xp/__pycache__/
 **/lcov.info
 yard-rs/tch-xp/micromamba
+Cargo.lock.bak
