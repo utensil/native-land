@@ -8,6 +8,7 @@ on:
       - "justfile"
       - "yard-cpp/**"
       - ".github/workflows/cpp.yml"
+      - "!**/README.md"
     # paths-ignore:
     #   - "archived/**"
     #   - "**/README.md"

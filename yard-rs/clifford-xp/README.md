@@ -63,7 +63,8 @@ For GPU backends, there are:
 - [mlx-rs](https://github.com/oxideai/mlx-rs)
 - [rai](https://github.com/cksac/rai) JAX-like
 - [krnl](https://github.com/charles-r-earp/krnl)
-- [cudarc](https://github.com/coreylowman/cudarc)
+- [cudarc](https://github.com/coreylowman/cudarc) for CUDA
+- [Ash](https://github.com/ash-rs/ash) for Vulkan
 - [gpu.cpp](https://github.com/AnswerDotAI/gpu.cpp) in C++
 - [uwal](https://github.com/UstymUkhman/uwal) in JS
 
