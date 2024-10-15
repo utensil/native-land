@@ -63,6 +63,7 @@ For GPU backends, there are:
 - [mlx-rs](https://github.com/oxideai/mlx-rs)
 - [rai](https://github.com/cksac/rai) JAX-like
 - [krnl](https://github.com/charles-r-earp/krnl)
+- [luminal](https://github.com/jafioti/luminal) which uses composable compilers and uses egg
 - [cudarc](https://github.com/coreylowman/cudarc) for CUDA
 - [Ash](https://github.com/ash-rs/ash) for Vulkan
 - [gpu.cpp](https://github.com/AnswerDotAI/gpu.cpp) in C++
@@ -92,6 +93,10 @@ For symbolic backends, there are:
   - [symengine](https://github.com/symengine/symengine)
   - [GiNaC](https://www.ginac.de/)
   - [cadabra2](https://github.com/kpeeters/cadabra2)
+
+For program optimization, the approach of [mirage](https://github.com/mirage-project/mirage), [StructTensor](https://github.com/edin-dal/structtensor), and `STOREL`(*Optimizing Tensor Programs on Flexible Storage*) based on [SDQL](https://github.com/edin-dal/sdql) and egg should be considered.
+
+<!-- - [Enumo](https://github.com/uwplse/ruler), https://github.com/moves-rwth/caesar  which uses egg -->
 
 As for codegen, there are
 

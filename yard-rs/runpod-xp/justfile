@@ -14,11 +14,8 @@ kill:
 test-kill ID:
     RUNPOD_POD_ID={{ID}} python kill.py
 
-run CONFIG:
+run CONFIG="demo.yml":
     python run.py {{ justfile_directory() / "tasks" / CONFIG }}
-
-test-run:
-    just run demo.yml
 
 gpus:
     #!/usr/bin/env bash
