@@ -35,8 +35,9 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - windows-latest
-          - macos-latest
+          - windows-2022
+          # macos-15 is deploying, macos-latest is still macos-14
+          - macos-15
         python-version: ["3.11"]
       fail-fast: false
     steps:
