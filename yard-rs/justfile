@@ -172,6 +172,10 @@ prep-tch-data:
     if [[ ! -f {{"input.txt"}} ]]; then
         curl https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt -o input.txt
     fi
+
+    # for mnist
+    # using a mirror as the original link has issues
+    # https://pytorch.org/vision/main/_modules/torchvision/datasets/mnist.html#MNIST
     if [[ ! -f {{"train-images-idx3-ubyte"}} ]]; then
         curl https://ossci-datasets.s3.amazonaws.com/mnist/train-images-idx3-ubyte.gz -o train-images-idx3-ubyte.gz
         yes|gunzip train-images-idx3-ubyte.gz
