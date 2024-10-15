@@ -208,9 +208,9 @@ def run(
 
             eta = CUSTOM_RUNPOD_IMAGE_SIZE * BITS_PER_BYTE / pod_info['machine']['maxDownloadSpeedMbps'] + CUSTOM_RUNPOD_IMAGE_SIZE / COMPRESSION_RATIO / pod_info['machine']['diskMBps']
 
-            logging.info(" - Estimated time to download and extrace the image: {eta} seconds")
+            logging.info(f" - Estimated time to download and extrace the image: {eta} seconds")
             logging.info(" - While you're waiting, you can check the status of the pod at https://www.runpod.io/console/pods ")
-            logging.info(" - After started, use the following command to ssh into the pod: {ssh_command}")
+            logging.info(f" - After started, use the following command to ssh into the pod: {ssh_command}")
             # logging.info(f"     or the following command in CodeSpace: {codespace_ssh_command}")
 
             runtime = None
