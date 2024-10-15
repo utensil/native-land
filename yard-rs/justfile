@@ -8,11 +8,22 @@ example_xp := justfile_directory() / "example-xp"
 
 LIBTORCH_PREFIX := clean(join(justfile_directory() , ".." , ".."))
 export LIBTORCH := join(LIBTORCH_PREFIX, "libtorch")
+ 
 env_sep := if os() == "windows" { ";" } else { ":" }
 export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
+export LIBTORCH_BYPASS_VERSION_CHECK := "1"
+export DYLD_LIBRARY_PATH := join(LIBTORCH, "lib")
+export DYLD_FALLBACK_LIBRARY_PATH := join(LIBTORCH, "lib")
+# + env_sep + env_var_or_default("DYLD_LIBRARY_PATH", "")
 
 default:
     just list
+
+check:
+    just
+    echo "LIBTORCH=$LIBTORCH"
+    echo "PATH=$PATH"
+    echo "DYLD_LIBRARY_PATH={{DYLD_LIBRARY_PATH}}"
 
 [group('dx')]
 prep-dx:
@@ -137,6 +148,47 @@ try-wp: (prep-ex "https://github.com/Wumpf/wgpu-profiler" "wgpu-profiler" "main"
 try-cl EX="gelu": (prep-ex "https://github.com/tracel-ai/cubecl" "cubecl" "main")
     cd {{example_xp / "cubecl" }} && cargo run --release --example {{EX}}
 
+# run just prep-tch before running the tch examples!!
+
+# basics 
+
+[group('ex')]
+[macos]
+try-tch EX: (prep-ex "https://github.com/LaurentMazare/tch-rs" "tch-rs" "main") prep-tch-data
+    #!/usr/bin/env bash
+    cd {{example_xp / "tch-rs" }}
+    if [[ {{EX}} == "char-rnn" ]]; then
+        # replace Device::cuda_if_available() in examples/char-rnn/main.rs to Device::Mps
+        sed -i '' 's/Device::cuda_if_available()/Device::Mps/g' examples/char-rnn/main.rs
+    fi
+    DYLD_FALLBACK_LIBRARY_PATH={{DYLD_FALLBACK_LIBRARY_PATH}} cargo run --release --example {{EX}}
+
+prep-tch-data:
+    #!/usr/bin/env bash
+    set -e
+    mkdir -p {{example_xp / "tch-rs" / "data"}}
+    cd {{example_xp / "tch-rs" / "data"}}
+    # for char-rnn
+    if [[ ! -f {{"input.txt"}} ]]; then
+        curl https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt -o input.txt
+    fi
+    if [[ ! -f {{"train-images-idx3-ubyte"}} ]]; then
+        curl https://ossci-datasets.s3.amazonaws.com/mnist/train-images-idx3-ubyte.gz -o train-images-idx3-ubyte.gz
+        yes|gunzip train-images-idx3-ubyte.gz
+    fi
+    if [[ ! -f {{"train-labels-idx1-ubyte"}} ]]; then
+        curl https://ossci-datasets.s3.amazonaws.com/mnist/train-labels-idx1-ubyte.gz -o train-labels-idx1-ubyte.gz
+        yes|gunzip train-labels-idx1-ubyte.gz
+    fi
+    if [[ ! -f {{"t10k-images-idx3-ubyte"}} ]]; then
+        curl https://ossci-datasets.s3.amazonaws.com/mnist/t10k-images-idx3-ubyte.gz -o t10k-images-idx3-ubyte.gz
+        yes|gunzip t10k-images-idx3-ubyte.gz
+    fi
+    if [[ ! -f {{"t10k-labels-idx1-ubyte"}} ]]; then
+        curl https://ossci-datasets.s3.amazonaws.com/mnist/t10k-labels-idx1-ubyte.gz -o t10k-labels-idx1-ubyte.gz
+        yes|gunzip t10k-labels-idx1-ubyte.gz
+    fi
+
 [group('ex')]
 rm-ex NAME:
     rm -rf {{example_xp / NAME}}
@@ -181,3 +233,5 @@ prep-tch:
         unzip -o "{{ LIBTORCH_ZIP_PATH }}" -d "{{ LIBTORCH_PREFIX }}"
     fi
     echo "Unzipped to {{ LIBTORCH_DIR }}"
+
+
