@@ -44,6 +44,10 @@ For tch-rs, should check out:
 - https://github.com/zurgl/makemore-rs
 - https://github.com/VasanthakumarV/einops
 
+For wgpu, don't forget to check out:
+
+- https://github.com/Kiiyya/lean-wgpu
+
 For benchmarking and profiling, should check out:
 
 - https://nnethercote.github.io/perf-book/benchmarking.html
