@@ -3,10 +3,8 @@
 # - https://github.com/Rust-GPU/rust-gpu/blob/main/examples/runners/wgpu/build.rs
 [package]
 name = "rsgpu-xp"
-edition.workspace = true
-license.workspace = true
-readme.workspace = true
-version.workspace = true
+edition = "2021"
+version = "0.1.0"
 
 [dependencies]
 wgpu = { version = "22.1", features = ["spirv", "vulkan-portability"] }

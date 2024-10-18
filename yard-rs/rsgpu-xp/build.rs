@@ -34,6 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let builder_dir = PathBuf::from(manifest_dir).join("builder");
     let status = std::process::Command::new("cargo")
         .args([
+            // "+nightly-2024-04-24",
             "run",
             "--release",
             "--target-dir",

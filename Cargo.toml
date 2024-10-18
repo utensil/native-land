@@ -14,6 +14,7 @@ exclude = [
     "archived/*",
     "yard-rs/example-xp",
     "yard-rs/runpod-xp",
+    "yard-rs/rsgpu-xp"
 ]
 
 [workspace.package]
