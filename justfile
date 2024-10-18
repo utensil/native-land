@@ -25,7 +25,6 @@ check:
 
 prep-ci:
     just prep-tch
-    just prep-krnl
 
 [linux]
 ci: prep-ci
@@ -171,8 +170,3 @@ prep-linux:
 [group('tch')]
 prep-tch:
     cd yard-rs/tch-xp && just prep-tch
-
-[group('krnl')]
-prep-krnl:
-    cd yard-rs/krnl-xp && just prep-krnl
-

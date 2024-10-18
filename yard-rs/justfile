@@ -247,5 +247,7 @@ prep-tch:
 
 
 prep-krnl:
-    cargo install krnlc --git https://github.com/charles-r-earp/krnl --rev 96b5d97205ba2cd08ad65e99d758c26349c31b24
-    # cargo install krnlc
+    cargo +nightly-2023-05-27 install krnlc --git https://github.com/charles-r-earp/krnl --rev 96b5d97205ba2cd08ad65e99d758c26349c31b24 --locked
+    # cargo +nightly-2023-05-27 install krnlc --locked
+    cd .. && rm -rf target/krnlc
+    cd krnl-xp && krnlc
