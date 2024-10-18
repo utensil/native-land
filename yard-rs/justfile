@@ -96,6 +96,7 @@ bt *PARAMS:
         git clone --depth=100 --recurse-submodules {{URL}} {{example_xp / DIR}}
     fi
     cd {{example_xp / DIR}}
+    git fetch --depth=100 origin {{BRANCH}}
     git checkout {{BRANCH}}
 
 # breakout scene_viewer

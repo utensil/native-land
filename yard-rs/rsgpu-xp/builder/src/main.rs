@@ -19,6 +19,6 @@ fn build_shader(path_to_crate: &str, codegen_names: bool) -> Result<(), Box<dyn 
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    build_shader("../rsgpu-shaders", true)?;
+    build_shader("../shaders", true)?;
     Ok(())
 }

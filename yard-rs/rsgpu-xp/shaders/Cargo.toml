@@ -1,8 +1,11 @@
 [workspace]
 
+resolver = "2"
+
 [package]
-name = "rsgpu-shaders"
+name = "shaders"
 version = "0.1.0"
+publish = false
 
 [lib]
 crate-type = ["dylib", "lib"]
@@ -11,11 +14,13 @@ crate-type = ["dylib", "lib"]
 unexpected_cfgs = { level = "allow", check-cfg = ['cfg(target_arch, values("spirv"))'] }
 
 [dependencies]
-serde = { version = "1.0", features = ["derive", "rc"] }
-serde_json = "1.0"
-serde-wasm-bindgen = "0.6"
-spirv-std = { git = "https://github.com/GraphiteEditor/rust-gpu.git", rev = "7f60fbbdddc0d6effa1c3c86e3e11f9896c970e8" }
-glam = { version = "0.28", default-features = false, features = ["serde"] }
+# serde = { version = "1.0", features = ["derive", "rc"] }
+# serde_json = "1.0"
+# serde-wasm-bindgen = "0.6"
+spirv-std = { git = "https://github.com/Rust-GPU/rust-gpu.git", rev = "d2eb777510bae92c33eabe29567a61e3617088ba" }
+num-traits = { version = "0.2.15", default-features = false }
+glam = { version = "0.28", default-features = false }
+# bytemuck = { version = "1.6.3", features = ["derive"] }
 # using this rev until https://github.com/Rust-GPU/rust-gpu/issues/29 is fixed
 # spirv-std = { git = "https://github.com/Rust-GPU/rust-gpu.git", rev = "54f6978c25b7e168ded04e720b996625b3654ebd" }
 # following deps before https://github.com/GraphiteEditor/Graphite/commit/fa1535d0bb2a7124a773b9b8eb62686820519299

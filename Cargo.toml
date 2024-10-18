@@ -7,7 +7,7 @@ resolver = "2"
 
 # run a member with `cargo run -p member`
 members = [
-    "yard-rs/*"
+    "yard-rs/*",
 ]
 
 exclude = [

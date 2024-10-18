@@ -1,0 +1,13 @@
+# this project is adapted from
+# - https://github.com/GraphiteEditor/Graphite/tree/master/node-graph/gpu-compiler
+# - https://github.com/Rust-GPU/rust-gpu/blob/main/examples/runners/wgpu/build.rs
+[package]
+name = "rsgpu-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]
+wgpu = { version = "22.1", features = ["spirv", "vulkan-portability"] }
+futures = { version = "0.3", default-features = false, features = ["std", "executor"] }

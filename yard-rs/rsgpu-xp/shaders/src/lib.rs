@@ -2,30 +2,12 @@
 // HACK(eddyb) can't easily see warnings otherwise from `spirv-builder` builds.
 #![deny(warnings)]
 
-use glam::{UVec3, Vec4, vec4};
+extern crate spirv_std;
+
+use glam::UVec3;
 use spirv_std::{glam, spirv};
 
-// Adapted from rust-gpu/examples/shaders/simplest-shader
-
-#[spirv(fragment)]
-pub fn main_fs(output: &mut Vec4) {
-    *output = vec4(1.0, 0.0, 0.0, 1.0);
-}
-
-#[spirv(vertex)]
-pub fn main_vs(
-    #[spirv(vertex_index)] vert_id: i32,
-    #[spirv(position, invariant)] out_pos: &mut Vec4,
-) {
-    *out_pos = vec4(
-        (vert_id - 1) as f32,
-        ((vert_id & 1) * 2 - 1) as f32,
-        0.0,
-        1.0,
-    );
-}
-
-// Adapted from rust-gpu/examples/shaders/compute-shader
+// Adapted from the wgpu hello-compute example
 
 pub fn collatz(mut n: u32) -> Option<u32> {
     let mut i = 0;
@@ -57,3 +39,4 @@ pub fn main_cs(
     let index = id.x as usize;
     prime_indices[index] = collatz(prime_indices[index]).unwrap_or(u32::MAX);
 }
+
