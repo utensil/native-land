@@ -1,12 +1,8 @@
 // Adapted from krnl official example
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
-#![feature(stmt_expr_attributes)]
 
 use krnl::{
-    macros::module,
-    anyhow::Result,
-    device::Device,
-    buffer::{Buffer, Slice, SliceMut},
+    anyhow::{anyhow, Result}, buffer::{Buffer, Slice, SliceMut}, device::Device, macros::module
 };
 
 #[module]
@@ -48,23 +44,7 @@ fn saxpy(alpha: f32, x: Slice<f32>, mut y: SliceMut<f32>) -> Result<()> {
         return Ok(());
     }
 
-    let build_kernel =
-    #[cfg_attr(coverage_nightly, coverage(off))]
-    | | {
-        if true {
-            kernels::saxpy::builder()?
-                .build(y.device())?
-                .dispatch(alpha, x, y)
-        } else {
-            // or
-            kernels::saxpy_global::builder()?
-                .build(y.device())?
-                .with_global_threads(y.len() as u32)
-                .dispatch(alpha, x, y)
-        }
-    };
-
-    build_kernel()
+    return Err(anyhow!("slice not on host"));
 }
 
 pub fn run_saxpy() -> Result<Vec<f32>> {
@@ -76,6 +56,5 @@ pub fn run_saxpy() -> Result<Vec<f32>> {
     let mut y = Buffer::from(y).into_device(device.clone())?;
     saxpy(alpha, x.as_slice(), y.as_slice_mut())?;
     let y = y.into_vec()?;
-    // println!("{y:?}");
     Ok(y)
 }
