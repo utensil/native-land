@@ -20,6 +20,11 @@ Should also check out:
 For rust-gpu, should check out:
 
 - https://embarkstudios.github.io/rust-gpu/book/writing-shader-crates.html
+- used extensively by
+  - https://github.com/charles-r-earp/autograph
+    - https://github.com/charles-r-earp/krnl
+  - https://github.com/schell/renderling
+  - https://github.com/GraphiteEditor/Graphite
 - Bevy-Rust-GPU Compute example: https://github.com/Bevy-Rust-GPU/example-workspace/pull/22
 - documentation and examples for porting WGSL/GLSL shaders: https://github.com/EmbarkStudios/rust-gpu/issues/1096
   - https://github.com/bevyengine/bevy/blob/main/assets/shaders/game_of_life.wgsl
@@ -33,16 +38,19 @@ For CubeCL, should check out:
 
 - [CubeCL Architecture Overview - Running Rust on your GPU (WebGPU, CUDA)](https://gist.github.com/nihalpasham/570d4fe01b403985e1eaf620b6613774)
 - https://github.com/nobuyuki83/floor_plan
+- CubeCL is most extensively used in its [JIT backend](https://github.com/tracel-ai/burn/tree/main/crates/burn-jit)
 
 For candle, should check out:
 
 - https://github.com/ToluClassics/candle-tutorial
 - https://github.com/tomsanbear/candle-einops
+- Burn has a [candle backend](https://github.com/tracel-ai/burn/tree/main/crates/burn-candle)
 
 For tch-rs, should check out:
 
 - https://github.com/zurgl/makemore-rs
 - https://github.com/VasanthakumarV/einops
+- Burn has a [tch backend](https://github.com/tracel-ai/burn/tree/main/crates/burn-tch)
 
 For wgpu, don't forget to check out:
 

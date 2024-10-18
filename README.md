@@ -4,9 +4,9 @@
 
 [![codecov](https://codecov.io/gh/utensil/native-land/graph/badge.svg?token=MPli1CWOp4)](https://codecov.io/gh/utensil/native-land) [![DeepSource](https://app.deepsource.com/gh/utensil/native-land.svg/?label=code+coverage&show_trend=true&token=RINFELWOIDI0xeIlpAi2NAuG)](https://app.deepsource.com/gh/utensil/native-land/) [![DeepSource](https://app.deepsource.com/gh/utensil/native-land.svg/?label=active+issues&show_trend=true&token=RINFELWOIDI0xeIlpAi2NAuG)](https://app.deepsource.com/gh/utensil/native-land/)
 
-A monorepo for my native projects: Rust, Zig, C++...
+A monorepo for my native projects: Rust, Zig, C++..., including code on GPU.
 
-The repo is organized as follows, strongly inspired by [Research Codebase Manifesto](https://www.moderndescartes.com/essays/research_code/) with shorter names:
+The repo is organized as follows, strongly inspired by [Research Codebase Manifesto](https://www.moderndescartes.com/essays/research_code/) with (tentative) shorter names:
  
 - `yard-*`: experimental stuff per language, avoid dependencies between and upon them, some code might graduate to `proj*` and `pkg-*`
 - `proj`, `proj-*`: projects in general, or per language, may depend on `pkg-*`
