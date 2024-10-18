@@ -211,7 +211,6 @@ def run(
 
             logging.info(f" - Estimated time to download and extrace the image: {eta} seconds")
             logging.info(" - While you're waiting, you can check the status of the pod at https://www.runpod.io/console/pods ")
-            logging.info(f" - After started, use the following command to ssh into the pod: {ssh_command}")
             # logging.info(f"     or the following command in CodeSpace: {codespace_ssh_command}")
 
             runtime = None
@@ -237,18 +236,34 @@ def run(
             logging.info(f"Pod {pod['id']} started:\n{as_yaml(pod_info)}")
             edit_discord_message(msg_created, f"Pod {pod['id']} started:\n{as_yaml(pod_info)}")
 
-            logging.info(f"Use the following command to ssh into the pod:\n{ssh_command}")
+            logging.info(f"Use the following command to ssh into the pod:\n\n{ssh_command}\n\n")
 
-            # try:
-            #     total_try_time = 0 
-            #     while total_try_time < 60: 
-            #         # wait 5 seconds, ssh into the pod, and run `tail -f /content/rust.log`
-            #         time.sleep(5)
-            #         child = pexpect.spawn(f"{ssh_command} 'tail -f /content/rust.log'")
-            #         child.expect(pexpect.EOF)
-            #         total_try_time += 5
-            # except Exception as ex:
-            #     log_error(f"Failed to tail the log for pod {pod['id']}", exc_info=ex)
+            total_try_time = 0
+            with tqdm(total=60) as pbar:
+                while total_try_time < 60:
+                    try:
+                        # wait 5 seconds, ssh into the pod, and run `tail -f /content/run.log`
+                        time.sleep(POLL_PERIOD)
+                        child = pexpect.spawn(f"{ssh_command}")
+                        child.expect(":/#")
+                        child.sendline("tail -f /content/*.log")
+                        # read from child 100 each time until EOF
+                        while child.isalive():
+                            output = child.read(500)
+                            if output:
+                                print(output.decode(), end='')
+                            else:
+                                break
+                        child.expect(pexpect.EOF)
+                    except UnicodeDecodeError as ex:
+                        logging.error(f"Failed to decode the output of the log for pod {pod['id']}", exc_info=ex)
+                        break
+                    except Exception as ex:
+                        logging.error(f"Failed to tail the log for pod {pod['id']}", exc_info=ex)
+                    
+                    total_try_time += POLL_PERIOD
+                    pbar.update(POLL_PERIOD)
+                
 
             # myself = runpod.get_myself()
 
