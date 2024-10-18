@@ -67,7 +67,7 @@ jobs:
       - name: Install the nightly toolchain
         uses: dtolnay/rust-toolchain@nightly
         with:
-          components: rustfmt
+          components: rustfmt clippy
       - uses: taiki-e/install-action@v2
         with:
           tool: just@1.36.0,cargo-binstall,cargo-nextest,cargo-llvm-cov,deepsource
