@@ -1,0 +1,10 @@
+[package]
+name = "krnl-xp"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
+
+[dependencies]
+# krnl = { git = "https://github.com/charles-r-earp/krnl", rev = "96b5d97205ba2cd08ad65e99d758c26349c31b24"}
+krnl = "0.1.1"
