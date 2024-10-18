@@ -30,12 +30,14 @@ prep-ci:
 ci: prep-ci
     just clippy
     just cov
+    just cov-rsgpu
 
 [macos]
 [windows]
 ci: prep-ci
     just clippy
     just test
+    just test-rsgpu
 
 [group('rust'), no-cd]
 test:
@@ -185,3 +187,11 @@ prep-linux:
 [group('tch')]
 prep-tch:
     cd yard-rs/tch-xp && just prep-tch
+
+[group('rust-gpu')]
+test-rsgpu:
+    cd yard-rs/rsgpu-xp && just test
+
+[group('rust-gpu')]
+cov-rsgpu:
+    cd yard-rs/rsgpu-xp && just cov
