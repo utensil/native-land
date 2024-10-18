@@ -81,6 +81,14 @@ vcov: cov
     cargo +nightly llvm-cov report --ignore-filename-regex main.rs --html --open
 
 [group('rust'), no-cd]
+build:
+    cargo build
+
+[group('rust'), no-cd]
+build-stable:
+    cargo +stable build
+
+[group('rust'), no-cd]
 build-nightly:
     cargo +nightly build
 
