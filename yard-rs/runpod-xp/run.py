@@ -237,6 +237,19 @@ def run(
             logging.info(f"Pod {pod['id']} started:\n{as_yaml(pod_info)}")
             edit_discord_message(msg_created, f"Pod {pod['id']} started:\n{as_yaml(pod_info)}")
 
+            logging.info(f"Use the following command to ssh into the pod:\n{ssh_command}")
+
+            # try:
+            #     total_try_time = 0 
+            #     while total_try_time < 60: 
+            #         # wait 5 seconds, ssh into the pod, and run `tail -f /content/rust.log`
+            #         time.sleep(5)
+            #         child = pexpect.spawn(f"{ssh_command} 'tail -f /content/rust.log'")
+            #         child.expect(pexpect.EOF)
+            #         total_try_time += 5
+            # except Exception as ex:
+            #     log_error(f"Failed to tail the log for pod {pod['id']}", exc_info=ex)
+
             # myself = runpod.get_myself()
 
             # log_info(f"RunPod overview:\n{as_yaml(myself)}")
