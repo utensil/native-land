@@ -1,4 +1,6 @@
 // Adapted from krnl official example
+#![cfg_attr(coverage_nightly, feature(coverage_attribute))]
+#![feature(stmt_expr_attributes)]
 
 use krnl::{
     macros::module,
@@ -19,12 +21,14 @@ mod kernels {
 
     // Item kernels for iterator patterns.
     #[kernel]
+    #[cfg_attr(coverage_nightly, coverage(off))]
     pub fn saxpy(alpha: f32, #[item] x: f32, #[item] y: &mut f32) {
         saxpy_impl(alpha, x, y);
     }
 
     // General purpose kernels like CUDA / OpenCL.
     #[kernel]
+    #[cfg_attr(coverage_nightly, coverage(off))]
     pub fn saxpy_global(alpha: f32, #[global] x: Slice<f32>, #[global] y: UnsafeSlice<f32>) {
         use krnl_core::buffer::UnsafeIndex;
 
@@ -43,20 +47,27 @@ fn saxpy(alpha: f32, x: Slice<f32>, mut y: SliceMut<f32>) -> Result<()> {
             .for_each(|(x, y)| kernels::saxpy_impl(alpha, x, y));
         return Ok(());
     }
-    if true {
-        kernels::saxpy::builder()?
-            .build(y.device())?
-            .dispatch(alpha, x, y)
-    } else {
-        // or
-        kernels::saxpy_global::builder()?
-            .build(y.device())?
-            .with_global_threads(y.len() as u32)
-            .dispatch(alpha, x, y)
-    }
+
+    let build_kernel =
+    #[cfg_attr(coverage_nightly, coverage(off))]
+    | | {
+        if true {
+            kernels::saxpy::builder()?
+                .build(y.device())?
+                .dispatch(alpha, x, y)
+        } else {
+            // or
+            kernels::saxpy_global::builder()?
+                .build(y.device())?
+                .with_global_threads(y.len() as u32)
+                .dispatch(alpha, x, y)
+        }
+    };
+
+    build_kernel()
 }
 
-fn main() -> Result<()> {
+pub fn run_saxpy() -> Result<Vec<f32>> {
     let x = vec![1f32];
     let alpha = 2f32;
     let y = vec![0f32];
@@ -65,6 +76,6 @@ fn main() -> Result<()> {
     let mut y = Buffer::from(y).into_device(device.clone())?;
     saxpy(alpha, x.as_slice(), y.as_slice_mut())?;
     let y = y.into_vec()?;
-    println!("{y:?}");
-    Ok(())
+    // println!("{y:?}");
+    Ok(y)
 }
