@@ -4,8 +4,9 @@ use crate::CompiledShaderModules;
 // use std::borrow::Cow;
 // use std::time::Duration;
 use wgpu::util::DeviceExt;
+use std::collections::HashMap;
 
-pub fn start() {
+pub fn start() -> HashMap<u32, u32> {
     // let manifest_dir = env!("CARGO_MANIFEST_DIR");
     // let path= [manifest_dir, "compiled-shaders", "shaders"]
     //     .iter()
@@ -26,10 +27,10 @@ pub fn start() {
     // let compiled_shader_modules = vec![(None, load_spv_module(path))];
     let compiled_shader_modules = vec![(None, wgpu::include_spirv_raw!(env!("shaders.spv")))];
 
-    futures::executor::block_on(start_internal(CompiledShaderModules { named_spv_modules: compiled_shader_modules }));
+    futures::executor::block_on(start_internal(CompiledShaderModules { named_spv_modules: compiled_shader_modules }))
 }
 
-async fn start_internal(compiled_shader_modules: CompiledShaderModules) {
+async fn start_internal(compiled_shader_modules: CompiledShaderModules) -> HashMap<u32, u32> {
     let backends = wgpu::util::backend_bits_from_env().unwrap_or(wgpu::Backends::PRIMARY);
     let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
         backends,
@@ -200,17 +201,20 @@ async fn start_internal(compiled_shader_modules: CompiledShaderModules) {
     readback_buffer.unmap();
     // drop(timing_data);
     // timestamp_readback_buffer.unmap();
-    let mut max = 0;
-    for (src, out) in src_range.zip(result.iter().copied()) {
-        if out == u32::MAX {
-            println!("{src}: overflowed");
-            break;
-        } else if out > max {
-            max = out;
-            // Should produce <https://oeis.org/A006877>
-            println!("{src}: {out}");
-        }
-    }
+    // let mut max = 0;
+
+    src_range.zip(result.iter().copied()).collect::<HashMap<_, _>>()
+
+    // for (src, out) in src_range.zip(result.iter().copied()) {
+    //     if out == u32::MAX {
+    //         println!("{src}: overflowed");
+    //         break;
+    //     } else if out > max {
+    //         max = out;
+    //         // Should produce <https://oeis.org/A006877>
+    //         println!("{src}: {out}");
+    //     }
+    // }
     // println!(
     //     "Took: {:?}",
     //     Duration::from_nanos(

@@ -39,7 +39,7 @@ ci: prep-ci
 
 [group('rust'), no-cd]
 test:
-    just test-nightly
+    cargo nextest run --no-fail-fast --retries 2
 
 [group('util'), no-cd]
 list:
@@ -47,7 +47,7 @@ list:
 
 [group('rust'), no-cd]
 test-stable:
-    cargo +stable test
+    cargo +stable nextest run --no-fail-fast --retries 2
 
 # [group('rust'), no-cd]
 # prep-stable:
@@ -69,7 +69,8 @@ test-stable:
     yes|cargo +nightly nextest run --no-fail-fast --retries 2
 
 [group('rust'), no-cd]
-cov: cov-nightly
+cov:
+    yes|cargo llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
 
 [group('rust'), no-cd]
 cov-nightly:
@@ -77,7 +78,7 @@ cov-nightly:
 
 [group('rust'), no-cd]
 clippy:
-    just clippy-nightly
+    cargo clippy
 
 [group('rust'), no-cd]
 clippy-stable:
@@ -88,7 +89,7 @@ clippy-nightly:
     cargo +nightly clippy
 
 vcov: cov
-    cargo +nightly llvm-cov report --ignore-filename-regex main.rs --html --open
+    cargo llvm-cov report --ignore-filename-regex main.rs --html --open
 
 [group('rust'), no-cd]
 build:
