@@ -1,0 +1,7 @@
+# this file is there only to make rust-analyzer happy
+# should use `just build/test/cov` etc. to set environment variables properly
+# FIXME: rust-analyzer is still not happy
+[env]
+LIBTORCH = { value = "../../../libtorch" , relative = true }
+DYLD_LIBRARY_PATH = { value = "./../../../libtorch/lib" , relative = true }
+DYLD_FALLBACK_LIBRARY_PATH = { value = "./../../../libtorch/lib" , relative = true }
