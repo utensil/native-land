@@ -1,7 +1,7 @@
 task: 42
 runpod:
   entry: |
-    bash -c "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/utensil/native-land/main/yard-rs/runpod-xp/scripts/rust.sh -sSf | bash" >> /content/rust.log
+    bash -c "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/utensil/native-land/main/yard-rs/runpod-xp/scripts/rust.sh -sSf | bash"
 
   # "AMD Instinct MI300X OAM"
   # "NVIDIA A100 80GB PCIe"

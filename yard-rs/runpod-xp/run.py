@@ -17,7 +17,8 @@ sys.path.insert(0, ".")
 from common import log_info, log_error, edit_discord_message  # noqa: F403,E402
 
 # https://github.com/runpod/containers/blob/main/official-templates/pytorch/docker-bake.hcl
-CUSTOM_RUNPOD_IMAGE = 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04'
+# CUSTOM_RUNPOD_IMAGE = 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04'
+CUSTOM_RUNPOD_IMAGE = 'runpod/pytorch:2.2.1-py3.10-cuda12.1.1-devel-ubuntu22.04'
 CUSTOM_RUNPOD_IMAGE_SIZE_IN_GB = 12.5
 CUSTOM_RUNPOD_IMAGE_SIZE = CUSTOM_RUNPOD_IMAGE_SIZE_IN_GB * 1024  # In MB
 BITS_PER_BYTE = 8

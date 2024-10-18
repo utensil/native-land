@@ -2,6 +2,9 @@ set dotenv-load
 
 apikey := env_var("RUNPOD_API_KEY")
 
+default:
+    just --list
+
 prep:
     pip install -r requirements-runpod.txt
 

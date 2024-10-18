@@ -28,6 +28,8 @@ else
   (cd native-land && git pull)
 fi
 
+exec >> /content/rust.log 2>&1
+
 cd native-land
 just prep-linux
 cd yard-rs/bevy-xp
