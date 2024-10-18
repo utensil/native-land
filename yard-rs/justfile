@@ -93,7 +93,7 @@ bt *PARAMS:
     mkdir -p {{example_xp}}
     cd {{example_xp}}
     if [[ ! -d {{example_xp / DIR}} ]]; then
-        git clone --depth=100 {{URL}} {{example_xp / DIR}}
+        git clone --depth=100 --recurse-submodules {{URL}} {{example_xp / DIR}}
     fi
     cd {{example_xp / DIR}}
     git checkout {{BRANCH}}
@@ -136,6 +136,11 @@ try-rg EX="runners/wgpu": (prep-ex "https://github.com/Rust-GPU/rust-gpu" "rust-
 [group('ex')]
 try-wg : (prep-ex "https://github.com/gfx-rs/wgpu" "wgpu" "trunk")
     cd {{example_xp / "wgpu" }} && cargo bench -p wgpu-benchmark --features tracy
+
+[group('ex')]
+try-mlx : (prep-ex "https://github.com/oxideai/mlx-rs" "mlx-rs" "main")
+    cd {{example_xp / "mlx-rs" / "mlx-sys" }} && cargo run --release --example is_metal_available
+    cd {{example_xp / "mlx-rs" / "mlx-rs" }} && cargo run --release --example tutorial
 
 # need to change the version of tracy-client to match the tracy installed, see https://github.com/nagisa/rust_tracy_client
 # but still only CPU usage

@@ -70,3 +70,8 @@ For benchmarking and profiling, should check out:
 - https://github.com/Celtoys/Remotery
 - https://github.com/bevyengine/bevy/blob/main/docs/profiling.md (most informative on profiling)
 - https://github.com/mikesart/gpuvis
+
+An interesting task: convert GPU puzzles into Rust
+  - https://github.com/srush/GPU-Puzzles
+  - https://github.com/AnswerDotAI/gpu.cpp/tree/main/examples/gpu_puzzles
+  - https://github.com/abeleinin/Metal-Puzzles
