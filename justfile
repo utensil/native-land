@@ -28,11 +28,13 @@ prep-ci:
 
 [linux]
 ci: prep-ci
+    just clippy
     just cov
 
 [macos]
 [windows]
 ci: prep-ci
+    just clippy
     just test
 
 [group('rust'), no-cd]
@@ -72,6 +74,18 @@ cov: cov-nightly
 [group('rust'), no-cd]
 cov-nightly:
     yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+clippy:
+    just clippy-nightly
+
+[group('rust'), no-cd]
+clippy-stable:
+    cargo +stable clippy
+
+[group('rust'), no-cd]
+clippy-nightly:
+    cargo +nightly clippy
 
 vcov: cov
     cargo +nightly llvm-cov report --ignore-filename-regex main.rs --html --open

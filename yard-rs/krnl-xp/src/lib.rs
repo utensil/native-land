@@ -49,7 +49,7 @@ fn saxpy(alpha: f32, x: Slice<f32>, mut y: SliceMut<f32>) -> Result<()> {
         return Ok(());
     }
 
-    return Err(anyhow!("slice not on host"));
+    Err(anyhow!("slice not on host"))
 }
 
 pub fn run_saxpy() -> Result<Vec<f32>> {
