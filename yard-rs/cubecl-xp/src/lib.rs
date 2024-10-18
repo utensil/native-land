@@ -1,11 +1,11 @@
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
-use cubecl::prelude::*;
 use cubecl::codegen::Compiler;
+use cubecl::prelude::*;
 use cubecl::ExecutionMode::Unchecked;
 
 #[cfg_attr(coverage_nightly, coverage(off))]
-#[cube(launch_unchecked,create_dummy_kernel)]
+#[cube(launch_unchecked, create_dummy_kernel)]
 fn gelu_array<F: Float>(input: &Array<Line<F>>, output: &mut Array<Line<F>>) {
     if ABSOLUTE_POS < input.len() {
         output[ABSOLUTE_POS] = gelu_scalar::<F>(input[ABSOLUTE_POS]);
@@ -28,7 +28,7 @@ pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
 
     // adapted from
     // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/common.rs
-    // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/main.rs 
+    // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/main.rs
 
     let knl = gelu_array::create_dummy_kernel::<f32, R>(
         CubeCount::Static(1, 1, 1),

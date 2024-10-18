@@ -3,9 +3,9 @@
 // - https://huggingface.github.io/candle/inference/hub.html
 
 use anyhow::{anyhow, Result};
-use candle_core::{Device, Tensor, DType};
-use hf_hub::api::tokio::Api;
+use candle_core::{DType, Device, Tensor};
 use candle_nn::{Linear, Module};
+use hf_hub::api::tokio::Api;
 use memmap2::Mmap;
 use std::fs;
 
@@ -21,7 +21,7 @@ impl Model {
         Ok(x.matmul(&self.second)?)
     }
 }
-const USE_MMAP : bool = true;
+const USE_MMAP: bool = true;
 
 async fn task() -> Result<()> {
     // Use Device::new_cuda(0)?; to use the GPU.
@@ -53,13 +53,15 @@ async fn task() -> Result<()> {
         candle_core::safetensors::load(weights_filename, &Device::Cpu)?
     };
 
-    let weight = weights.get("bert.encoder.layer.0.attention.self.query.weight")
+    let weight = weights
+        .get("bert.encoder.layer.0.attention.self.query.weight")
         .ok_or(anyhow!("fail to get weight"))?;
-    let bias = weights.get("bert.encoder.layer.0.attention.self.query.bias")
+    let bias = weights
+        .get("bert.encoder.layer.0.attention.self.query.bias")
         .ok_or(anyhow!("fail to get bias"))?;
-    
+
     let linear = Linear::new(weight.clone(), Some(bias.clone()));
-    
+
     let input_ids = Tensor::zeros((3, 768), DType::F32, &Device::Cpu)?;
     let output = linear.forward(&input_ids)?;
 

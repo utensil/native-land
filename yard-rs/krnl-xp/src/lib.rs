@@ -2,7 +2,10 @@
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
 use krnl::{
-    anyhow::{anyhow, Result}, buffer::{Buffer, Slice, SliceMut}, device::Device, macros::module
+    anyhow::{anyhow, Result},
+    buffer::{Buffer, Slice, SliceMut},
+    device::Device,
+    macros::module,
 };
 
 #[module]
@@ -30,7 +33,9 @@ mod kernels {
 
         let global_id = kernel.global_id();
         if global_id < x.len().min(y.len()) {
-            saxpy_impl(alpha, x[global_id], unsafe { y.unsafe_index_mut(global_id) });
+            saxpy_impl(alpha, x[global_id], unsafe {
+                y.unsafe_index_mut(global_id)
+            });
         }
     }
 }

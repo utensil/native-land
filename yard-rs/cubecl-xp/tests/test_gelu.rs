@@ -8,7 +8,10 @@ fn test_launch() {
 
     // pretty_assertions::assert_eq!(vec![-0.1587, 0.0000, 0.8413, 5.0000], result);
     // test float equality for result
-    for (a, b) in result.iter().zip(vec![-0.1587, 0.0000, 0.8413, 5.0000].iter()) {
+    for (a, b) in result
+        .iter()
+        .zip(vec![-0.1587, 0.0000, 0.8413, 5.0000].iter())
+    {
         assert!((a - b).abs() < 1e-2);
     }
 }
