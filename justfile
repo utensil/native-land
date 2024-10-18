@@ -47,10 +47,6 @@ list:
 test-stable:
     cargo +stable test
 
-[group('rust'), no-cd]
-build-stable:
-    cargo +stable build
-
 # [group('rust'), no-cd]
 # prep-stable:
 #     # https://rust-analyzer.github.io/manual.html#installation
