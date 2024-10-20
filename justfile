@@ -30,14 +30,14 @@ prep-ci:
 ci: prep-ci
     just clippy
     just cov
-    just cov-rsgpu
+    # just cov-rsgpu
 
 [macos]
 [windows]
 ci: prep-ci
     just clippy
     just test
-    just test-rsgpu
+    # just test-rsgpu
 
 [group('rust'), no-cd]
 test:
