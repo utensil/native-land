@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
-    - uses: extractions/setup-just@v1
+    - uses: extractions/setup-just@v2
       with:
         just-version: 1.36.0
     - name: Setup Python
