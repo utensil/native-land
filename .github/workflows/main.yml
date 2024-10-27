@@ -119,7 +119,7 @@ jobs:
         run: |
           just ci
       - name: Report to DeepSource
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && env.DEEPSOURCE_DSN
         run: |
           deepsource report --analyzer test-coverage --key rust --value-file lcov.info
         env:
