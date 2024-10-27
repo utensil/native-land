@@ -1,3 +1,4 @@
+example_xp := justfile_directory() / "example-xp"
 
 default:
     just --list
@@ -7,3 +8,19 @@ prep-xrepo:
 
 new NAME:
     xmake create -l c++ -P {{NAME}}
+
+[group('ex')]
+@prep-ex URL DIR BRANCH:
+    #!/usr/bin/env bash
+    mkdir -p {{example_xp}}
+    cd {{example_xp}}
+    if [[ ! -d {{example_xp / DIR}} ]]; then
+        git clone --depth=100 --recurse-submodules {{URL}} {{example_xp / DIR}}
+    fi
+    cd {{example_xp / DIR}}
+    git fetch --depth=100 origin {{BRANCH}}
+    git checkout {{BRANCH}}
+
+try-gabm: (prep-ex "https://github.com/utensil/ga-benchmark" "ga-benchmark" "master")
+    cd {{example_xp / "ga-benchmark"}} 
+  

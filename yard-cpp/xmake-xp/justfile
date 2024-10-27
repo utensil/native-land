@@ -34,6 +34,7 @@ prep-conda:
     xmake require -v --search "vcpkg::{{NAME}}" || true
     xmake require -v --search "conan::{{NAME}}" || true
     xmake require -v --search "conda::{{NAME}}" || true
+    xmake require -v --search "cmake::{{NAME}}" || true
     # xmake require --search "clib::{{NAME}}" || true
     # xmake require --search "brew::{{NAME}}" || true
 

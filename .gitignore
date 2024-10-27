@@ -16,7 +16,7 @@ config_*
 archived/exercism
 **/.DS_Store
 .vscode/settings.json
-yard-rs/example-xp/
+yard-*/example-xp/
 yard-rs/nohup.out
 yard-rs/runpod-xp/.env
 yard-rs/runpod-xp/__pycache__/
