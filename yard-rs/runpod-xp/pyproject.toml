@@ -1,0 +1,17 @@
+[project]
+name = "runpod-xp"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "addict>=2.4.0",
+    "discord-py>=2.4.0",
+    "fire>=0.7.0",
+    "pexpect>=4.9.0",
+    "runpod",
+    "setuptools>=75.2.0",
+    "tqdm>=4.66.5",
+]
+
+[tool.uv.sources]
+runpod = { git = "https://github.com/utensil/runpod-python", rev = "pod" }

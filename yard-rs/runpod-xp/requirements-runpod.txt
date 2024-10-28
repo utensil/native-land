@@ -4,3 +4,4 @@ addict
 tqdm
 discord.py
 pexpect
+setuptools

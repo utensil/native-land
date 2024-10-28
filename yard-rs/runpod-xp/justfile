@@ -6,19 +6,20 @@ default:
     just --list
 
 prep:
-    pip install -r requirements-runpod.txt
+    uv init --no-readme --no-pin-python --python 3.11
+    uv add -r requirements-runpod.txt --python 3.11 # --script *.py
 
 monit:
-    python monit.py
+    uv run monit.py
 
 kill:
-    python kill.py
+    uv run kill.py
 
 test-kill ID:
     RUNPOD_POD_ID={{ID}} python kill.py
 
 run CONFIG="demo.yml":
-    python run.py {{ justfile_directory() / "tasks" / CONFIG }}
+    uv run run.py {{ justfile_directory() / "tasks" / CONFIG }}
 
 gpus:
     #!/usr/bin/env bash
