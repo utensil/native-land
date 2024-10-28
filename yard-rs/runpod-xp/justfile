@@ -9,6 +9,12 @@ prep:
     uv init --no-readme --no-pin-python --python 3.11
     uv add -r requirements-runpod.txt --python 3.11 # --script *.py
 
+deps:
+    uv pip compile requirements-runpod.txt
+
+sync-deps:
+    uv sync
+
 monit:
     uv run monit.py
 

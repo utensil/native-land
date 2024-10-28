@@ -2,7 +2,7 @@
 name = "runpod-xp"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.11"
+requires-python = "==3.11.*"
 dependencies = [
     "addict>=2.4.0",
     "discord-py>=2.4.0",
