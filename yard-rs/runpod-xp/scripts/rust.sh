@@ -19,6 +19,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y
 . "$HOME/.cargo/env"
 
+
+
 mkdir -p /content/
 cd /content/
 
@@ -45,7 +47,9 @@ cd ../../
 just ci
 
 cd /content/native-land/yard-rs/runpod-xp
-pip install -r requirements-runpod.txt
-just kill
+time just prep-uv
+time just monit
+sleep 60
+time just kill
 
 sleep infinity

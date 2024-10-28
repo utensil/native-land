@@ -18,7 +18,7 @@ kill:
 test-kill ID:
     RUNPOD_POD_ID={{ID}} python kill.py
 
-run CONFIG="demo.yml":
+run CONFIG="rust.yml":
     uv run run.py {{ justfile_directory() / "tasks" / CONFIG }}
 
 gpus:
@@ -27,3 +27,12 @@ gpus:
         --header 'content-type: application/json' \
         --url 'https://api.runpod.io/graphql?api_key={{ apikey }}' \
         --data '{"query": "query GpuTypes { gpuTypes { id displayName memoryInGb } }"}'| jq | tee gpus.json |jq ".data.gpuTypes[].id"
+
+[unix]
+prep-uv:
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+
+[windows]
+prep-uv:
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
