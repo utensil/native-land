@@ -30,7 +30,12 @@ else
   (cd native-land && git pull)
 fi
 
-exec >> /content/rust.log 2>&1
+LOGFILE=/content/rust.log
+
+echo "Redirecting output to $LOGFILE"
+echo "To inspect, run: tail -f $LOGFILE"
+
+exec >> $LOGFILE 2>&1
 
 cd native-land
 just prep-linux
