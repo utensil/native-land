@@ -26,7 +26,6 @@ jobs:
     - name: Monit
       run: |
         cd yard-rs/runpod-xp
-        just prep
         just monit
       env:
         RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
