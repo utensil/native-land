@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -euxo pipefail
+# set -euxo pipefail
 
-set -x
+# set -x
 
 WORKSPACE=${WORKSPACE:-"/workspace"}
 
