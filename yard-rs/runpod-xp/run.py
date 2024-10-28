@@ -249,11 +249,15 @@ def run(
                         child.sendline("tail -f /content/*.log")
                         # read from child 100 each time until EOF
                         while child.isalive():
-                            output = child.read(1000)
-                            if output:
-                                print(output.decode(), end='')
-                            else:
-                                break
+                            try:
+                                output = child.read(1000)
+                                if output:
+                                    print(output.decode(), end='')
+                                else:
+                                    break
+                            except pexpect.exceptions.TIMEOUT:
+                                # logging.error(f"Timeout while tailing the log for pod {pod['id']}")
+                                continue
                         child.expect(pexpect.EOF)
                     except pexpect.exceptions.EOF:
                         logging.info(f"EOF while tailing the log for pod {pod['id']}")
@@ -261,9 +265,6 @@ def run(
                     except UnicodeDecodeError as ex:
                         logging.error(f"Failed to decode the output of the log for pod {pod['id']}", exc_info=ex)
                         continue 
-                    except pexpect.exceptions.TIMEOUT:
-                        logging.error(f"Timeout while tailing the log for pod {pod['id']}")
-                        continue
                     except Exception as ex:
                         logging.error(f"Failed to tail the log for pod {pod['id']}", exc_info=ex)
                     
