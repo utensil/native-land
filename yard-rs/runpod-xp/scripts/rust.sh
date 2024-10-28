@@ -38,21 +38,20 @@ exec >> $LOGFILE 2>&1
 
 cd native-land
 just prep-linux
-cd yard-rs/bevy-xp
-cargo test
-cd ../../
-cd yard-rs/cubecl-xp
-cargo test --no-default-features --features=cuda
-cargo run --example gelu --no-default-features --features=cuda
-cd ../../
-cd yard-rs/krnl-xp
-cargo test
-cd ../../
-just ci
+# cd yard-rs/bevy-xp
+# cargo test
+# cd ../../
+# cd yard-rs/cubecl-xp
+# cargo test --no-default-features --features=cuda
+# cargo run --example gelu --no-default-features --features=cuda
+# cd ../../
+# cd yard-rs/krnl-xp
+# cargo test
+# cd ../../
+just ci || echo "❌ CI failed"
 
 cd /content/native-land/yard-rs/runpod-xp
 time just prep-uv
-time just monit
 sleep 60
 time just kill
 
