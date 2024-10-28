@@ -20,7 +20,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-t
 . "$HOME/.cargo/env"
 
 
-
 mkdir -p /content/
 cd /content/
 

@@ -130,6 +130,7 @@ prep-linux:
     curl \
     wget \
     file \
+    unzip \
     libxdo-dev \
     libssl-dev \
     libayatana-appindicator3-dev \
