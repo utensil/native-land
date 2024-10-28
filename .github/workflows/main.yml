@@ -39,7 +39,7 @@ jobs:
           - windows-2022
           # macos-15 is deploying, macos-latest is still macos-14
           - macos-15
-        python-version: ["3.11"]
+        lang: ["Rust"]
       fail-fast: false
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -131,10 +131,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # required
           files: lcov.info
           # fail_ci_if_error: true # optional (default = false)
-    # - name: Install Python ${{ matrix.python-version }}
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
     # - name: Test evcxr notebooks
     #   run: |
     #     cd notebooks
