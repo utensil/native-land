@@ -255,6 +255,9 @@ def run(
                             else:
                                 break
                         child.expect(pexpect.EOF)
+                    except pexpect.exceptions.EOF:
+                        logging.info(f"EOF while tailing the log for pod {pod['id']}")
+                        continue 
                     except UnicodeDecodeError as ex:
                         logging.error(f"Failed to decode the output of the log for pod {pod['id']}", exc_info=ex)
                         continue 

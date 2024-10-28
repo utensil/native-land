@@ -48,6 +48,7 @@ just prep-linux
 # cd yard-rs/krnl-xp
 # cargo test
 # cd ../../
+just prep-test
 just ci || echo "❌ CI failed"
 
 cd /content/native-land/yard-rs/runpod-xp
