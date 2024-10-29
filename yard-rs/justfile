@@ -155,6 +155,18 @@ try-wp: (prep-ex "https://github.com/Wumpf/wgpu-profiler" "wgpu-profiler" "main"
 try-cl EX="gelu": (prep-ex "https://github.com/tracel-ai/cubecl" "cubecl" "main")
     cd {{example_xp / "cubecl" }} && cargo run --release --example {{EX}}
 
+[group('ex')]
+try-mbc CASE="scalar": (prep-ex "https://github.com/utensil/mathbench-rs" "mathbench-rs" "master")
+    #!/usr/bin/env bash
+    cd {{example_xp / "mathbench-rs" }}
+    cargo bench --features {{CASE}} {{CASE}}
+
+[group('ex')]
+v-mbc:
+    #!/usr/bin/env bash
+    cd {{example_xp / "mathbench-rs" }}
+    uv run --with prettytable scripts/summary.py glam nalgebra ultraviolet
+
 # run just prep-tch before running the tch examples!!
 
 # basics 
@@ -251,3 +263,4 @@ prep-krnl:
     # cargo +nightly-2023-05-27 install krnlc --locked
     cd .. && rm -rf target/krnlc
     cd krnl-xp && (rm krnl-cache.rs || true) && krnlc
+
