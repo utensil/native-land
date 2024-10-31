@@ -165,7 +165,8 @@ try-mbc CASE="scalar": (prep-ex "https://github.com/utensil/mathbench-rs" "mathb
 v-mbc:
     #!/usr/bin/env bash
     cd {{example_xp / "mathbench-rs" }}
-    uv run --with prettytable scripts/summary.py glam nalgebra ultraviolet
+    uv run --with prettytable scripts/summary.py glam nalgebra ultraviolet cgmath
+    open {{ example_xp / "mathbench-rs/target/criterion/report/index.html" }}
 
 # run just prep-tch before running the tch examples!!
 
