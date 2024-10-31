@@ -1,8 +1,8 @@
 extern crate chrono;
 
 #[cfg(test)]
-mod run_cxx_test {
-    use rust_cpp::run_cxx::*;
+mod run_cpp_test {
+    use rust_cpp::run_cpp::*;
     use chrono::Utc;
 
     #[test]
@@ -17,7 +17,7 @@ mod run_cxx_test {
     }
 
     // Run it with
-    // cargo test --test run_cxx_test -- --nocapture
+    // cargo test --test run_cpp_test -- --nocapture
     #[test]
     fn test_double() {
         double();
