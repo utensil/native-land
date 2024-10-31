@@ -200,4 +200,5 @@ cov-rsgpu:
     cd yard-rs/rsgpu-xp && just cov
 
 prep-cache: prep-binstall
-    cargo binstall sccache --locked
+    which sccache || (yes|cargo binstall sccache)
+
