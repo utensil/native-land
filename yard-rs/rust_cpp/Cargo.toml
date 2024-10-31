@@ -1,10 +1,10 @@
-[workspace]
 [package]
 name = "rust_cpp"
-version = "0.0.1"
-authors = ["utensil <utensilcandel@gmail.com>"]
 build = "build.rs"
-edition = "2021"
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
 
 [dependencies]
 assert_cli = "0.6.3"
