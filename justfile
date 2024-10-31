@@ -4,6 +4,7 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
+export RUSTC_WRAPPER := "sccache"
 
 # export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
 # mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")
@@ -24,6 +25,7 @@ check:
     echo "PATH=$PATH"
 
 prep-ci:
+    just prep-cache
     just prep-tch
 
 [linux]
@@ -196,3 +198,6 @@ test-rsgpu:
 [group('rust-gpu')]
 cov-rsgpu:
     cd yard-rs/rsgpu-xp && just cov
+
+prep-cache: prep-binstall
+    cargo binstall sccache --locked

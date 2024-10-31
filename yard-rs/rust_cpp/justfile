@@ -1,3 +1,6 @@
+
+set fallback
+
 libs := "libs"
 
 @clone URL DIR BRANCH:
@@ -13,3 +16,4 @@ libs := "libs"
 prep-gal: (clone "https://github.com/jeremyong/gal" "gal" "master")
 
 prep-sga: (clone "https://github.com/sudgy/sga" "sga" "master")
+

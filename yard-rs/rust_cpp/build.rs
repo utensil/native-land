@@ -11,4 +11,7 @@ fn main() {
         .include(include_gal)
         .include(include_sga)
         .build("src/lib.rs");
+
+    // suppress cargo rerun for edits
+    println!("cargo:rerun-if-changed=src/run_cpp.rs");
 }
