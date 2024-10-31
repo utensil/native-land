@@ -1,0 +1,15 @@
+libs := "libs"
+
+@clone URL DIR BRANCH:
+    #!/usr/bin/env bash
+    mkdir -p {{libs}}
+    if [[ ! -d {{libs / DIR}} ]]; then
+        git clone --depth=100 --recurse-submodules {{URL}} {{libs / DIR}}
+    fi
+    cd {{libs / DIR}}
+    git fetch --depth=100 origin {{BRANCH}}
+    git checkout {{BRANCH}}
+
+prep-gal: (clone "https://github.com/jeremyong/gal" "gal" "master")
+
+prep-sga: (clone "https://github.com/sudgy/sga" "sga" "master")
