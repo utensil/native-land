@@ -4,14 +4,14 @@ name = "rust_cpp"
 version = "0.0.1"
 authors = ["utensil <utensilcandel@gmail.com>"]
 build = "build.rs"
-edition = "2015"
+edition = "2021"
 
 [dependencies]
 assert_cli = "0.6.3"
 maplit = "1.0.1"
-cpp = "0.4"
+cpp = "0.5"
 chrono = "0.4"
 
 [build-dependencies]
-cpp_build = "0.4"
+cpp_build = "0.5"
 cc = "1.0"

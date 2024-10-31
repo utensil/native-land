@@ -1,7 +1,20 @@
+#![allow(non_upper_case_globals)]
+
+use cpp::cpp;
+
 cpp!{{
-    #include <stdio.h>
+    #include <cstdio>
     #include <chrono>
+    #include <iostream>
 }}
+
+pub fn hello() {
+    unsafe {
+        cpp!([] {
+            std::cout << "Hello, World!" << std::endl;
+        });
+    }
+}
 
 pub fn printf() {
     unsafe {
@@ -37,7 +50,7 @@ pub fn double() {
             })
         };
 
-        let div = |a : f64, b : f64| {
+        let _div = |a : f64, b : f64| {
             cpp!([a as "double", b as "double"] -> f64 as "double" {
                 return a / b;
             })
