@@ -32,10 +32,10 @@ jobs:
       matrix:
         os:
           # see https://github.com/actions/runner-images
-          - ubuntu-22.04
+          # - ubuntu-22.04
           # - windows-2022
           # macos-15 is deploying, macos-latest is still macos-14
-          # - macos-15
+          - macos-15
         lang: ["Rust"]
       fail-fast: false
     steps:
@@ -67,7 +67,7 @@ jobs:
           components: rustfmt clippy
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.36.0,cargo-binstall
+          tool: just@1.36.0,cargo-binstall,sccache
       - name: Setup Python via uv
         uses: astral-sh/setup-uv@v3
         with:
