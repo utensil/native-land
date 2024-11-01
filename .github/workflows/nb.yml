@@ -1,0 +1,117 @@
+name: Notebook CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "notebooks/**"
+      - ".github/workflows/nb.yml"
+      - "!.deepsource.toml"
+      - "!**/README.md"
+    # paths-ignore:
+    #   - "archived/**"
+    #   - "**/README.md"
+    #   - ".gitignore"
+
+env:
+  CARGO_TERM_COLOR: always
+  # # Sourced from https://vulkan.lunarg.com/sdk/home#linux
+  # VULKAN_SDK_VERSION: "1.3.268"
+
+  # # Sourced from https://archive.mesa3d.org/. Bumping this requires
+  # # updating the mesa build in https://github.com/gfx-rs/ci-build and creating a new release.
+  # MESA_VERSION: "23.3.1"
+  # # Corresponds to https://github.com/gfx-rs/ci-build/releases
+  # MESA_CI_BINARY_BUILD: "build18"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          # see https://github.com/actions/runner-images
+          - ubuntu-22.04
+          # - windows-2022
+          # macos-15 is deploying, macos-latest is still macos-14
+          # - macos-15
+        lang: ["Rust"]
+      fail-fast: false
+    steps:
+      - name: Free Disk Space (Ubuntu)
+        if: runner.os == 'Linux'
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 2
+      # - name: Install the stable toolchain
+      #   uses: dtolnay/rust-toolchain@stable
+      #   with:
+      #     components: rustfmt
+      - name: Install the nightly toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt clippy
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just@1.36.0,cargo-binstall
+      - name: Setup Python via uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.27"
+          enable-cache: true
+      - name: quick check
+        run: |
+          cd notebooks
+          just list
+      # - uses: actions/cache@v4
+      #   with:
+      #     path: |
+      #       ~/.cargo/bin/
+      #       ~/.cargo/registry/index/
+      #       ~/.cargo/registry/cache/
+      #       ~/.cargo/git/db/
+      #       target/
+      #     key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-cargo-test-  
+      # - name: Setup Linux for GPU
+      #   if: runner.os == 'Linux'
+      #   uses: tracel-ai/github-actions/setup-linux@v1
+      #   with:
+      #     vulkan-sdk-version: ${{ env.VULKAN_SDK_VERSION }}
+      #     mesa-version: ${{ env.MESA_VERSION }}
+      #     mesa-ci-build-version: ${{ env.MESA_CI_BINARY_BUILD }}
+      # - name: Install linux dependencies
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install libwebkit2gtk-4.1-dev \
+      #       build-essential \
+      #       pkg-config \
+      #       curl \
+      #       wget \
+      #       file \
+      #       libxdo-dev \
+      #       libssl-dev \
+      #       libayatana-appindicator3-dev \
+      #       librsvg2-dev \
+      #       libx11-dev libasound2-dev libudev-dev libxkbcommon-x11-0
+      - name: Test evcxr notebooks
+        run: |
+          cd notebooks
+          just prep
+          just test

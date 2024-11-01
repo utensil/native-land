@@ -202,3 +202,10 @@ cov-rsgpu:
 prep-cache: prep-binstall
     which sccache || (yes|cargo binstall sccache)
 
+[unix]
+prep-uv:
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+[windows]
+prep-uv:
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"

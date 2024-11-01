@@ -1,4 +1,13 @@
-defaut: test
+set fallback
+
+env_sep := if os() == "windows" { ";" } else { ":" }
+venv := join(justfile_directory(), ".venv") 
+export PATH := join(venv, "bin") + env_sep + env_var("PATH")
+
+defaut: list
+
+list:
+    just --list
 
 test:
     pytest -vv --durations=50 --nbval --nbval-kernel-name rust .
@@ -6,7 +15,23 @@ test:
 kernels:
     jupyter kernelspec list
 
-prep:
+lab:
+    jupyter lab
+
+prep: prep-venv
+    uv pip install ipykernel nbval jupyterlab
+    rustup component add rust-src
+    cargo install --locked --force evcxr_jupyter
+    evcxr_jupyter --install
+
+prep-venv:
+    #!/usr/bin/env bash
+    which uv || just prep-uv
+    if [ ! -d .venv ]; then
+        uv venv --seed --python 3.11
+    fi
+
+old-prep:
     #!/usr/bin/env bash
     set -e
     # assuming pyenv is installed
@@ -15,9 +40,6 @@ prep:
     rustup component add rust-src
     cargo install --locked evcxr_jupyter
     evcxr_jupyter --install
-
-lab:
-    jupyter lab
 
 install-pyenv:
     #!/usr/bin/env bash

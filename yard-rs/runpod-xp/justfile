@@ -1,3 +1,4 @@
+set fallback
 set dotenv-load
 
 apikey := env_var("RUNPOD_API_KEY")
@@ -34,11 +35,4 @@ gpus:
         --url 'https://api.runpod.io/graphql?api_key={{ apikey }}' \
         --data '{"query": "query GpuTypes { gpuTypes { id displayName memoryInGb } }"}'| jq | tee gpus.json |jq ".data.gpuTypes[].id"
 
-[unix]
-prep-uv:
-    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-
-[windows]
-prep-uv:
-    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
