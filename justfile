@@ -5,6 +5,7 @@ export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
 export RUSTC_WRAPPER := "sccache"
+# export CARGO_BUILD_JOBS := "4"
 
 # export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
 # mm_packages := join(MAMBA_ROOT_PREFIX, "envs", "tch-rs", "lib", "python3.11", "site-packages")

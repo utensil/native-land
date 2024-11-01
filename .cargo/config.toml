@@ -4,3 +4,10 @@
 LIBTORCH = { value = "../libtorch" , relative = true }
 DYLD_LIBRARY_PATH = { value = ".../libtorch/lib" , relative = true }
 DYLD_FALLBACK_LIBRARY_PATH = { value = "../libtorch/lib" , relative = true }
+
+# This is to avoid using all cores of my 10-core machine, not working as expected
+# it no longer uses all cores at all time, but it still uses all cores at some time
+# [build]
+# jobs = 2
+# rustflags = ["-Z", "threads=4"]
+
