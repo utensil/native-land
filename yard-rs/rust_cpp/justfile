@@ -3,6 +3,9 @@ set fallback
 
 libs := "libs"
 
+default:
+    just list
+
 @clone URL DIR BRANCH:
     #!/usr/bin/env bash
     mkdir -p {{libs}}
