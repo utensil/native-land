@@ -25,3 +25,6 @@ yard-rs/tch-xp/micromamba
 Cargo.lock.bak
 yard-rs/rust_cpp/libs
 notebooks/.ipynb_checkpoints
+yard-cpp/.xmake/macosx/arm64
+yard-cpp/sga-xp/.xmake/macosx/arm64
+yard-cpp/sga-xp/build

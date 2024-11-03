@@ -18,5 +18,7 @@ default:
 
 prep-gal: (clone "https://github.com/jeremyong/gal" "gal" "master")
 
-prep-sga: (clone "https://github.com/sudgy/sga" "sga" "master")
+# prep-sga: (clone "https://github.com/sudgy/sga" "sga" "master")
+
+prep-sga: (clone "https://github.com/sudgy/ganim" "ganim" "master")
 

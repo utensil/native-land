@@ -210,3 +210,16 @@ prep-uv:
 [windows]
 prep-uv:
     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+add-rc LINE:
+    grep -F '{{LINE}}' ~/.zshrc|| echo '{{LINE}}' >> ~/.zshrc
+
+prep-llvm:
+    brew install llvm@18
+    just add-rc 'export LDFLAGS="-L/opt/homebrew/opt/llvm@18/lib/c++ -L/opt/homebrew/opt/llvm@18/lib -lunwind"'
+    just add-rc 'export PATH="/opt/homebrew/opt/llvm@18/bin:$PATH"' 
+    just add-rc 'export LDFLAGS="-L/opt/homebrew/opt/llvm@18/lib"'
+    just add-rc 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@18/include"'
+
+prep-gcc:
+    brew install gcc@13
