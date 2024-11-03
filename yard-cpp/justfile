@@ -1,6 +1,9 @@
 set fallback
 
 example_xp := justfile_directory() / "example-xp"
+# export CC := '/opt/homebrew/Cellar/llvm/19.1.2/bin/clang'
+# export CXX := '/opt/homebrew/Cellar/llvm/19.1.2/bin/clang++'
+# export LD := '/opt/homebrew/Cellar/llvm/19.1.2/bin/lld'
 # export CC := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/clang'
 # export CXX := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/clang++'
 # export LD := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/lld'

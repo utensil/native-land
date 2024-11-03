@@ -215,6 +215,9 @@ add-rc LINE:
     grep -F '{{LINE}}' ~/.zshrc|| echo '{{LINE}}' >> ~/.zshrc
 
 prep-llvm:
+    brew install llvm@19
+
+prep-llvm18:
     brew install llvm@18
     just add-rc 'export LDFLAGS="-L/opt/homebrew/opt/llvm@18/lib/c++ -L/opt/homebrew/opt/llvm@18/lib -lunwind"'
     just add-rc 'export PATH="/opt/homebrew/opt/llvm@18/bin:$PATH"' 
