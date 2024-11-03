@@ -1,8 +1,12 @@
 set fallback
 
 example_xp := justfile_directory() / "example-xp"
-# export CC := `which clang`
-# export CXX := `which clang++`
+# export CC := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/clang'
+# export CXX := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/clang++'
+# export LD := '/opt/homebrew/Cellar/llvm@18/18.1.8/bin/lld'
+# export CC := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/clang'
+# export CXX := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/clang++'
+# export LD := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/lld'
 export CC := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/gcc-13'
 export CXX := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
 export LD := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
@@ -34,6 +38,7 @@ try-gabm: (prep-ex "https://github.com/utensil/ga-benchmark" "ga-benchmark" "mas
 [no-cd]
 build:
     xmake f --toolchain=gcc --cxx={{CXX}} --cc={{CC}} --ld={{LD}}
+    # xmake f --toolchain=clang --cxx={{CXX}} --cc={{CC}} --ld={{LD}}
     xmake -vv
  
 [no-cd]

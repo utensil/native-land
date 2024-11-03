@@ -221,5 +221,8 @@ prep-llvm:
     just add-rc 'export LDFLAGS="-L/opt/homebrew/opt/llvm@18/lib"'
     just add-rc 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@18/include"'
 
+prep-llvm17:
+    brew install llvm@17
+
 prep-gcc:
     brew install gcc@13
