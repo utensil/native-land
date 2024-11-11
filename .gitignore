@@ -28,3 +28,4 @@ notebooks/.ipynb_checkpoints
 yard-cpp/.xmake/macosx/arm64
 yard-cpp/sga-xp/.xmake/macosx/arm64
 yard-cpp/sga-xp/build
+yard-cpp/sga-xp/.clangd

@@ -10,9 +10,13 @@ example_xp := justfile_directory() / "example-xp"
 # export CC := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/clang'
 # export CXX := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/clang++'
 # export LD := '/opt/homebrew/Cellar/llvm@17/17.0.6/bin/lld'
-export CC := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/gcc-13'
-export CXX := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
-export LD := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
+# export CC := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/gcc-13'
+# export CXX := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
+# export LD := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
+
+export CC := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/gcc-14'
+export CXX := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/g++-14'
+export LD := `which ld`
 
 default:
     just --list

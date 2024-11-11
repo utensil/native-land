@@ -1,0 +1,4 @@
+CompileFlags:
+  Add:
+    - -std=c++23
+    - -I$HOME/projects/native-land/yard-rs/rust_cpp/libs/ganim/src/

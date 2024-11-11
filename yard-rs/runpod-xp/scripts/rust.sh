@@ -13,12 +13,12 @@ rm -rf /root/.cache
 mkdir -p /content/cache
 ln -s /content/cache /root/.cache
 
-cd "$WORKSPACE" 
+mkdir -p "$WORKSPACE"
+cd "$WORKSPACE"
 
-curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin || which just
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y
+which just || (curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin)
+which cargo || (curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y)
 . "$HOME/.cargo/env"
-
 
 mkdir -p /content/
 cd /content/
@@ -34,7 +34,7 @@ LOGFILE=/content/rust.log
 echo "Redirecting output to $LOGFILE"
 echo "To inspect, run: tail -f $LOGFILE"
 
-exec >> $LOGFILE 2>&1
+exec >>$LOGFILE 2>&1
 
 cd native-land
 just prep-linux
