@@ -153,7 +153,7 @@ fn spawn_hello_task(
 
     let task = listener
         .incoming()
-        .for_each(move |socket| send_hello(socket))
+        .for_each(send_hello)
         .map_err(|err| {
             // All tasks must have an `Error` type of `()`. This forces error
             // handling and helps avoid silencing failures.
@@ -541,8 +541,8 @@ struct ForwardAddressPair {
 
 #[derive(Serialize, Deserialize)]
 enum ForwardProtocol {
-    TCP,
-    UDP,
+    Tcp,
+    Udp,
 }
 
 type Ips = Vec<std::net::IpAddr>;
@@ -578,20 +578,20 @@ impl ForwardItem {
     pub fn forward(&self) -> Result<(), Box<dyn Error>> {
         let addr = &(self.addr);
         match self.proto {
-            ForwardProtocol::TCP => tcp_forward(
+            ForwardProtocol::Tcp => tcp_forward(
                 &addr.listen_ip,
                 addr.listen_port,
                 &addr.forward_ip,
                 addr.forward_port,
                 &self.accepts,
             ),
-            ForwardProtocol::UDP => Ok(udp_forward(
+            ForwardProtocol::Udp => udp_forward(
                 &addr.listen_ip,
                 addr.listen_port,
                 &addr.forward_ip,
                 addr.forward_port,
                 &self.accepts,
-            )),
+            ),
         }
     }
 }
@@ -610,7 +610,7 @@ fn tcp_proxy_main() -> Result<(), Box<dyn Error>> {
     let forward_port = forward_port_str.parse()?;
 
     let forward_item = ForwardItem::new(
-        ForwardProtocol::TCP,
+        ForwardProtocol::Tcp,
         &listen_ip,
         listen_port,
         &forward_ip,
@@ -634,21 +634,21 @@ fn tcp_forward(
     let forward_addr_str = format!("{}:{}", forward_ip, forward_port);
     let forward_addr = with_context(forward_addr_str.parse::<SocketAddr>(), &forward_addr_str)?;
 
-    // Create a TCP listener which will listen for incoming connections.
+    // Create a Tcp listener which will listen for incoming connections.
     let listener = with_context(TcpListener::bind(&listen_addr), &listen_addr_str)?;
 
     let mut accepted_ips: HashSet<std::net::IpAddr> = HashSet::new();
     let mut accepted_ips_desc = String::new();
     if let Some(ref ips) = accepts {
-        accepted_ips_desc = format!("\nFor only: \n");
-        accepted_ips = ips.iter().map(|ip| ip.clone()).collect();
+        accepted_ips_desc = "\nFor only: \n".to_string();
+        accepted_ips = ips.iter().copied().collect();
         accepted_ips.iter().for_each(|accepted_ip| {
             accepted_ips_desc.push_str(&format!("- {}", &accepted_ip));
         });
     }
 
     println!(
-        "[TCP] {} -> {}{}",
+        "[Tcp] {} -> {}{}",
         listen_addr, forward_addr, accepted_ips_desc
     );
 
@@ -656,7 +656,7 @@ fn tcp_forward(
         .incoming()
         .map_err(|e| println!("error accepting socket; error = {:?}", e))
         .for_each(move |client| {
-            let peer_ip = client.peer_addr().unwrap().ip().clone();
+            let peer_ip = client.peer_addr().unwrap().ip();
             if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
                 let rejection = tokio::io::write_all(
                     client,
@@ -675,7 +675,7 @@ Connection: close
             } else {
                 let proxy = TcpStream::connect(&forward_addr)
                     .and_then(move |server| {
-                        // Create separate read/write handles for the TCP clients that we're
+                        // Create separate read/write handles for the Tcp clients that we're
                         // proxying data between. Note that typically you'd use
                         // `AsyncRead::split` for this operation, but we want our writer
                         // handles to have a custom implementation of `shutdown` which
@@ -732,7 +732,7 @@ fn udp_proxy_main() -> Result<(), Box<dyn Error>> {
     let forward_port = forward_port_str.parse()?;
 
     let forward_item = ForwardItem::new(
-        ForwardProtocol::UDP,
+        ForwardProtocol::Udp,
         &listen_ip,
         listen_port,
         &forward_ip,
@@ -757,13 +757,13 @@ fn proxies_main() -> Result<(), Box<dyn Error>> {
     // let udp_forward_port = 8081;
 
     // let forward_config = vec![
-    //     ForwardItem::new(ForwardProtocol::TCP, &tcp_listen_ip, tcp_listen_port, &tcp_forward_ip, tcp_forward_port),
-    //     ForwardItem::new(ForwardProtocol::UDP, &udp_listen_ip, udp_listen_port, &udp_forward_ip, udp_forward_port)
+    //     ForwardItem::new(ForwardProtocol::Tcp, &tcp_listen_ip, tcp_listen_port, &tcp_forward_ip, tcp_forward_port),
+    //     ForwardItem::new(ForwardProtocol::Udp, &udp_listen_ip, udp_listen_port, &udp_forward_ip, udp_forward_port)
     // ];
 
     // let forward_config = vec![
-    //     ForwardItem::new(ForwardProtocol::TCP, "127.0.0.1", 80, "127.0.0.1", 8080),
-    //     ForwardItem::new(ForwardProtocol::UDP, "127.0.0.1", 81, "127.0.0.1", 8081)
+    //     ForwardItem::new(ForwardProtocol::Tcp, "127.0.0.1", 80, "127.0.0.1", 8080),
+    //     ForwardItem::new(ForwardProtocol::Udp, "127.0.0.1", 81, "127.0.0.1", 8081)
     // ];
 
     // let file = OpenOptions::new()
@@ -826,7 +826,7 @@ fn spawn_main() -> Result<(), Box<dyn Error>> {
     loop {
         unsafe {
             if let Some(ref child) = REF_CHILD {
-                println!("{}", "Killing......");
+                println!("Killing......");
                 child
                     .lock()
                     .unwrap()
@@ -834,7 +834,7 @@ fn spawn_main() -> Result<(), Box<dyn Error>> {
                     .expect("command wasn't running");
                 return Ok(());
             } else {
-                println!("{}", "Waiting......");
+                println!("Waiting......");
             }
         }
 
@@ -860,7 +860,8 @@ fn main() {
         // "hosts" => {
         //     hosts_main()
         // }
-        "help" | _ => print_help(),
+        "help" => print_help(),
+        _ => print_help(),
     }.unwrap_or_else(|err| println!("{}", err));
 }
 
@@ -934,39 +935,36 @@ fn udp_forward(
     forward_ip: &str,
     forward_port: i32,
     accepts: &Option<Ips>,
-) {
+) -> Result<(), Box<dyn Error>> {
     let listen_addr = format!("{}:{}", listen_ip, listen_port);
     let local =
-        UdpSocket::bind(&listen_addr).expect(&format!("Unable to bind to {}", &listen_addr));
+        UdpSocket::bind(&listen_addr)?;
 
     let forward_addr = format!("{}:{}", forward_ip, forward_port);
 
     let mut accepted_ips: HashSet<std::net::IpAddr> = HashSet::new();
     let mut accepted_ips_desc = String::new();
     if let Some(ref ips) = accepts {
-        accepted_ips_desc = format!("\nFor only: \n");
-        accepted_ips = ips.iter().map(|ip| ip.clone()).collect();
+        accepted_ips_desc = "\nFor only: \n".to_string();
+        accepted_ips = ips.iter().copied().collect();
         accepted_ips.iter().for_each(|accepted_ip| {
             accepted_ips_desc.push_str(&format!("- {}", &accepted_ip));
         });
     }
 
     println!(
-        "[UDP] {} -> {}{}",
+        "[Udp] {} -> {}{}",
         listen_addr, forward_addr, accepted_ips_desc
     );
 
-    let responder = local.try_clone().expect(&format!(
-        "Failed to clone primary listening address socket {}",
-        local.local_addr().unwrap()
-    ));
+    let responder = local.try_clone()?;
     let (main_sender, main_receiver) = channel::<(_, Vec<u8>)>();
     thread::spawn(move || {
         // debug(format!("Started new thread to deal out responses to clients"));
         loop {
             let (dest, buf) = main_receiver.recv().unwrap();
             let to_send = buf.as_slice();
-            responder.send_to(to_send, dest).expect(&format!(
+            responder.send_to(to_send, dest).unwrap_or_else(|_| panic!(
                 "Failed to forward response from upstream server to client {}",
                 dest
             ));
@@ -980,7 +978,7 @@ fn udp_forward(
 
         println!("{}", src_addr);
 
-        let peer_ip = src_addr.ip().clone();
+        let peer_ip = src_addr.ip();
         if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
             println!("Incoming client rejected: {:?}", peer_ip);
             continue;
@@ -995,7 +993,7 @@ fn udp_forward(
             let client_id = format!("{}", src_addr);
 
             if remove_existing {
-                debug(format!("Removing existing forwarder from map."));
+                debug("Removing existing forwarder from map.".to_string());
                 client_map.remove(&client_id);
             }
 
@@ -1015,10 +1013,8 @@ fn udp_forward(
                         "Establishing new forwarder for client {} on {}",
                         src_addr, &temp_outgoing_addr
                     ));
-                    let upstream_send = UdpSocket::bind(&temp_outgoing_addr).expect(&format!(
-                        "Failed to bind to transient address {}",
-                        &temp_outgoing_addr
-                    ));
+                    let upstream_send = UdpSocket::bind(&temp_outgoing_addr).unwrap_or_else(|_| panic!("Failed to bind to transient address {}",
+                            &temp_outgoing_addr));
                     let upstream_recv = upstream_send
                         .try_clone()
                         .expect("Failed to clone client-specific connection to upstream!");
@@ -1053,7 +1049,7 @@ fn udp_forward(
                         match receiver.recv_timeout(Duration::from_millis(TIMEOUT)) {
                             Ok(from_client) => {
                                 upstream_send.send_to(from_client.as_slice(), &forward_addr_copy)
-                                    .expect(&format!("Failed to forward packet from client {} to upstream server!", src_addr));
+                                    .unwrap_or_else(|_| panic!("Failed to forward packet from client {} to upstream server!", src_addr));
                                 timeouts = 0; //reset timeout count
                             }
                             Err(_) => {
