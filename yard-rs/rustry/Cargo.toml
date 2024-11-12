@@ -1,8 +1,10 @@
-[workspace]
 [package]
 name = "rustry"
-version = "0.0.1"
 authors = ["utensil <utensilcandel@gmail.com>"]
+edition.workspace = true
+license.workspace = true
+readme.workspace = true
+version.workspace = true
 
 [dependencies]
 tokio = "0.1"

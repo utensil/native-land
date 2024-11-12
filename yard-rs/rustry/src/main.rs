@@ -109,11 +109,11 @@ fn make_shared<T>(t: T) -> Shared<T> {
     Arc::new(Mutex::new(t))
 }
 
-fn print_help() -> Result<(), Box<Error>> {
+fn print_help() -> Result<(), Box<dyn Error>> {
     println!("Usage:");
     println!("rustry help");
     println!("rustry hello listen_ip listen_port_start listen_port_stop");
-    println!("rustry hosts");
+    // println!("rustry hosts");
     println!("rustry tcp_proxy listen_ip listen_port forward_ip forward_port");
     println!("rustry udp_proxy listen_ip listen_port forward_ip forward_port");
     println!("rustry ping target_ip");
@@ -142,7 +142,7 @@ fn spawn_hello_task(
     rt: &mut Runtime,
     listen_ip_str: String,
     listen_port: u16,
-) -> Result<(), Box<Error>> {
+) -> Result<(), Box<dyn Error>> {
     let listen_addr_str = format!("{}:{}", listen_ip_str, listen_port);
     let listen_addr = listen_addr_str
         .parse::<SocketAddr>()
@@ -167,7 +167,7 @@ fn spawn_hello_task(
     Ok(())
 }
 
-fn hello_main() -> Result<(), Box<Error>> {
+fn hello_main() -> Result<(), Box<dyn Error>> {
     let listen_ip_str = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
     let listen_port_start_str = env::args().nth(3).unwrap_or("80".to_string());
     let listen_port_stop_str = env::args().nth(4).unwrap_or(listen_port_start_str.clone());
@@ -253,7 +253,7 @@ unsafe fn get_nid_struct(hwnd: &HWND) -> NOTIFYICONDATAW {
 }
 
 #[cfg(windows)]
-fn to_absolute_path(relative_path_str: String) -> Result<String, Box<Error>> {
+fn to_absolute_path(relative_path_str: String) -> Result<String, Box<dyn Error>> {
     let relative_path = std::path::PathBuf::from(relative_path_str);
     let mut absolute_path = std::env::current_dir()?;
     absolute_path.push(relative_path);
@@ -266,7 +266,7 @@ fn to_absolute_path(relative_path_str: String) -> Result<String, Box<Error>> {
 }
 
 #[cfg(windows)]
-fn tray_main() -> Result<(), Box<Error>> {
+fn tray_main() -> Result<(), Box<dyn Error>> {
     let mut app;
     match systray::Application::new() {
         Ok(w) => app = w,
@@ -347,14 +347,14 @@ fn tray_main() -> Result<(), Box<Error>> {
 }
 
 #[cfg(not(windows))]
-fn tray_main() -> Result<(), Box<Error>> {
+fn tray_main() -> Result<(), Box<dyn Error>> {
     println!("tray is only implemented for Windows.");
 
     Ok(())
 }
 
 #[cfg(windows)]
-fn ping_main() -> Result<(), Box<Error>> {
+fn ping_main() -> Result<(), Box<dyn Error>> {
     use std::io::{Error as IOError, ErrorKind as IOErrorKind};
 
     let target_addr_str = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
@@ -525,7 +525,7 @@ fn ping_main() -> Result<(), Box<Error>> {
 }
 
 #[cfg(not(windows))]
-fn ping_main() -> Result<(), Box<Error>> {
+fn ping_main() -> Result<(), Box<dyn Error>> {
     println!("ping is only implemented for Windows.");
 
     Ok(())
@@ -575,7 +575,7 @@ impl ForwardItem {
         }
     }
 
-    pub fn forward(&self) -> Result<(), Box<Error>> {
+    pub fn forward(&self) -> Result<(), Box<dyn Error>> {
         let addr = &(self.addr);
         match self.proto {
             ForwardProtocol::TCP => tcp_forward(
@@ -596,12 +596,12 @@ impl ForwardItem {
     }
 }
 
-// fn hosts_main -> Result<(), Box<Error>> {
+// fn hosts_main -> Result<(), Box<dyn Error>> {
 
 // }
 
 // Adapted from https://github.com/neosmart/tcpproxy/blob/master/src/main.rs
-fn tcp_proxy_main() -> Result<(), Box<Error>> {
+fn tcp_proxy_main() -> Result<(), Box<dyn Error>> {
     let listen_ip = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
     let listen_port_str = env::args().nth(3).unwrap_or("80".to_string());
     let listen_port = listen_port_str.parse()?;
@@ -628,7 +628,7 @@ fn tcp_forward(
     forward_ip: &str,
     forward_port: i32,
     accepts: &Option<Ips>,
-) -> Result<(), Box<Error>> {
+) -> Result<(), Box<dyn Error>> {
     let listen_addr_str = format!("{}:{}", listen_ip, listen_port);
     let listen_addr = with_context(listen_addr_str.parse::<SocketAddr>(), &listen_addr_str)?;
     let forward_addr_str = format!("{}:{}", forward_ip, forward_port);
@@ -723,7 +723,7 @@ Connection: close
     Ok(())
 }
 
-fn udp_proxy_main() -> Result<(), Box<Error>> {
+fn udp_proxy_main() -> Result<(), Box<dyn Error>> {
     let listen_ip = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
     let listen_port_str = env::args().nth(3).unwrap_or("80".to_string());
     let listen_port = listen_port_str.parse()?;
@@ -746,7 +746,7 @@ fn udp_proxy_main() -> Result<(), Box<Error>> {
 
 static mut REF_CHILD: Option<Shared<std::process::Child>> = None;
 
-fn proxies_main() -> Result<(), Box<Error>> {
+fn proxies_main() -> Result<(), Box<dyn Error>> {
     // let tcp_listen_ip = "127.0.0.1";
     // let tcp_forward_ip = "127.0.0.1";
     // let udp_listen_ip = "127.0.0.1";
@@ -792,7 +792,7 @@ fn proxies_main() -> Result<(), Box<Error>> {
     Ok(())
 }
 
-fn spawn_main() -> Result<(), Box<Error>> {
+fn spawn_main() -> Result<(), Box<dyn Error>> {
     use std::process::Command;
 
     let command = env::args().nth(2).unwrap_or("ping".to_string());
@@ -906,7 +906,7 @@ impl AsyncRead for ProxyTcpStream {}
 
 impl AsyncWrite for ProxyTcpStream {
     fn shutdown(&mut self) -> Poll<(), io::Error> {
-        try!(self.handle().lock().unwrap().shutdown(Shutdown::Write));
+        self.handle().lock().unwrap().shutdown(Shutdown::Write)?;
         Ok(().into())
     }
 }
