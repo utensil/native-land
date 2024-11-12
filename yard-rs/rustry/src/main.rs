@@ -1050,7 +1050,7 @@ fn udp_forward(
                         match receiver.recv_timeout(Duration::from_millis(TIMEOUT)) {
                             Ok(from_client) => {
                                 upstream_send.send_to(from_client.as_slice(), &forward_addr_copy)
-                                    .expect(&format!("Failed to forward packet from client {} to upstream server!", src_addr));
+                                    .unwrap_or_else(|_| panic!("Failed to forward packet from client {} to upstream server!", src_addr));
                                 timeouts = 0; //reset timeout count
                             }
                             Err(_) => {
