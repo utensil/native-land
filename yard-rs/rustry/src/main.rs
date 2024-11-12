@@ -151,16 +151,13 @@ fn spawn_hello_task(
     let listener = with_context(TcpListener::bind(&listen_addr), &listen_addr_str)?;
     println!("Listening on: {}", listen_addr);
 
-    let task = listener
-        .incoming()
-        .for_each(send_hello)
-        .map_err(|err| {
-            // All tasks must have an `Error` type of `()`. This forces error
-            // handling and helps avoid silencing failures.
-            //
-            // In our example, we are only going to log the error to STDOUT.
-            println!("accept error = {:?}", err);
-        });
+    let task = listener.incoming().for_each(send_hello).map_err(|err| {
+        // All tasks must have an `Error` type of `()`. This forces error
+        // handling and helps avoid silencing failures.
+        //
+        // In our example, we are only going to log the error to STDOUT.
+        println!("accept error = {:?}", err);
+    });
 
     rt.spawn(task);
 
@@ -666,52 +663,54 @@ Content-Length: 13
 Connection: close
 
 403 Forbidden",
-                ).then(move |_res| {
+                )
+                .then(move |_res| {
                     println!("Incoming client rejected: {:?}", peer_ip);
                     Ok(())
                 });
 
                 tokio::spawn(rejection);
             } else {
-                let proxy = TcpStream::connect(&forward_addr)
-                    .and_then(move |server| {
-                        // Create separate read/write handles for the Tcp clients that we're
-                        // proxying data between. Note that typically you'd use
-                        // `AsyncRead::split` for this operation, but we want our writer
-                        // handles to have a custom implementation of `shutdown` which
-                        // actually calls `TcpStream::shutdown` to ensure that EOF is
-                        // transmitted properly across the proxied connection.
-                        //
-                        // As a result, we wrap up our client/server manually in arcs and
-                        // use the impls below on our custom `MyTcpStream` type.
-                        let client_reader = ProxyTcpStream::new(client);
-                        let client_writer = client_reader.clone();
-                        let server_reader = ProxyTcpStream::new(server);
-                        let server_writer = server_reader.clone();
+                let proxy =
+                    TcpStream::connect(&forward_addr)
+                        .and_then(move |server| {
+                            // Create separate read/write handles for the Tcp clients that we're
+                            // proxying data between. Note that typically you'd use
+                            // `AsyncRead::split` for this operation, but we want our writer
+                            // handles to have a custom implementation of `shutdown` which
+                            // actually calls `TcpStream::shutdown` to ensure that EOF is
+                            // transmitted properly across the proxied connection.
+                            //
+                            // As a result, we wrap up our client/server manually in arcs and
+                            // use the impls below on our custom `MyTcpStream` type.
+                            let client_reader = ProxyTcpStream::new(client);
+                            let client_writer = client_reader.clone();
+                            let server_reader = ProxyTcpStream::new(server);
+                            let server_writer = server_reader.clone();
 
-                        // Copy the data (in parallel) between the client and the server.
-                        // After the copy is done we indicate to the remote side that we've
-                        // finished by shutting down the connection.
-                        let client_to_server = copy(client_reader, server_writer).and_then(
-                            |(n, _, server_writer)| shutdown(server_writer).map(move |_| n),
-                        );
+                            // Copy the data (in parallel) between the client and the server.
+                            // After the copy is done we indicate to the remote side that we've
+                            // finished by shutting down the connection.
+                            let client_to_server = copy(client_reader, server_writer).and_then(
+                                |(n, _, server_writer)| shutdown(server_writer).map(move |_| n),
+                            );
 
-                        let server_to_client = copy(server_reader, client_writer).and_then(
-                            |(n, _, client_writer)| shutdown(client_writer).map(move |_| n),
-                        );
+                            let server_to_client = copy(server_reader, client_writer).and_then(
+                                |(n, _, client_writer)| shutdown(client_writer).map(move |_| n),
+                            );
 
-                        client_to_server.join(server_to_client)
-                    })
-                    .map(move |(from_client, from_server)| {
-                        println!(
-                            "client wrote {} bytes and received {} bytes",
-                            from_client, from_server
-                        );
-                    })
-                    .map_err(|e| {
-                        // Don't panic. Maybe the client just disconnected too soon.
-                        println!("error: {}", e);
-                    });
+                            client_to_server.join(server_to_client)
+                        })
+                        .map(move |(from_client, from_server)| {
+                            println!(
+                                "client wrote {} bytes and received {} bytes",
+                                from_client, from_server
+                            );
+                        })
+                        .map_err(|e| {
+                            // Don't panic. Maybe the client just disconnected too soon.
+                            println!("error: {}", e);
+                        });
 
                 tokio::spawn(proxy);
             }
@@ -799,9 +798,9 @@ fn spawn_main() -> Result<(), Box<dyn Error>> {
 
     let _t = thread::spawn(|| {
         let child = Command::new(command)
-                        // .arg("file.txt")
-                        .spawn()
-                        .expect("failed to execute child");
+            // .arg("file.txt")
+            .spawn()
+            .expect("failed to execute child");
         unsafe {
             REF_CHILD = Some(make_shared(child));
 
@@ -862,7 +861,8 @@ fn main() {
         // }
         "help" => print_help(),
         _ => print_help(),
-    }.unwrap_or_else(|err| println!("{}", err));
+    }
+    .unwrap_or_else(|err| println!("{}", err));
 }
 
 // The following are adpated from https://github.com/neosmart/tcpproxy/blob/master/src/main.rs
@@ -937,8 +937,7 @@ fn udp_forward(
     accepts: &Option<Ips>,
 ) -> Result<(), Box<dyn Error>> {
     let listen_addr = format!("{}:{}", listen_ip, listen_port);
-    let local =
-        UdpSocket::bind(&listen_addr)?;
+    let local = UdpSocket::bind(&listen_addr)?;
 
     let forward_addr = format!("{}:{}", forward_ip, forward_port);
 
@@ -964,10 +963,12 @@ fn udp_forward(
         loop {
             let (dest, buf) = main_receiver.recv().unwrap();
             let to_send = buf.as_slice();
-            responder.send_to(to_send, dest).unwrap_or_else(|_| panic!(
-                "Failed to forward response from upstream server to client {}",
-                dest
-            ));
+            responder.send_to(to_send, dest).unwrap_or_else(|_| {
+                panic!(
+                    "Failed to forward response from upstream server to client {}",
+                    dest
+                )
+            });
         }
     });
 
@@ -1049,7 +1050,7 @@ fn udp_forward(
                         match receiver.recv_timeout(Duration::from_millis(TIMEOUT)) {
                             Ok(from_client) => {
                                 upstream_send.send_to(from_client.as_slice(), &forward_addr_copy)
-                                    .unwrap_or_else(|_| panic!("Failed to forward packet from client {} to upstream server!", src_addr));
+                                    .expect(&format!("Failed to forward packet from client {} to upstream server!", src_addr));
                                 timeouts = 0; //reset timeout count
                             }
                             Err(_) => {
