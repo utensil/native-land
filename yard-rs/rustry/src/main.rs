@@ -232,7 +232,7 @@ unsafe fn get_nid_struct(hwnd: &HWND) -> NOTIFYICONDATAW {
         uFlags: 0 as UINT,
         uCallbackMessage: 0 as UINT,
         hIcon: 0 as HICON,
-        szTip: [0 as u16; 128],
+        szTip: [0_u16; 128],
         dwState: 0 as DWORD,
         dwStateMask: 0 as DWORD,
         szInfo: [0 as WCHAR; 256],
@@ -274,6 +274,7 @@ fn tray_main() -> Result<(), Box<dyn Error>> {
     println!("icon_path is {}", icon_path);
     app.set_icon_from_file(&icon_path).ok();
 
+    #[allow(dead_code)]
     unsafe {
         struct MyWindowInfo {
             pub hwnd: HWND,
@@ -292,7 +293,7 @@ fn tray_main() -> Result<(), Box<dyn Error>> {
         fn to_wstring(str: &str) -> Vec<u16> {
             OsStr::new(str)
                 .encode_wide()
-                .chain(Some(0).into_iter())
+                .chain(Some(0))
                 .collect::<Vec<_>>()
         }
 
@@ -428,7 +429,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
             flags: std::os::raw::c_uchar,
             options_size: std::os::raw::c_uchar,
             options_data: *const std::os::raw::c_uchar,
-        };
+        }
 
         #[repr(C, packed)]
         struct IcmpEchoReply {
@@ -439,7 +440,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
             reserved: std::os::raw::c_ushort,
             data: *const libc::c_char,
             info: IpOptionInformation,
-        };
+        }
 
         let request = String::from("12345");
         let request_len = request.len();
@@ -459,7 +460,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
             send_data.as_ptr() as usize
         );
 
-        let p_buffer = libc::malloc(buf_size as usize) as *mut libc::c_void;
+        let p_buffer = libc::malloc(buf_size);
 
         let ret_val = _IcmpSendEcho(
             h_icmp,
@@ -511,7 +512,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
             print!("{:02x}", v);
 
             if (i + 1) % 8 == 0 {
-                println!("");
+                println!();
             } else if (i + 1) % 4 == 0 {
                 print!(" ");
             }

@@ -9,6 +9,12 @@ pub struct ReadLine {
     recv: Receiver<io::Result<String>>,
 }
 
+impl Default for ReadLine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ReadLine {
     pub fn new() -> ReadLine {
         let (tx, rx) = mpsc::channel();
