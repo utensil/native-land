@@ -168,6 +168,14 @@ v-mbc:
     uv run --with prettytable scripts/summary.py glam nalgebra ultraviolet cgmath
     open {{ example_xp / "mathbench-rs/target/criterion/report/index.html" }}
 
+# triangle basic-compute-shader https://github.com/vulkano-rs/vulkano/tree/master/examples
+
+try-vk CASE: (prep-ex "https://github.com/vulkano-rs/vulkano" "vulkano" "master")
+    cd {{example_xp / "vulkano" }} && cargo run --release --bin {{CASE}}
+
+try-vkrs: (prep-ex "https://github.com/Firestar99/rust-gpu-vulkano-example.git" "rust-gpu-vulkano-example" "master")
+    cd {{example_xp / "rust-gpu-vulkano-example" }} && cargo run --release
+
 # run just prep-tch before running the tch examples!!
 
 # basics 
