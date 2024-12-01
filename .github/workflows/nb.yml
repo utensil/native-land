@@ -69,7 +69,7 @@ jobs:
         with:
           tool: just@1.36.0,cargo-binstall,sccache
       - name: Setup Python via uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v4
         with:
           version: "0.4.27"
           enable-cache: true
