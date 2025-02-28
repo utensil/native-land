@@ -54,5 +54,6 @@ run: build
 
 [no-cd]
 clean:
+    yes|xrepo clean
     xmake clean -a
     xmake f --clean

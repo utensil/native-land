@@ -1,9 +1,15 @@
 set fallback
 
-run:
+default:
+    just --list
+
+prep:
+    xmake q -v
+
+run: prep
     xmake -y -v && xmake run
 
-run-win:
+run-win: prep
     xmake f -y -v -p windows
     xmake -y -v && xmake run
 
