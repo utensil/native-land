@@ -108,6 +108,9 @@ build-stable:
 build-nightly:
     cargo +nightly build
 
+run *PARAMS:
+    cargo run {{PARAMS}}
+
 # [group('rust'), no-cd]
 # nightly: prep-nightly test-nightly
 
