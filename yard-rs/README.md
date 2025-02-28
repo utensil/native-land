@@ -1,4 +1,4 @@
-## Learning Resources for Rust (maybe outdated)
+# Learning Resources for Rust (maybe outdated)
 
 - Getting Started
   - [Learn Rust in Y Minutes](https://learnxinyminutes.com/docs/rust/)
