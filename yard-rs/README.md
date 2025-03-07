@@ -13,9 +13,13 @@
   - Intro to the Rust programming language [[Video](https://www.youtube.com/watch?v=agzf6ftEsLU)] [[Slides](http://people.mozilla.org/~acrichton/rust-talk-2014-12-10/#/)]
   - "The Rust Programming Language" - Aaron Turon of Mozilla [[Video](https://www.youtube.com/watch?v=O5vzLKg7y-k)]
 - Better
+  - [Effective Rust](https://www.lurklurk.org/effective-rust/)
   - Idiomatic Rust - Writing Concise and Elegant Rust Code [[Video](https://video.fosdem.org/2018/H.2214/rust_idiomatic.mp4)] [[Slides](https://speakerdeck.com/mre/idiomatic-rust-writing-concise-and-elegant-rust-code)] by [@mre](https://github.com/mre) - FOSDEM 2018
   - Idiomatic Rust Libraries [[Video](https://www.youtube.com/watch?v=0zOg8_B71gE)] [[Slides](https://killercup.github.io/rustfest-idiomatic-libs/index.html#/)] by [@killercup](https://github.com/killercup) - Rustfest Kiev 
   - [Rust Design Patterns](https://github.com/rust-unofficial/patterns)
+- Prototyping & Scripting
+  - [Prototyping in Rust](https://corrode.dev/blog/prototyping/)
+  - [Rust scripting for AoC](https://github.com/ChristopherBiscardi/advent-of-code/raw/bc5ad528576194355f2fb1b6a03091d8bcd69f76/2024/rust/scripts/get-aoc-input.rs)
 - Exercises
   - [Rust: The Basics](https://stepik.org/lesson/9268/)
   - [rustlings - Small exercises to get you used to reading and writing Rust code](https://github.com/rustlings/rustlings)
