@@ -1,5 +1,5 @@
 #include <iostream>
-/* #define STB_DS_IMPLEMENTA */ TION
+// #define STB_DS_IMPLEMENTATION
 // #include "stb_ds.h"
 #include <boost/math/quaternion.hpp>
 #define SOKOL_IMPL
@@ -7,7 +7,7 @@
 // #include "raylib.h"
 #include <vector>
 
-    using std::vector;
+using std::vector;
 
 int main(int argc, char **argv) {
   // use sokol_time
