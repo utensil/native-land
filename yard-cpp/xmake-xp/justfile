@@ -4,7 +4,7 @@ default:
     just --list
 
 prep:
-    xmake q -v
+    xmake q -y -v
 
 run: prep
     xmake -y -v && xmake run
