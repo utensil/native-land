@@ -11,7 +11,7 @@ run: prep
     xmake -y -v && xmake run
 
 run-win: prep
-    xmake f -y -v -p mingw 
+    xmake f -y -v -p windows 
     xmake -y -v && xmake run
 
 prep-vcpkg:
