@@ -110,8 +110,14 @@ jobs:
         run: |
           cd yard-cpp/xmake-xp
           just run
+      - name: Setup MSYS32 (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64 
       - name: Run xmake project (Windows)
         if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: |
           cd yard-cpp/xmake-xp
           just run-win
