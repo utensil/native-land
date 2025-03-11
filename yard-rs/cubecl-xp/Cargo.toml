@@ -11,7 +11,7 @@ wgpu = ["cubecl/wgpu"]
 cuda = ["cubecl/cuda"]
 
 [dependencies]
-cubecl = { git = "https://github.com/tracel-ai/cubecl", rev = "bb9d62a25afa8da9932f8a0f6e03f33320bdf460"} # , features = ["wgpu"] }
+cubecl = { git = "https://github.com/tracel-ai/cubecl", rev = "1156d3e61c0b6ee30685f059323abd5f170bf8c7"} # , features = ["wgpu"] }
 half = { version = "2.4.1", features = [
     "alloc",
     "num-traits",
