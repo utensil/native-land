@@ -269,7 +269,7 @@ prep-tch:
     fi
     echo "Downloaded to {{ LIBTORCH_ZIP_PATH }}"
     if [[ ! -d {{ LIBTORCH_DIR }} ]]; then
-        unzip -o "{{ LIBTORCH_ZIP_PATH }}" -d "{{ LIBTORCH_PREFIX }}"
+        unzip -o "{{ LIBTORCH_ZIP_PATH }}" -d "{{ LIBTORCH_PREFIX }}" 2>&1 > /dev/null
     fi
     echo "Unzipped to {{ LIBTORCH_DIR }}"
 
