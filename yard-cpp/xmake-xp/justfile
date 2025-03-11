@@ -7,6 +7,7 @@ prep:
     xmake q -y -v
 
 run: prep
+    just info boost
     xmake -y -v && xmake run
 
 run-win: prep
