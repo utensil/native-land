@@ -402,8 +402,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
         let ipaddr: std::os::raw::c_ulong = winapi::um::winsock2::inet_addr(ipaddr_str.as_ptr());
 
         if ipaddr == winapi::shared::ws2def::INADDR_NONE {
-            return Err(Box::new(IOError::new(
-                IOErrorKind::Other,
+            return Err(Box::new(std::io::Error::other(
                 "ipaddr == winapi::shared::ws2def::INADDR_NONE",
             )));
         }
@@ -416,8 +415,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
         let h_icmp = _IcmpCreateFile();
 
         if h_icmp == winapi::um::handleapi::INVALID_HANDLE_VALUE {
-            return Err(Box::new(IOError::new(
-                IOErrorKind::Other,
+            return Err(Box::new(std::io::Error::other(
                 "h_icmp == winapi::um::handleapi::INVALID_HANDLE_VALUE",
             )));
         }
