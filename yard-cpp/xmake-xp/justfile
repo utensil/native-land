@@ -7,11 +7,11 @@ prep:
     xmake q -y -v
 
 run: prep
-    just info boost
+    # just info boost
     xmake -y -v && xmake run
 
 run-win: prep
-    xmake f -y -v -p windows
+    xmake f -y -v -p mingw 
     xmake -y -v && xmake run
 
 prep-vcpkg:
