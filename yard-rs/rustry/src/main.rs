@@ -353,8 +353,6 @@ fn tray_main() -> Result<(), Box<dyn Error>> {
 
 #[cfg(windows)]
 fn ping_main() -> Result<(), Box<dyn Error>> {
-    use std::io::{Error as IOError, ErrorKind as IOErrorKind};
-
     let target_addr_str = env::args().nth(2).unwrap_or("127.0.0.1".to_string());
     // let target_addr = with_context(listen_addr_str.parse::<SocketAddr>(), &listen_addr_str)?;
 
