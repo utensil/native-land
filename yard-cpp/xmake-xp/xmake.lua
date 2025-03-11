@@ -11,7 +11,7 @@ set_languages("c++20")
 -- set_toolchains("@muslcc")
 
 add_requires("stb")
-add_requires("boost", { configs = { math = true } })
+add_requires("boost", { configs = { all = true } })
 add_requires("sokol")
 add_requires("raylib")
 

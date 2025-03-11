@@ -52,8 +52,11 @@ build:
 run: build
     xmake run
 
+# to truely reproduce package missing issues on CI
+# one should also check if the library is installed via homebrew etc.
+# e.g. brew uninstall boost
 [no-cd]
 clean:
-    yes|xrepo clean
+    xrepo clean -y
     xmake clean -a
-    xmake f --clean
+    xmake f --clean -y
