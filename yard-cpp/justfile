@@ -14,8 +14,8 @@ example_xp := justfile_directory() / "example-xp"
 # CXX := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
 # LD := '/opt/homebrew/Cellar/gcc@13/13.3.0/bin/g++-13'
 
-CC := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/gcc-14'
-CXX := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/g++-14'
+# CC := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/gcc-14'
+# CXX := '/home/linuxbrew/.linuxbrew/Cellar/gcc/14.2.0_1/bin/g++-14'
 LD := `which ld`
 
 default:
