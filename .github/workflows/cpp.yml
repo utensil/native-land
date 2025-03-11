@@ -37,6 +37,7 @@ jobs:
           # macos-15 is deploying, macos-latest is still macos-14
           - macos-15
         lang: ["C++"]
+        python-version: ["3.11"]
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
@@ -97,6 +98,10 @@ jobs:
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           xmake-version: '2.9.5'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Run xmake project (non-Windows)
         if: runner.os != 'Windows'
         run: |
