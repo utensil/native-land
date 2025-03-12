@@ -35,8 +35,8 @@ pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
     let knl = gelu_array::create_dummy_kernel::<f32, R>(
         CubeCount::Static(1, 1, 1),
         CubeDim::new(1, 1, 1),
-        unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
-        unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
+        unsafe { ArrayArg::from_raw_parts::<f32>(&input_handle, 1, 1) },
+        unsafe { ArrayArg::from_raw_parts::<f32>(&input_handle, 1, 1) },
     );
 
     let compiler = WgslCompiler::default();
