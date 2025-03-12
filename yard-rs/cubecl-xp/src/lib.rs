@@ -1,8 +1,6 @@
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
-use cubecl::codegen::Compiler;
 use cubecl::prelude::*;
-use cubecl::ExecutionMode::Unchecked;
 
 #[cfg_attr(coverage_nightly, coverage(off))]
 #[cube(launch_unchecked, create_dummy_kernel)]
