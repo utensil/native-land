@@ -97,7 +97,7 @@ jobs:
         # if: runner.os == 'macOS' || runner.os == 'Linux'
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-          xmake-version: '2.9.5'
+          xmake-version: '2.9.8'
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:

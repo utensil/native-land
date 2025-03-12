@@ -74,7 +74,7 @@ prep-zig:
 # error: Recipe `run-zig` failed on line 49 with exit code 255
 
 run-zig:
-    xmake f --cc="zig cc" --cxx="zig cc" --ld="zig c++" -c
+    xmake f --cc="zig cc" --cxx="zig cc" --ld="zig c++" -c -y
     just run
 
 resume-clang:
