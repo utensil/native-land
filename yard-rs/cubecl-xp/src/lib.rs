@@ -22,31 +22,31 @@ fn gelu_scalar<F: Float>(x: Line<F>) -> Line<F> {
     x * (Line::erf(tmp) + 1.0) / 2.0
 }
 
-pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
-    let client = R::client(device);
-    let input_handle = client.empty(1);
+// pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
+//     let client = R::client(device);
+//     let input_handle = client.empty(1);
 
-    // adapted from
-    // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/common.rs
-    // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/main.rs
+//     // adapted from
+//     // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/common.rs
+//     // - https://github.com/tracel-ai/cubecl/blob/main/crates/cubecl-wgpu/tests/main.rs
 
-    let knl = gelu_array::create_dummy_kernel::<f32, R>(
-        CubeCount::Static(1, 1, 1),
-        CubeDim::new(1, 1, 1),
-        unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
-        unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
-    );
+//     let knl = gelu_array::create_dummy_kernel::<f32, R>(
+//         CubeCount::Static(1, 1, 1),
+//         CubeDim::new(1, 1, 1),
+//         unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
+//         unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
+//     );
 
-    let knldef = knl.define();
+//     let knldef = knl.define();
 
-    // println!("{:?}", knldef.body);
+//     // println!("{:?}", knldef.body);
 
-    let compiled = R::Compiler::compile(knldef, Unchecked);
+//     let compiled = R::Compiler::compile(knldef, Unchecked);
 
-    // println!("{}", compiled);
+//     // println!("{}", compiled);
 
-    format!("{}", compiled)
-}
+//     format!("{}", compiled)
+// }
 
 pub fn gelu_launch<R: Runtime>(device: &R::Device) -> Vec<f32> {
     let client = R::client(device);
