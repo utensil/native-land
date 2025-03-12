@@ -60,12 +60,12 @@ pub fn gelu_launch<R: Runtime>(device: &R::Device) -> Vec<f32> {
             &client,
             CubeCount::Static(1, 1, 1),
             CubeDim::new(input.len() as u32 / vectorization, 1, 1),
-            ArrayArg::from_raw_parts(&input_handle, input.len(), vectorization as u8),
-            ArrayArg::from_raw_parts(&output_handle, input.len(), vectorization as u8),
+            ArrayArg::from_raw_parts::<f32>(&input_handle, input.len(), vectorization as u8),
+            ArrayArg::from_raw_parts::<f32>(&output_handle, input.len(), vectorization as u8),
         )
     };
 
-    let bytes = client.read(output_handle.binding());
+    let bytes = client.read_one(output_handle.binding());
     let output = f32::from_bytes(&bytes);
 
     output.to_vec()
