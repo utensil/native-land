@@ -1,6 +1,10 @@
 #![cfg_attr(coverage_nightly, feature(coverage_attribute))]
 
 use cubecl::prelude::*;
+use cubecl::Compiler;
+use cubecl::WgpuCompilationOptions;
+use cubecl::wgpu::WgslCompiler;
+use cubecl::ExecutionMode;
 
 #[cfg_attr(coverage_nightly, coverage(off))]
 #[cube(launch_unchecked, create_dummy_kernel)]
@@ -35,11 +39,12 @@ pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
         unsafe { ArrayArg::from_raw_parts(&input_handle, 1, 1) },
     );
 
+    let compiler = WgslCompiler::default();
     let knldef = knl.define();
 
     // println!("{:?}", knldef.body);
-
-    let compiled = R::Compiler::compile(knldef, Unchecked);
+    
+    let compiled = compiler.compile(knldef, &WgpuCompilationOptions::default(), ExecutionMode::Unchecked);
 
     // println!("{}", compiled);
 
