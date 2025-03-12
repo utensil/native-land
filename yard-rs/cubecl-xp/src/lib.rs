@@ -39,7 +39,7 @@ pub fn gelu_shader<R: Runtime>(device: &R::Device) -> String {
         unsafe { ArrayArg::from_raw_parts::<f32>(&input_handle, 1, 1) },
     );
 
-    let compiler = WgslCompiler::default();
+    let mut compiler = WgslCompiler::default();
     let knldef = knl.define();
 
     // println!("{:?}", knldef.body);
