@@ -14,7 +14,9 @@ exclude = [
     "archived/*",
     "yard-rs/example-xp",
     "yard-rs/runpod-xp",
-    "yard-rs/rsgpu-xp"
+    "yard-rs/rsgpu-xp",
+    # its dep half is no longer compatible with what candle requires
+    "yard-rs/krnl-xp"
     # "yard-rs/cubecl-xp"
 ]
 

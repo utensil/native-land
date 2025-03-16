@@ -273,10 +273,17 @@ prep-tch:
     fi
     echo "Unzipped to {{ LIBTORCH_DIR }}"
 
+KRNL_REV := "96b5d97205ba2cd08ad65e99d758c26349c31b24"
 
 prep-krnl:
-    cargo +nightly-2023-05-27 install krnlc --git https://github.com/charles-r-earp/krnl --rev 96b5d97205ba2cd08ad65e99d758c26349c31b24 --locked
-    # cargo +nightly-2023-05-27 install krnlc --locked
-    cd .. && rm -rf target/krnlc
-    cd krnl-xp && (rm krnl-cache.rs || true) && krnlc
+    #!/usr/bin/env zsh
+    set -e
+    cargo +nightly-2023-05-27 install krnlc --git https://github.com/charles-r-earp/krnl --rev {{KRNL_REV}} --locked
+    cd krnl-xp
+    (rm krnl-cache.rs || true)
+    cargo generate-lockfile
+    cargo update -p half --precise 2.1.0
+    rustup default nightly-2023-05-27
+    CARGO_TARGET_DIR=./target cargo clean && krnlc -v
+    rustup default nightly
 
