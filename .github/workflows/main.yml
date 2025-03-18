@@ -126,7 +126,7 @@ jobs:
       #     DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
       - name: Report coverage to Codecov
         if : runner.os == 'Linux'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # required
           files: lcov.info
