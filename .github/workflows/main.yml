@@ -118,12 +118,12 @@ jobs:
       - name: Run CI
         run: |
           just ci
-      - name: Report to DeepSource
-        if: runner.os == 'Linux' && env.DEEPSOURCE_DSN
-        run: |
-          deepsource report --analyzer test-coverage --key rust --value-file lcov.info
-        env:
-          DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+      # - name: Report to DeepSource
+      #   if: runner.os == 'Linux' && env.DEEPSOURCE_DSN
+      #   run: |
+      #     deepsource report --analyzer test-coverage --key rust --value-file lcov.info
+      #   env:
+      #     DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
       - name: Report coverage to Codecov
         if : runner.os == 'Linux'
         uses: codecov/codecov-action@v4

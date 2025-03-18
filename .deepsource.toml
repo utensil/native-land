@@ -6,8 +6,8 @@ exclude_patterns = [
   "**/main.rs"
 ]
 
-[[analyzers]]
-name = "test-coverage"
+# [[analyzers]]
+# name = "test-coverage"
 
 [[analyzers]]
 name = "cxx"
