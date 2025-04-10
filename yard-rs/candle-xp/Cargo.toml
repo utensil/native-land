@@ -8,8 +8,9 @@ version.workspace = true
 [dependencies]
 anyhow = "1.0.89"
 # https://huggingface.github.io/candle/guide/installation.html
-candle-core = { git = "https://github.com/huggingface/candle.git", rev = "a01aa897" }
-candle-nn = { git = "https://github.com/huggingface/candle.git", rev = "a01aa897" } 
+# rev fixed to 0.8.4
+candle-core = { git = "https://github.com/huggingface/candle.git", rev = "468d1d525fe206a35d6962c02cfa7b9918b31076" }
+candle-nn = { git = "https://github.com/huggingface/candle.git", rev = "468d1d525fe206a35d6962c02cfa7b9918b31076" } 
 # https://huggingface.github.io/candle/inference/hub.html
 hf-hub = { version = "0.3.2", features = ["tokio"] }
 memmap2 = "0.9.5"

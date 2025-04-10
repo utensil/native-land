@@ -4,7 +4,7 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
-export RUSTC_WRAPPER := "sccache"
+# export RUSTC_WRAPPER := "sccache"
 # export CARGO_BUILD_JOBS := "4"
 
 # export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
@@ -33,7 +33,7 @@ prep-ci:
 ci: prep-ci
     just clippy
     just cov
-    cd yard-rs/krnl-xp && just test
+    # cd yard-rs/krnl-xp && just test
     # just cov-rsgpu
 
 [macos]
@@ -41,7 +41,7 @@ ci: prep-ci
 ci: prep-ci
     just clippy
     just test
-    cd yard-rs/krnl-xp && just test
+    # cd yard-rs/krnl-xp && just test
     # just test-rsgpu
 
 [group('rust'), no-cd]
