@@ -412,7 +412,7 @@ fn ping_main() -> Result<(), Box<dyn Error>> {
 
         let h_icmp = _IcmpCreateFile();
 
-        if h_icmp == winapi::um::handleapi::INVALID_HANDLE_VALUE {
+        if std::ptr::eq(h_icmp, winapi::um::handleapi::INVALID_HANDLE_VALUE) {
             return Err(Box::new(std::io::Error::other(
                 "h_icmp == winapi::um::handleapi::INVALID_HANDLE_VALUE",
             )));
