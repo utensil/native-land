@@ -1,0 +1,28 @@
+export HOMEBREW_NO_AUTO_UPDATE := "1"
+
+default:
+  just --list
+
+# prep:
+#   brew install zig
+
+prep-asdf:
+  asdf plugin add zig https://github.com/zigcc/asdf-zig.git
+  asdf plugin update zig
+
+prep:
+  asdf install zig 0.13.0
+  asdf set zig 0.13.0
+
+try-mlx:
+  #!/usr/bin/env zsh
+  cd example-xp
+  if [ ! -d "MLX.zig" ]; then
+    git clone https://github.com/jaco-bro/MLX.zig.git
+  else
+    (cd MLX.zig && git pull)
+  fi
+  cd MLX.zig
+  `asdf which zig` build
+
+
