@@ -1,0 +1,101 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Nx
+
+```elixir
+Mix.install([
+  {:nx, "~> 0.9"},
+  {:exla, "~> 0.9"}
+])
+```
+
+## Getting started with Nx
+
+```elixir
+ t = Nx.tensor([[1, 2], [3, 4]])
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Nx.Tensor<
+  s32[2][2]
+  [
+    [1, 2],
+    [3, 4]
+  ]
+>
+```
+
+```elixir
+Nx.shape(t)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{2, 2}
+```
+
+```elixir
+Nx.divide(Nx.exp(t), Nx.sum(Nx.exp(t)))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Nx.Tensor<
+  f32[2][2]
+  [
+    [0.032058604061603546, 0.08714432269334793],
+    [0.23688282072544098, 0.6439142227172852]
+  ]
+>
+```
+
+```elixir
+defmodule MyModule do
+  import Nx.Defn
+
+  defn softmax(t) do
+    Nx.exp(t) / Nx.sum(Nx.exp(t))
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, MyModule, <<70, 79, 82, 49, 0, 0, 10, ...>>, true}
+```
+
+```elixir
+MyModule.softmax(Nx.tensor([1, 2, 3]))
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Nx.Tensor<
+  f32[3]
+  [0.09003057330846786, 0.2447284758090973, 0.6652409434318542]
+>
+```
+
+```elixir
+will_jit = EXLA.jit(&MyModule.softmax/1)
+will_jit.(t)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+#Nx.Tensor<
+  f32[2][2]
+  EXLA.Backend<host:0, 0.365804015.1072037908.162395>
+  [
+    [0.032058604061603546, 0.08714432269334793],
+    [0.23688282072544098, 0.6439142227172852]
+  ]
+>
+```
