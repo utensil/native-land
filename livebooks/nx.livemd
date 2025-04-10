@@ -5,11 +5,32 @@
 ```elixir
 Mix.install([
   {:nx, "~> 0.9"},
-  {:exla, "~> 0.9"}
+  {:exla, "~> 0.9"},
+  {:emlx, github: "elixir-nx/emlx", branch: "main"}
 ])
 ```
 
 ## Getting started with Nx
+
+```elixir
+Nx.default_backend({EMLX.Backend, device: :gpu})
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{Nx.BinaryBackend, []}
+```
+
+```elixir
+Nx.Defn.default_options(compiler: EMLX)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[]
+```
 
 ```elixir
  t = Nx.tensor([[1, 2], [3, 4]])
@@ -20,6 +41,7 @@ Mix.install([
 ```
 #Nx.Tensor<
   s32[2][2]
+  EMLX.Backend<gpu, 0.872558687.1883111428.141904>
   [
     [1, 2],
     [3, 4]
@@ -46,9 +68,10 @@ Nx.divide(Nx.exp(t), Nx.sum(Nx.exp(t)))
 ```
 #Nx.Tensor<
   f32[2][2]
+  EMLX.Backend<gpu, 0.872558687.1883111428.141921>
   [
     [0.032058604061603546, 0.08714432269334793],
-    [0.23688282072544098, 0.6439142227172852]
+    [0.23688285052776337, 0.6439142227172852]
   ]
 >
 ```
@@ -66,7 +89,7 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-{:module, MyModule, <<70, 79, 82, 49, 0, 0, 10, ...>>, true}
+{:module, MyModule, <<70, 79, 82, 49, 0, 0, 9, ...>>, true}
 ```
 
 ```elixir
@@ -78,7 +101,8 @@ MyModule.softmax(Nx.tensor([1, 2, 3]))
 ```
 #Nx.Tensor<
   f32[3]
-  [0.09003057330846786, 0.2447284758090973, 0.6652409434318542]
+  EMLX.Backend<gpu, 0.872558687.1883111444.139536>
+  [0.09003056585788727, 0.2447284609079361, 0.665241003036499]
 >
 ```
 
@@ -92,7 +116,7 @@ will_jit.(t)
 ```
 #Nx.Tensor<
   f32[2][2]
-  EXLA.Backend<host:0, 0.365804015.1072037908.162395>
+  EXLA.Backend<host:0, 0.872558687.1883111444.139537>
   [
     [0.032058604061603546, 0.08714432269334793],
     [0.23688282072544098, 0.6439142227172852]
