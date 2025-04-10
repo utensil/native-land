@@ -7,14 +7,13 @@ version = "0.0.1"
 
 [dependencies]
 krnl = { git = "https://github.com/charles-r-earp/krnl", rev = "96b5d97205ba2cd08ad65e99d758c26349c31b24"}
+ahash = { version = "=0.8.6"}
 
 [dependencies.half]
-version = "=2.1.0"
+version = "=2.4.1"
 default-features = false
 features = ["num-traits"]
 
 [lints.rust]
 unexpected_cfgs = { level = "allow", check-cfg = ['cfg(target_arch, values("spirv"))'] }
 
-[workspace.dependencies]
-half = "=2.1.0"
