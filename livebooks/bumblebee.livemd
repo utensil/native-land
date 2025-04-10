@@ -1,0 +1,73 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Bumblebee
+
+```elixir
+Mix.install(
+  [
+    {:kino_bumblebee, "~> 0.5.0"},
+    {:exla, ">= 0.0.0"}
+  ],
+  config: [nx: [default_backend: EXLA.Backend]]
+)
+```
+
+## Section
+
+<!-- livebook:{"attrs":"eyJjb21waWxlciI6ImV4bGEiLCJudW1faW1hZ2VzX3Blcl9wcm9tcHQiOjEsIm51bV9zdGVwcyI6MjAsInNlcXVlbmNlX2xlbmd0aCI6NTAsInRhc2tfaWQiOiJ0ZXh0X3RvX2ltYWdlIiwidmFyaWFudF9pZCI6InN0YWJsZV9kaWZmdXNpb25fZ2hpYmxpIn0","chunks":[[0,985],[987,613]],"kind":"Elixir.KinoBumblebee.TaskCell","livebook_object":"smart_cell"} -->
+
+```elixir
+repository_id = "nitrosocke/Ghibli-Diffusion"
+{:ok, tokenizer} = Bumblebee.load_tokenizer({:hf, "openai/clip-vit-large-patch14"})
+{:ok, clip} = Bumblebee.load_model({:hf, repository_id, subdir: "text_encoder"})
+{:ok, unet} = Bumblebee.load_model({:hf, repository_id, subdir: "unet"})
+
+{:ok, vae} =
+  Bumblebee.load_model({:hf, repository_id, subdir: "vae"}, architecture: :decoder)
+
+{:ok, scheduler} = Bumblebee.load_scheduler({:hf, repository_id, subdir: "scheduler"})
+
+{:ok, featurizer} =
+  Bumblebee.load_featurizer({:hf, repository_id, subdir: "feature_extractor"})
+
+{:ok, safety_checker} =
+  Bumblebee.load_model({:hf, repository_id, subdir: "safety_checker"})
+
+serving =
+  Bumblebee.Diffusion.StableDiffusion.text_to_image(clip, unet, vae, tokenizer, scheduler,
+    num_steps: 20,
+    num_images_per_prompt: 1,
+    safety_checker: safety_checker,
+    safety_checker_featurizer: featurizer,
+    compile: [batch_size: 1, sequence_length: 50],
+    defn_options: [compiler: EXLA]
+  )
+
+text_input = Kino.Input.textarea("Text", default: "ghibli style numbat in forest")
+seed_input = Kino.Input.number("Seed")
+form = Kino.Control.form([text: text_input, seed: seed_input], submit: "Run")
+frame = Kino.Frame.new()
+
+Kino.listen(form, fn %{data: %{text: text, seed: seed}} ->
+  Kino.Frame.render(frame, Kino.Text.new("Running..."))
+  output = Nx.Serving.run(serving, %{prompt: text, seed: seed})
+
+  for result <- output.results do
+    Kino.Image.new(result.image)
+  end
+  |> Kino.Layout.grid(columns: 2)
+  |> then(&Kino.Frame.render(frame, &1))
+end)
+
+Kino.Layout.grid([form, frame], boxed: true, gap: 16)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+|===============================================================| 100% (2.22 MB)
+|=============================================================| 100% (492.30 MB)
+|============================================================| 100% (3438.36 MB)
+|=============================================================| 100% (334.71 MB)
+|============================================================| 100% (1216.06 MB)
+```
