@@ -33,6 +33,7 @@ prep-ci:
 ci: prep-ci
     just clippy
     just cov
+    cd yard-rs/krnl-xp && just test
     # just cov-rsgpu
 
 [macos]
@@ -40,6 +41,7 @@ ci: prep-ci
 ci: prep-ci
     just clippy
     just test
+    cd yard-rs/krnl-xp && just test
     # just test-rsgpu
 
 [group('rust'), no-cd]
