@@ -13,8 +13,13 @@ prep-asdf:
 prep:
   asdf install zig 0.13.0
   asdf set zig 0.13.0
+  # now zig is available either by `asdf which zig` or adding $HOME/.asdf/shims to your PATH
 
-try-mlx:
+[no-cd]
+build:
+  zig build
+
+try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
   #!/usr/bin/env zsh
   cd example-xp
   if [ ! -d "MLX.zig" ]; then
@@ -23,6 +28,7 @@ try-mlx:
     (cd MLX.zig && git pull)
   fi
   cd MLX.zig
-  `asdf which zig` build
+  zig build
+  ./zig-out/bin/llm --num-tokens={{NUM_TOKENS}} --model-type={{MODEL_TYPE}} "{{INPUT}}"
 
 
