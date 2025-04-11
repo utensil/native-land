@@ -12,7 +12,7 @@ prep-asdf:
 
 prep:
   asdf install zig 0.13.0
-  asdf set zig 0.13.0
+  asdf set --home zig 0.13.0
 
 try-mlx:
   #!/usr/bin/env zsh
