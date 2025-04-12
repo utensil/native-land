@@ -6,6 +6,9 @@ default:
 # prep:
 #   brew install zig
 
+prep-term:
+  which asdf || brew install asdf
+
 prep-asdf:
   asdf plugin add zig https://github.com/zigcc/asdf-zig.git
   asdf plugin update zig
@@ -18,6 +21,20 @@ prep:
 [no-cd]
 build:
   zig build
+
+[no-cd]
+run:
+  zig build run
+
+[no-cd]
+test:
+  zig build test
+
+new PROJ:
+  #!/usr/bin/env zsh
+  mkdir {{PROJ}}
+  cd {{PROJ}}
+  zig init
 
 try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
   #!/usr/bin/env zsh
