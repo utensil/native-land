@@ -30,5 +30,5 @@ yard-cpp/sga-xp/build
 yard-cpp/sga-xp/.clangd
 .aider*
 .env
-yard-zig/**/zig-cache
+yard-zig/**/.zig-cache
 yard-zig/**/zig-out

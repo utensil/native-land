@@ -13,10 +13,19 @@ prep-asdf:
   asdf plugin add zig https://github.com/zigcc/asdf-zig.git
   asdf plugin update zig
 
-prep:
-  asdf install zig 0.13.0
-  asdf set zig 0.13.0
+[no-cd]
+prep-zig VERSION:
+  asdf install zig {{VERSION}}
+  asdf set zig {{VERSION}}
   # now zig is available either by `asdf which zig` or adding $HOME/.asdf/shims to your PATH
+
+[no-cd]
+dep REPO:
+  #!/usr/bin/env zsh
+  # working around https://github.com/ziglang/zig/issues/22542
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+  zig fetch --save {{REPO}}
 
 [no-cd]
 build:
@@ -32,8 +41,12 @@ test:
 
 new PROJ:
   #!/usr/bin/env zsh
+  set -e
   mkdir {{PROJ}}
   cd {{PROJ}}
+  echo "Which version of zig do you want to use for project {{PROJ}}?"
+  read -r ZIG_VERSION
+  just prep-zig ${ZIG_VERSION}
   zig init
 
 try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
@@ -45,6 +58,7 @@ try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
     (cd MLX.zig && git pull)
   fi
   cd MLX.zig
+  just prep-zig 0.13.0
   zig build
   ./zig-out/bin/llm --num-tokens={{NUM_TOKENS}} --model-type={{MODEL_TYPE}} "{{INPUT}}"
 
