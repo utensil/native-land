@@ -6,10 +6,8 @@ default:
 # prep:
 #   brew install zig
 
-prep-term:
-  which asdf || brew install asdf
-
 prep-asdf:
+  which asdf || brew install asdf
   asdf plugin add zig https://github.com/zigcc/asdf-zig.git
   asdf plugin update zig
 
@@ -19,6 +17,7 @@ prep-zig VERSION:
   asdf set zig {{VERSION}}
   # now zig is available either by `asdf which zig` or adding $HOME/.asdf/shims to your PATH
 
+# REPO looks like git+https://HOST/USER/REPO.git
 [no-cd]
 dep REPO:
   #!/usr/bin/env zsh
