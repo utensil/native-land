@@ -19,23 +19,34 @@ prep-zig VERSION:
 
 # REPO looks like git+https://HOST/USER/REPO.git
 [no-cd]
+fetch:
+  #!/usr/bin/env zsh
+  # working around https://github.com/ziglang/zig/issues/22542
+  unset HTTP_PROXY
+  unset HTTPS_PROXY
+  unset http_proxy
+  unset https_proxy
+  zig build --fetch
+
+[no-cd]
 dep REPO:
   #!/usr/bin/env zsh
   # working around https://github.com/ziglang/zig/issues/22542
   unset HTTP_PROXY
   unset HTTPS_PROXY
+  unset http_proxy
+  unset https_proxy
   zig fetch --save {{REPO}}
 
 [no-cd]
-build:
-  zig build
+build: fetch
 
 [no-cd]
-run:
+run: fetch
   zig build run
 
 [no-cd]
-test:
+test: fetch
   zig build test
 
 new PROJ:
