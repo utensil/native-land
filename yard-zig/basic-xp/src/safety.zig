@@ -116,19 +116,19 @@ test "explicit allocators" {
     defer arena.deinit();
 
     const allocator = arena.allocator();
-    const mem1 = try allocator.alloc(u8, 100);
-    defer allocator.free(mem1); // Explicit free
+    // Use var since we'll modify the pointer
+    var mem = try allocator.alloc(u8, 100);
+    defer allocator.free(mem); // Will free final allocation
 
-    const mem2 = try allocator.alloc(u8, 200);
-    defer allocator.free(mem2);
+    try expect(mem.len == 100);
 
-    try expect(mem1.len == 100);
-    try expect(mem2.len == 200);
+    // Realloc and update pointer
+    mem = try allocator.realloc(mem, 200);
+    try expect(mem.len == 200);
 
-    // Test realloc
-    // fix realloc free AI!
-    const new_mem1 = try allocator.realloc(mem1, 200);
-    try expect(new_mem1.len == 200);
+    // Test the expanded memory
+    @memset(mem, 0xAA);
+    try expect(mem[150] == 0xAA);
 }
 
 fn fibonacci(n: u32) u32 {
