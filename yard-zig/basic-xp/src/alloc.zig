@@ -55,3 +55,5 @@ test "arena allocator" {
 
     // All allocations are freed when arena.deinit() is called
 }
+
+// test std.heap.GeneralPurposeAllocator AI!
