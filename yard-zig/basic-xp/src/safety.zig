@@ -42,10 +42,10 @@ test "compile-time safety checks" {
 test "runtime bounds checking" {
     var list = std.ArrayList(u8).init(std.testing.allocator);
     defer list.deinit();
-    
+
     try list.append(42);
     try expect(list.items[0] == 42);
-    
+
     // Test out of bounds access
     if (list.items.len > 1) {
         try expect(list.items[1] == 0); // Shouldn't reach here
@@ -57,7 +57,7 @@ test "runtime bounds checking" {
     const val = arr[index]; // Runtime bounds checked
     arr[index] = 4; // OK
     try expect(val == 2);
-    
+
     // Should panic in debug/safe modes
     // arr[3] = 0;
 }
@@ -76,7 +76,7 @@ test "defer for guaranteed cleanup" {
 test "optional types prevent null dereferences" {
     const maybe_num: ?u32 = null;
     if (maybe_num) |num| {
-        try expect(num == 42);  // Shouldn't reach here
+        try expect(num == 42); // Shouldn't reach here
         try expect(false);
     } else {
         try expect(true); // Should reach here
@@ -84,7 +84,7 @@ test "optional types prevent null dereferences" {
 
     const real_num: ?u32 = 42;
     if (real_num) |num| {
-        try expect(num == 42);  // Should reach here
+        try expect(num == 42); // Should reach here
     } else {
         try expect(false); // Shouldn't reach here
     }
@@ -92,18 +92,18 @@ test "optional types prevent null dereferences" {
 
 test "sentinel-terminated arrays" {
     const allocator = std.testing.allocator;
-    
+
     // Literal strings are null-terminated
     const str: [:0]const u8 = "hello";
     try expect(str.len == 5);
     try expect(str[5] == 0); // Sentinel value
-    
+
     // Manually created sentinel-terminated array
     var buf: [6:0]u8 = undefined;
     buf[0..5].* = "hello".*;
     buf[5] = 0;
     try expect(buf[5] == 0);
-    
+
     // Dynamic allocation with sentinel
     const dyn_str = try allocator.allocSentinel(u8, 5, 0);
     defer allocator.free(dyn_str);
@@ -114,18 +114,19 @@ test "sentinel-terminated arrays" {
 test "explicit allocators" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    
+
     const allocator = arena.allocator();
     const mem1 = try allocator.alloc(u8, 100);
-    defer allocator.free(mem1);  // Explicit free
-    
+    defer allocator.free(mem1); // Explicit free
+
     const mem2 = try allocator.alloc(u8, 200);
     defer allocator.free(mem2);
-    
+
     try expect(mem1.len == 100);
     try expect(mem2.len == 200);
-    
+
     // Test realloc
+    // fix realloc free AI!
     const new_mem1 = try allocator.realloc(mem1, 200);
     try expect(new_mem1.len == 200);
 }
@@ -138,7 +139,7 @@ fn fibonacci(n: u32) u32 {
 test "thread safety with allocators" {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
-    
+
     const allocator = gpa.allocator();
     var thread = try std.Thread.spawn(.{}, struct {
         fn f(alloc: Allocator) !void {
@@ -147,9 +148,9 @@ test "thread safety with allocators" {
             @memset(mem, 42);
         }
     }.f, .{allocator});
-    
+
     thread.join(); // No try needed since join() doesn't return error
-    
+
     // Main thread can still use allocator
     const mem = try allocator.alloc(u8, 100);
     defer allocator.free(mem);
@@ -206,7 +207,7 @@ test "errdefer for error cleanup - partial failure" {
         mem1: []u8,
         mem2: []u8,
         allocator: Allocator,
-        
+
         fn deinit(self: @This()) void {
             self.allocator.free(self.mem1);
             self.allocator.free(self.mem2);
@@ -215,17 +216,17 @@ test "errdefer for error cleanup - partial failure" {
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
-    
+
     const result = (struct {
         fn create(allocator: Allocator) !PartialResource {
             const mem1 = try allocator.alloc(u8, 100);
             errdefer allocator.free(mem1);
-            
+
             // Force error after first allocation
             return error.TestError;
         }
     }).create(gpa.allocator());
-    
+
     try expectError(error.TestError, result);
 }
 
