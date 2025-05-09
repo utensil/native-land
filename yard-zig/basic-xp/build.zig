@@ -139,6 +139,7 @@ pub fn build(b: *std.Build) !void {
                 .target = target,
                 .optimize = optimize,
             });
+            test_exe.linkLibC();
 
             const run_test = b.addRunArtifact(test_exe);
             test_step.dependOn(&run_test.step);
