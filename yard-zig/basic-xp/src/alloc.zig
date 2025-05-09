@@ -56,4 +56,17 @@ test "arena allocator" {
     // All allocations are freed when arena.deinit() is called
 }
 
-// test std.heap.GeneralPurposeAllocator AI!
+test "general purpose allocator" {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+    defer {
+        const deinit_status = gpa.deinit();
+        if (deinit_status == .leak) @panic("TEST FAIL");
+    }
+
+    const memory = try allocator.alloc(u8, 100);
+    defer allocator.free(memory);
+
+    try expect(memory.len == 100);
+    try expect(@TypeOf(memory) == []u8);
+}
