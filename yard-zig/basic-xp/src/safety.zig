@@ -264,3 +264,5 @@ test "errdefer for error cleanup" {
         try expect(result == error.TestError);
     }
 }
+
+// add a test case to demo iife AI!
