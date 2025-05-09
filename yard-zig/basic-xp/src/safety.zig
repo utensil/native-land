@@ -99,49 +99,17 @@ test "comptime function evaluation" {
     try expect(fib == 55);
 }
 
-test "errdefer for error cleanup" {
-    var main_gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = main_gpa.deinit();
-    const main_allocator = main_gpa.allocator();
+fn createResource(allocator: Allocator) !Resource {
+    const mem1 = try allocator.alloc(u8, 100);
+    errdefer allocator.free(mem1);
 
-    // Test successful path
-    {
-        const res = try createResource(main_allocator);
-        defer res.deinit();
-        try expect(res.mem1.len == 100);
-        try expect(res.mem2.len == 200);
-    }
-
-    // Test error path
-    {
-        var leak_gpa = std.heap.GeneralPurposeAllocator(.{
-            .enable_memory_limit = true,
-            .stack_trace_frames = 0,
-        }){};
-        const test_allocator = leak_gpa.allocator();
-
-        const result = createErrorResource(test_allocator);
-        try expect(result == error.TestError);
-
-        const leak_check = leak_gpa.deinit();
-        if (leak_check == .leak) {
-            std.debug.print("Memory leak detected!\n", .{});
-        }
-        try expect(leak_check == .ok); // Verify no leaks
-    }
-}
-
-fn createResource(parent_allocator: Allocator) !Resource {
-    const mem1 = try parent_allocator.alloc(u8, 100);
-    errdefer parent_allocator.free(mem1);
-
-    const mem2 = try parent_allocator.alloc(u8, 200);
-    errdefer parent_allocator.free(mem2);
+    const mem2 = try allocator.alloc(u8, 200);
+    errdefer allocator.free(mem2);
 
     return Resource{
         .mem1 = mem1,
         .mem2 = mem2,
-        .allocator = parent_allocator,
+        .allocator = allocator,
     };
 }
 
@@ -171,3 +139,38 @@ const ErrorResource = struct {
         self.allocator.free(self.mem);
     }
 };
+
+test "errdefer for error cleanup" {
+    // Test successful path
+    {
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        defer _ = gpa.deinit();
+        const allocator = gpa.allocator();
+        const res = try createResource(allocator);
+        defer res.deinit();
+        try expect(res.mem1.len == 100);
+        try expect(res.mem2.len == 200);
+    }
+
+    // Test error path
+    {
+        var gpa = std.heap.GeneralPurposeAllocator(.{
+            .enable_memory_limit = true,
+            .stack_trace_frames = 0,
+        }){};
+        const allocator = gpa.allocator();
+
+        defer {
+            const leak_check = gpa.deinit();
+            if (leak_check == .leak) {
+                std.debug.print("Memory leak detected!\n", .{});
+            }
+            // Can't use try in defer, so we'll check the result separately
+            std.debug.assert(leak_check == .ok); // Verify no leaks
+        }
+
+        const result = createErrorResource(allocator);
+
+        try expect(result == error.TestError);
+    }
+}
