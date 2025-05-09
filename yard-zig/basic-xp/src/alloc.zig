@@ -25,3 +25,12 @@ test "fixed buffer allocator" {
     try expect(memory.len == 100);
     try expect(@TypeOf(memory) == []u8);
 }
+
+test "fixed buffer allocator out of memory" {
+    var buffer: [100]u8 = undefined;
+    var fba = std.heap.FixedBufferAllocator.init(&buffer);
+    const allocator = fba.allocator();
+
+    const memory = allocator.alloc(u8, 101);
+    try std.testing.expectError(error.OutOfMemory, memory);
+}
