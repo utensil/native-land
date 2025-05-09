@@ -34,3 +34,6 @@ test "fixed buffer allocator out of memory" {
     const memory = allocator.alloc(u8, 101);
     try std.testing.expectError(error.OutOfMemory, memory);
 }
+
+// std.heap.ArenaAllocator takes in a child allocator and allows you to allocate many times and only free once.
+// test it AI!
