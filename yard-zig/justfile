@@ -1,4 +1,7 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
+export ZIG_OUT := env("ZIG_OUT", "zig-out")
+export ZIG_CACHE := env("ZIG_CACHE", ".zig-cache")
+ZIG_OPT := "-p ${ZIG_OUT} --cache-dir ${ZIG_CACHE}"
 
 default:
   just --list
@@ -26,7 +29,7 @@ fetch:
   unset HTTPS_PROXY
   unset http_proxy
   unset https_proxy
-  zig build --fetch
+  zig build --fetch {{ZIG_OPT}} 
 
 [no-cd]
 dep REPO:
@@ -40,14 +43,14 @@ dep REPO:
 
 [no-cd]
 build: fetch
+  zig build {{ZIG_OPT}} 
 
 [no-cd]
 run: fetch
-  zig build run
-
+  zig build {{ZIG_OPT}} run
 [no-cd]
 test: fetch
-  zig build test
+  zig build {{ZIG_OPT}} test
 
 new PROJ:
   #!/usr/bin/env zsh
