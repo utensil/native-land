@@ -4,30 +4,29 @@ const eql = std.mem.eql;
 const ArrayList = std.ArrayList;
 const test_allocator = std.testing.allocator;
 
+// there are too many try AI!
 test "basic arraylist operations" {
     var list = ArrayList(u8).init(test_allocator);
     defer list.deinit();
 
-    // Test append
-    try list.append('H');
-    try list.append('e');
-    try list.append('l');
-    try list.append('l');
-    try list.append('o');
-    try expect(eql(u8, list.items, "Hello"));
+    // Test append with loop
+    const hello = "Hello";
+    for (hello) |char| {
+        try list.append(char);
+    }
+    try expect(eql(u8, list.items, hello));
 
-    // Test appendSlice
+    // Test appendSlice and verify
     try list.appendSlice(" World!");
     try expect(eql(u8, list.items, "Hello World!"));
 
-    // Test insert
+    // Test insert and verify
     try list.insert(5, ',');
     try expect(eql(u8, list.items, "Hello, World!"));
 
-    // Test pop
+    // Test pop and verify
     const last_char = list.pop();
-    try expect(last_char == '!');
-    try expect(eql(u8, list.items, "Hello, World"));
+    try expect(last_char == '!' and eql(u8, list.items, "Hello, World"));
 }
 
 test "arraylist capacity and resizing" {
