@@ -23,6 +23,33 @@ fn mightFail(cond: bool) !u32 {
     }
 }
 
+test "IIFE (Immediately Invoked Function Expression)" {
+    // Basic IIFE calculation
+    const area = blk: {
+        const radius = 10;
+        const pi = 3.14159;
+        break :blk pi * radius * radius;
+    };
+    try expect(area > 314.0 and area < 315.0);
+
+    // IIFE with error handling
+    const parsed = blk: {
+        break :blk std.fmt.parseInt(u32, "123", 10);
+    } catch |err| {
+        try expect(err == error.InvalidCharacter);
+        break :blk 0;
+    };
+    try expect(parsed == 123);
+
+    // IIFE with memory operations
+    const buf = blk: {
+        var tmp: [100]u8 = undefined;
+        @memset(&tmp, 0xAA);
+        break :blk tmp;
+    };
+    try expect(buf[50] == 0xAA);
+}
+
 test "comprehensive error handling" {
     const result = mightFail(false) catch |err| {
         try expect(err == error.Fail);
