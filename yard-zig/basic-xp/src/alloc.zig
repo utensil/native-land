@@ -13,3 +13,15 @@ test "page_alloc" {
     try expect(memory.len == 100);
     try expect(@TypeOf(memory) == []u8);
 }
+
+test "fixed buffer allocator" {
+    var buffer: [100]u8 = undefined;
+    var fba = std.heap.FixedBufferAllocator.init(&buffer);
+    const allocator = fba.allocator();
+
+    const memory = try allocator.alloc(u8, 100);
+    defer allocator.free(memory);
+
+    try expect(memory.len == 100);
+    try expect(@TypeOf(memory) == []u8);
+}
