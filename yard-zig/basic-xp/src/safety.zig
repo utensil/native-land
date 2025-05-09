@@ -34,10 +34,11 @@ test "IIFE (Immediately Invoked Function Expression)" {
 
     // IIFE with error handling
     const parsed = blk: {
-        break :blk std.fmt.parseInt(u32, "123", 10);
-    } catch |err| {
-        try expect(err == error.InvalidCharacter);
-        break :blk 0;
+        const res = std.fmt.parseInt(u32, "123", 10) catch |err| {
+            try expect(err == error.InvalidCharacter);
+            break :blk 0;
+        };
+        break :blk res;
     };
     try expect(parsed == 123);
 
