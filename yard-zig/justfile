@@ -50,7 +50,7 @@ run: fetch
   zig build {{ZIG_OPT}} run
 [no-cd]
 test: fetch
-  zig build {{ZIG_OPT}} test
+  zig build {{ZIG_OPT}} test --summary all
 
 new PROJ:
   #!/usr/bin/env bash
