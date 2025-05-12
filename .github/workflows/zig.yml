@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: asdf-vm/actions/setup@v3
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just@1.36.0
       - name: Install Zig
         run: |
           cd yard-zig/basic-xp
