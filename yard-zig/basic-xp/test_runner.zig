@@ -1,4 +1,4 @@
-// The following code is from https://gist.github.com/nurpax/4afcb6e4ef3f03f0d282f7c462005f12
+// The following code is adapted from https://gist.github.com/nurpax/4afcb6e4ef3f03f0d282f7c462005f12
 
 // Modded from from https://gist.github.com/karlseguin/c6bea5b35e4e8d26af6f81c22cb5d76b
 
@@ -64,7 +64,7 @@ pub fn main() !void {
             }
         }
 
-        printer.fmt("Testing {s}: ", .{t.name});
+        printer.fmt("{s} ", .{t.name});
         const result = t.func();
 
         if (std.testing.allocator_instance.deinit() == .leak) {
@@ -99,7 +99,7 @@ pub fn main() !void {
 
     const total_tests = pass + fail;
     const status: Status = if (fail == 0) .pass else .fail;
-    printer.status(status, "\n{d} of {d} test{s} passed\n", .{ pass, total_tests, if (total_tests != 1) "s" else "" });
+    printer.status(status, "{d} of {d} test{s} passed\n", .{ pass, total_tests, if (total_tests != 1) "s" else "" });
     if (skip > 0) {
         printer.status(.skip, "{d} test{s} skipped\n", .{ skip, if (skip != 1) "s" else "" });
     }
