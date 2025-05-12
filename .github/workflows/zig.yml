@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: asdf-vm/actions/setup@v3
+        with:
+          asdf_branch: v0.15.0
       - uses: taiki-e/install-action@v2
         with:
           tool: just@1.36.0
