@@ -47,7 +47,7 @@ pub fn main() !void {
     defer if (filter) |f| alloc.free(f);
 
     const printer = Printer.init();
-    printer.fmt("\r\x1b[0K", .{}); // beginning of line and clear to end of line
+    printer.fmt("\x1b[0K", .{}); // beginning of line and clear to end of line
 
     var pass: usize = 0;
     var fail: usize = 0;
