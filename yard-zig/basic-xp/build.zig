@@ -138,6 +138,7 @@ pub fn build(b: *std.Build) !void {
                 .root_source_file = b.path(full_path),
                 .target = target,
                 .optimize = optimize,
+                .test_runner = .{ .path = b.path("test_runner.zig"), .mode = .simple },
             });
             test_exe.linkLibC();
 
