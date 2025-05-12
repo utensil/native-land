@@ -23,7 +23,7 @@ prep-zig VERSION:
 # REPO looks like git+https://HOST/USER/REPO.git
 [no-cd]
 fetch:
-  #!/usr/bin/env zsh
+  #!/usr/bin/env bash
   # working around https://github.com/ziglang/zig/issues/22542
   unset HTTP_PROXY
   unset HTTPS_PROXY
@@ -33,7 +33,7 @@ fetch:
 
 [no-cd]
 dep REPO:
-  #!/usr/bin/env zsh
+  #!/usr/bin/env bash
   # working around https://github.com/ziglang/zig/issues/22542
   unset HTTP_PROXY
   unset HTTPS_PROXY
@@ -53,7 +53,7 @@ test: fetch
   zig build {{ZIG_OPT}} test
 
 new PROJ:
-  #!/usr/bin/env zsh
+  #!/usr/bin/env bash
   set -e
   mkdir {{PROJ}}
   cd {{PROJ}}
@@ -63,7 +63,7 @@ new PROJ:
   zig init
 
 try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
-  #!/usr/bin/env zsh
+  #!/usr/bin/env bash
   cd example-xp
   if [ ! -d "MLX.zig" ]; then
     git clone https://github.com/jaco-bro/MLX.zig.git
