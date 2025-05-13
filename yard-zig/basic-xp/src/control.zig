@@ -104,3 +104,38 @@ test "loops as expressions" {
     } else false;
     try expect(hasNumber);
 }
+
+test "payload captures" {
+    // Optional payload
+    const maybe_num: ?u32 = 42;
+    if (maybe_num) |num| {
+        try expect(num == 42);
+    } else {
+        unreachable;
+    }
+
+    // Error union payload
+    const result: error{Test}!u32 = 100;
+    if (result) |value| {
+        try expect(value == 100);
+    } else |err| {
+        _ = err catch {};
+        unreachable;
+    }
+
+    // Pointer capture in for loop
+    var data = [_]u8{1, 2, 3};
+    for (&data) |*byte| byte.* += 1;
+    try expect(data[0] == 2);
+    try expect(data[1] == 3);
+    try expect(data[2] == 4);
+}
+
+test "inline loops" {
+    const types = [_]type{ i32, f32, u8 };
+    var sum: usize = 0;
+    inline for (types) |T| {
+        sum += @sizeOf(T);
+    }
+    try expect(sum == 9); // 4 + 4 + 1
+}
