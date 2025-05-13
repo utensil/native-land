@@ -299,7 +299,7 @@ test "runtime safety checks" {
         const a = [3]u8{ 1, 2, 3 };
         var index: u8 = undefined;
         // Force runtime evaluation of index
-        _ = @as(*volatile u8, &index).* = 5;
+        @as(*volatile u8, &index).* = 5;
         _ = a[index]; // Will panic at runtime
     }
 
@@ -367,7 +367,7 @@ test "runtime safety disabled" {
         const a = [3]u8{ 1, 2, 3 };
         var index: u8 = undefined;
         // Force runtime evaluation of index
-        _ = @as(*volatile u8, &index).* = 5;
+        @as(*volatile u8, &index).* = 5;
         _ = a[index]; // Won't panic with safety off
     }
 
