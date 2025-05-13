@@ -74,12 +74,7 @@ pub fn main() !void {
 
         const test_file = getTestFileName(t.name);
         if (!std.mem.eql(u8, current_file, test_file)) {
-            if (current_file.len > 0) {
-                printer.status(.text, "\n{s}: {d} passed, {d} failed\n", .{current_file, pass, fail});
-            }
             current_file = test_file;
-            pass = 0;
-            fail = 0;
         }
 
         printer.fmt("{s} ", .{t.name});
@@ -115,19 +110,14 @@ pub fn main() !void {
         printer.status(status, "[{s}]\n", .{@tagName(status)});
     }
 
-    // Print final file summary
-    if (current_file.len > 0) {
-        printer.status(.text, "\n{s}: {d} passed, {d} failed\n", .{current_file, pass, fail});
-    }
-
     const total_tests = pass + fail;
     const status: Status = if (fail == 0) .pass else .fail;
-    printer.status(status, "{d} of {d} test{s} passed\n", .{ pass, total_tests, if (total_tests != 1) "s" else "" });
+    printer.status(status, "{s}: {d} of {d} test{s} passed\n", .{ current_file, pass, total_tests, if (total_tests != 1) "s" else "" });
     if (skip > 0) {
-        printer.status(.skip, "{d} test{s} skipped\n", .{ skip, if (skip != 1) "s" else "" });
+        printer.status(.skip, "{s}: {d} test{s} skipped\n", .{ current_file, skip, if (skip != 1) "s" else "" });
     }
     if (leak > 0) {
-        printer.status(.fail, "{d} test{s} leaked\n", .{ leak, if (leak != 1) "s" else "" });
+        printer.status(.fail, "{s}: {d} test{s} leaked\n", .{ current_file, leak, if (leak != 1) "s" else "" });
     }
     std.process.exit(if (fail == 0) 0 else 1);
 }
