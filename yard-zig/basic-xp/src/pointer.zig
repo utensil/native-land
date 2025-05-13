@@ -16,10 +16,17 @@ test "pointer mutability" {
     x = 10;
     try expect(const_ptr.* == 10);
 
-    // Mutable pointer to mutable value 
+    // Mutable pointer to mutable value
     var mut_ptr = &x;
-    mut_ptr.* = 15;
+    mut_ptr.* = 15;  // Modify through pointer
     try expect(x == 15);
+    
+    // Can also reassign the pointer itself
+    var y: u8 = 20;
+    mut_ptr = &y;    // Now points to y
+    mut_ptr.* = 25;
+    try expect(y == 25);
+    try expect(x == 15);  // Original value unchanged
 }
 
 test "many-item pointers" {
