@@ -23,23 +23,29 @@ test "const pointers" {
     try expect(ptr.* == 1);
 }
 
-test "pointer to const value" {
-    const x: u8 = 10;
-    const ptr: *const u8 = &x;
+test "const pointer vs pointer to const" {
+    // Case 1: Pointer to const value
+    const const_value: u8 = 10;
+    const ptr_to_const: *const u8 = &const_value;
+    try expect(ptr_to_const.* == 10);
+    // Can't modify through ptr_to_const since value is const
+    // ptr_to_const.* = 20; // Compile error
 
-    // Verify we can read through the pointer
-    try expect(ptr.* == 10);
+    // Case 2: Const pointer to mutable value
+    var mutable_value: u8 = 15;
+    const const_ptr: *const u8 = &mutable_value;
+    try expect(const_ptr.* == 15);
+    // Can't modify through const_ptr even though value is mutable
+    // const_ptr.* = 25; // Compile error
+    // But original value can still be modified directly
+    mutable_value = 25;
+    try expect(const_ptr.* == 25);
 
-    // This would fail to compile:
-    // ptr.* = 20; // Error: cannot assign to constant
-
-    // Can take address of const value
-    const another_ptr = &x;
-    try expect(another_ptr.* == 10);
-
-    // Can coerce to more const pointer
-    const const_ptr: *const u8 = another_ptr;
-    try expect(const_ptr.* == 10);
+    // Case 3: Non-const pointer to mutable value
+    var another_value: u8 = 30;
+    const mutable_ptr: *u8 = &another_value;
+    mutable_ptr.* = 35;
+    try expect(another_value == 35);
 }
 
 test "many-item pointer basics" {
