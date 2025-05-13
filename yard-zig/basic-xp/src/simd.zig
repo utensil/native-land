@@ -72,12 +72,12 @@ test "vector min/max operations" {
 test "vector bitwise operations" {
     const x: @Vector(4, u8) = .{ 0b1010, 0b1100, 0b1111, 0b0000 };
     const y: @Vector(4, u8) = .{ 0b1000, 0b0100, 0b1010, 0b1111 };
-    const and = x & y;
-    const or = x | y;
-    const xor = x ^ y;
-    try expect(meta.eql(and, @Vector(4, u8){ 0b1000, 0b0100, 0b1010, 0b0000 }));
-    try expect(meta.eql(or, @Vector(4, u8){ 0b1010, 0b1100, 0b1111, 0b1111 }));
-    try expect(meta.eql(xor, @Vector(4, u8){ 0b0010, 0b1000, 0b0101, 0b1111 }));
+    const bit_and = x & y;
+    const bit_or = x | y;
+    const bit_xor = x ^ y;
+    try expect(meta.eql(bit_and, @Vector(4, u8){ 0b1000, 0b0100, 0b1010, 0b0000 }));
+    try expect(meta.eql(bit_or, @Vector(4, u8){ 0b1010, 0b1100, 0b1111, 0b1111 }));
+    try expect(meta.eql(bit_xor, @Vector(4, u8){ 0b0010, 0b1000, 0b0101, 0b1111 }));
 }
 
 test "vector floating point operations" {
