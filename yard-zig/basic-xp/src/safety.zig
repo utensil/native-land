@@ -293,80 +293,92 @@ test "errdefer for error cleanup" {
     }
 }
 
-test "runtime safety - out of bounds array access" {
-    const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
-    // This will panic in safe modes
-    const b = a[index];
-    _ = b;
+test "runtime safety checks" {
+    // Array bounds
+    {
+        const a = [3]u8{ 1, 2, 3 };
+        var index: u8 = 5;
+        const b = a[index];
+        _ = b;
+    }
+
+    // Integer overflow
+    {
+        var x: u8 = 255;
+        x += 1;
+        _ = x;
+    }
+
+    // Null pointer dereference
+    {
+        var ptr: ?*u32 = null;
+        const val = ptr.?.*;
+        _ = val;
+    }
+
+    // Unreachable code
+    {
+        const x: i32 = 1;
+        const y: u32 = if (x == 2) 5 else unreachable;
+        _ = y;
+    }
+
+    // Type coercion
+    {
+        const x: u32 = 300;
+        const y: u8 = @intCast(x);
+        _ = y;
+    }
+
+    // Division by zero
+    {
+        var x: i32 = 1;
+        var y: i32 = 0;
+        const z = x / y;
+        _ = z;
+    }
+
+    // Invalid enum cast
+    {
+        const E = enum { a, b, c };
+        const e = @intToEnum(E, 5);
+        _ = e;
+    }
+
+    // Slice bounds
+    {
+        var buf: [10]u8 = undefined;
+        const slice = buf[5..15];
+        _ = slice;
+    }
+
+    // Sentinel mismatch
+    {
+        const S = struct {
+            fn check(ptr: [*:0]const u8) void {
+                _ = ptr;
+            }
+        };
+        var buf = "hello".*;
+        S.check(&buf);
+    }
 }
 
-test "runtime safety - integer overflow" {
-    var x: u8 = 255;
-    // This will panic in safe modes
-    x += 1;
-    _ = x;
-}
-
-test "runtime safety - null pointer dereference" {
-    var ptr: ?*u32 = null;
-    // This will panic in safe modes
-    const val = ptr.?.*;
-    _ = val;
-}
-
-test "runtime safety - unreachable code" {
-    const x: i32 = 1;
-    // This will panic if reached
-    const y: u32 = if (x == 2) 5 else unreachable;
-    _ = y;
-}
-
-test "runtime safety - disabled safety" {
+test "runtime safety disabled" {
     @setRuntimeSafety(false);
-    const a = [3]u8{ 1, 2, 3 };
-    var index: u8 = 5;
-    // This won't panic even though it's out of bounds
-    const b = a[index];
-    _ = b;
-}
+    
+    // Array bounds check disabled
+    {
+        const a = [3]u8{ 1, 2, 3 };
+        var index: u8 = 5;
+        const b = a[index];
+        _ = b;
+    }
 
-test "runtime safety - type coercion" {
-    const x: u32 = 300;
-    // This will panic if value doesn't fit
-    const y: u8 = @intCast(x);
-    _ = y;
-}
-
-test "runtime safety - division by zero" {
-    var x: i32 = 1;
-    var y: i32 = 0;
-    // This will panic
-    const z = x / y;
-    _ = z;
-}
-
-test "runtime safety - invalid enum cast" {
-    const E = enum { a, b, c };
-    // This will panic
-    const e = @intToEnum(E, 5);
-    _ = e;
-}
-
-test "runtime safety - slice bounds" {
-    var buf: [10]u8 = undefined;
-    // This will panic
-    const slice = buf[5..15];
-    _ = slice;
-}
-
-test "runtime safety - sentinel mismatch" {
-    const S = struct {
-        fn check(ptr: [*:0]const u8) void {
-            _ = ptr;
-        }
-    };
-    var buf = "hello".*;
-    // This will panic due to missing sentinel
-    S.check(&buf);
+    // Integer overflow disabled
+    {
+        var x: u8 = 255;
+        x += 1;
+        _ = x;
+    }
 }
