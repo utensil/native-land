@@ -297,52 +297,45 @@ test "runtime safety checks" {
     // Array bounds
     {
         const a = [3]u8{ 1, 2, 3 };
-        var index: u8 = 5;
-        const b = a[index];
-        _ = b;
+        const index: u8 = 5;
+        _ = a[index]; // Will panic
     }
 
     // Integer overflow
     {
         var x: u8 = 255;
-        x += 1;
-        _ = x;
+        x += 1; // Will panic
     }
 
     // Null pointer dereference
     {
-        var ptr: ?*u32 = null;
-        const val = ptr.?.*;
-        _ = val;
+        const ptr: ?*u32 = null;
+        _ = ptr.?.*; // Will panic
     }
 
     // Unreachable code
     {
         const x: i32 = 1;
-        const y: u32 = if (x == 2) 5 else unreachable;
-        _ = y;
+        _ = if (x == 2) 5 else unreachable; // Will panic
     }
 
     // Type coercion
     {
         const x: u32 = 300;
-        const y: u8 = @intCast(x);
-        _ = y;
+        _ = @as(u8, @intCast(x)); // Will panic if value doesn't fit
     }
 
     // Division by zero
     {
-        var x: i32 = 1;
-        var y: i32 = 0;
-        const z = x / y;
-        _ = z;
+        const x: i32 = 1;
+        const y: i32 = 0;
+        _ = x / y; // Will panic
     }
 
     // Invalid enum cast
     {
         const E = enum { a, b, c };
-        const e = @intToEnum(E, 5);
-        _ = e;
+        _ = @as(E, @enumFromInt(5)); // Will panic
     }
 
     // Slice bounds
@@ -370,15 +363,13 @@ test "runtime safety disabled" {
     // Array bounds check disabled
     {
         const a = [3]u8{ 1, 2, 3 };
-        var index: u8 = 5;
-        const b = a[index];
-        _ = b;
+        const index: u8 = 5;
+        _ = a[index]; // Won't panic with safety off
     }
 
     // Integer overflow disabled
     {
         var x: u8 = 255;
-        x += 1;
-        _ = x;
+        x += 1; // Won't panic with safety off
     }
 }
