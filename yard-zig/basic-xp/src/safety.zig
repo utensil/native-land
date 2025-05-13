@@ -297,8 +297,10 @@ test "runtime safety checks" {
     // Array bounds
     {
         const a = [3]u8{ 1, 2, 3 };
-        const index: u8 = 5;
-        _ = a[index]; // Will panic
+        var index: u8 = undefined;
+        // Force runtime evaluation of index
+        _ = @as(*volatile u8, &index).* = 5;
+        _ = a[index]; // Will panic at runtime
     }
 
     // Integer overflow
@@ -363,7 +365,9 @@ test "runtime safety disabled" {
     // Array bounds check disabled
     {
         const a = [3]u8{ 1, 2, 3 };
-        const index: u8 = 5;
+        var index: u8 = undefined;
+        // Force runtime evaluation of index
+        _ = @as(*volatile u8, &index).* = 5;
         _ = a[index]; // Won't panic with safety off
     }
 
