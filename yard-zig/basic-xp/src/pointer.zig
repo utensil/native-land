@@ -41,11 +41,18 @@ test "const pointer vs pointer to const" {
     mutable_value = 25;
     try expect(const_ptr.* == 25);
 
-    // Case 3: Non-const pointer to mutable value
+    // Case 3: Mutable pointer to mutable value
     var another_value: u8 = 30;
-    const mutable_ptr: *u8 = &another_value;
+    var mutable_ptr: *u8 = &another_value; // Note: var not const
     mutable_ptr.* = 35;
     try expect(another_value == 35);
+    
+    // Can also reassign the pointer itself
+    var third_value: u8 = 40;
+    mutable_ptr = &third_value;
+    mutable_ptr.* = 45;
+    try expect(third_value == 45);
+    try expect(another_value == 35); // Original value unchanged
 }
 
 test "many-item pointer basics" {
