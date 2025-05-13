@@ -360,11 +360,25 @@ test "runtime safety checks" {
     {
         const S = struct {
             fn check(ptr: [*:0]const u8) void {
-                _ = ptr;
+                // This will verify the sentinel exists at runtime
+                _ = ptr[5]; // Access sentinel position
             }
         };
-        var buf = "hello".*;
-        S.check(&buf);
+
+        // Correct case (with sentinel)
+        {
+            var buf: [6:0]u8 = undefined;
+            @memcpy(buf[0..5], "hello");
+            buf[5] = 0; // Proper null terminator
+            S.check(&buf); // Works fine
+        }
+
+        // Incorrect case (missing sentinel)
+        {
+            var buf = "hello".*; // No null terminator
+            // This would fail at runtime if uncommented:
+            // S.check(&buf); // Would panic when accessing buf[5]
+        }
     }
 }
 
