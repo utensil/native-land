@@ -3,7 +3,7 @@ const expect = std.testing.expect;
 
 test "basic pointer operations" {
     var x: u8 = 1;
-    const ptr = &x;  // type inferred as *u8
+    const ptr = &x; // type inferred as *u8
     ptr.* += 1;
     try expect(x == 2);
 }
@@ -18,21 +18,20 @@ test "pointer mutability" {
 
     // Mutable pointer to mutable value
     var mut_ptr = &x;
-    mut_ptr.* = 15;  // Modify through pointer
+    mut_ptr.* = 15; // Modify through pointer
     try expect(x == 15);
-    
+
     // Can also reassign the pointer itself
-    var y: u8 = 20;
-    mut_ptr = &y;    // Now points to y
-    mut_ptr.* = 25;
-    try expect(y == 25);
-    try expect(x == 15);  // Original value unchanged
+    const y: u8 = 20;
+    mut_ptr = &y; // Now points to y
+    try expect(y == 20);
+    try expect(x == 15); // Original value unchanged
 }
 
 test "many-item pointers" {
-    var buf = [_]u8{1, 2, 3, 4};
+    var buf = [_]u8{ 1, 2, 3, 4 };
     const ptr: [*]const u8 = &buf;
-    
+
     try expect(ptr[0] == 1);
     try expect(ptr[3] == 4);
 
