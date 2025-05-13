@@ -311,8 +311,10 @@ test "runtime safety checks" {
 
     // Null pointer dereference
     {
-        const ptr: ?*u32 = null;
-        _ = ptr.?.*; // Will panic
+        var ptr: ?*u32 = null;
+        // Force runtime evaluation
+        @as(*volatile ?*u32, &ptr).* = null;
+        _ = ptr.?.*; // Will panic at runtime
     }
 
     // Unreachable code
