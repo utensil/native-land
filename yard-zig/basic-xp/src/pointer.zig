@@ -71,3 +71,22 @@ test "pointer coercion" {
     const const_ptr: *const u8 = ptr; // Coercion allowed
     try expect(const_ptr.* == 5);
 }
+
+test "pointer to const value" {
+    const x: u8 = 10;
+    const ptr: *const u8 = &x;
+    
+    // Verify we can read through the pointer
+    try expect(ptr.* == 10);
+    
+    // This would fail to compile:
+    // ptr.* = 20; // Error: cannot assign to constant
+    
+    // Can take address of const value
+    const another_ptr = &x;
+    try expect(another_ptr.* == 10);
+    
+    // Can coerce to more const pointer
+    const const_ptr: *const u8 = another_ptr;
+    try expect(const_ptr.* == 10);
+}
