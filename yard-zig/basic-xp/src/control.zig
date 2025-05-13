@@ -89,7 +89,7 @@ test "labelled blocks and loops" {
 }
 
 test "loops as expressions" {
-    const hasNumber = while (1..10) |i| {
+    const hasNumber = while (1 .. 10) |i| {
         if (i == 5) break true;
     } else false;
     try expect(hasNumber);
