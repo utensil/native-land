@@ -293,6 +293,7 @@ test "errdefer for error cleanup" {
     }
 }
 
+// inspired by https://zig.guide/language-basics/runtime-safety
 test "runtime safety checks" {
     // Array bounds
     {
@@ -383,5 +384,7 @@ test "runtime safety disabled" {
     {
         var x: u8 = 255;
         x += 1; // Won't panic with safety off
+        // now x should be 0
+        try expect(x == 0);
     }
 }
