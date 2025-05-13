@@ -92,7 +92,6 @@ test "vector floating point operations" {
 test "vector load and store operations" {
     const arr = [4]f32{ 1.0, 2.0, 3.0, 4.0 };
     const vec = @as(@Vector(4, f32), arr);
-    var result: [4]f32 = undefined;
-    @store(&result, vec, .{});
+    const result: [4]f32 = vec;
     try expect(meta.eql(arr, result));
 }
