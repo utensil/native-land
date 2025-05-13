@@ -1,6 +1,6 @@
 # Native Land
 
-[![CI (Rust)](https://github.com/utensil/native-land/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/main.yml) [![CI (C++)](https://github.com/utensil/native-land/actions/workflows/cpp.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/cpp.yml)
+[![CI (Rust)](https://github.com/utensil/native-land/actions/workflows/main.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/main.yml) [![CI (Zig)](https://github.com/utensil/native-land/actions/workflows/zig.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/zig.yml) [![CI (C++)](https://github.com/utensil/native-land/actions/workflows/cpp.yml/badge.svg)](https://github.com/utensil/native-land/actions/workflows/cpp.yml) 
 
 [![codecov](https://codecov.io/gh/utensil/native-land/graph/badge.svg?token=MPli1CWOp4)](https://codecov.io/gh/utensil/native-land) [![DeepSource](https://app.deepsource.com/gh/utensil/native-land.svg/?label=code+coverage&show_trend=true&token=RINFELWOIDI0xeIlpAi2NAuG)](https://app.deepsource.com/gh/utensil/native-land/) [![DeepSource](https://app.deepsource.com/gh/utensil/native-land.svg/?label=active+issues&show_trend=true&token=RINFELWOIDI0xeIlpAi2NAuG)](https://app.deepsource.com/gh/utensil/native-land/)
 
