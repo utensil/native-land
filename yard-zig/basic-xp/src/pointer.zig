@@ -22,9 +22,10 @@ test "pointer mutability" {
     try expect(x == 15);
 
     // Can also reassign the pointer itself
-    const y: u8 = 20;
+    var y: u8 = 20; // Changed from const to var
     mut_ptr = &y; // Now points to y
-    try expect(y == 20);
+    mut_ptr.* = 25; // Can modify through pointer
+    try expect(y == 25);
     try expect(x == 15); // Original value unchanged
 }
 
