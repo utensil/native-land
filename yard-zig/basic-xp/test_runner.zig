@@ -22,6 +22,13 @@ const Status = enum {
     text,
 };
 
+fn getTestFileName(name: []const u8) []const u8 {
+    if (std.mem.indexOfScalar(u8, name, '.')) |dot_pos| {
+        return name[0..dot_pos];
+    }
+    return name;
+}
+
 fn getenvOwned(alloc: std.mem.Allocator, key: []const u8) ?[]u8 {
     const v = std.process.getEnvVarOwned(alloc, key) catch |err| {
         if (err == error.EnvironmentVariableNotFound) {
@@ -53,6 +60,7 @@ pub fn main() !void {
     var fail: usize = 0;
     var skip: usize = 0;
     var leak: usize = 0;
+    var current_file: []const u8 = "";
 
     for (builtin.test_functions) |t| {
         std.testing.allocator_instance = .{};
@@ -62,6 +70,16 @@ pub fn main() !void {
             if (std.mem.indexOf(u8, t.name, f) == null) {
                 continue;
             }
+        }
+
+        const test_file = getTestFileName(t.name);
+        if (!std.mem.eql(u8, current_file, test_file)) {
+            if (current_file.len > 0) {
+                printer.status(.text, "\n{s}: {d} passed, {d} failed\n", .{current_file, pass, fail});
+            }
+            current_file = test_file;
+            pass = 0;
+            fail = 0;
         }
 
         printer.fmt("{s} ", .{t.name});
@@ -95,6 +113,11 @@ pub fn main() !void {
         }
 
         printer.status(status, "[{s}]\n", .{@tagName(status)});
+    }
+
+    // Print final file summary
+    if (current_file.len > 0) {
+        printer.status(.text, "\n{s}: {d} passed, {d} failed\n", .{current_file, pass, fail});
     }
 
     const total_tests = pass + fail;
