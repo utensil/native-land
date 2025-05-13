@@ -376,6 +376,8 @@ test "runtime safety checks" {
         // Incorrect case (missing sentinel)
         {
             var buf = "hello".*; // No null terminator
+            // Verify length is correct (5 bytes)
+            try expect(buf.len == 5);
             // This would fail at runtime if uncommented:
             // S.check(&buf); // Would panic when accessing buf[5]
         }
