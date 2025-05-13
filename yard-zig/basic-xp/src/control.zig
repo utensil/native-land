@@ -29,6 +29,15 @@ test "while loops" {
         sum += j;
     }
     try expect(sum == 55);
+
+    // While with continue
+    var odd_sum: u8 = 0;
+    var k: u8 = 0;
+    while (k <= 10) : (k += 1) {
+        if (k % 2 == 0) continue; // Skip even numbers
+        odd_sum += k;
+    }
+    try expect(odd_sum == 25); // 1 + 3 + 5 + 7 + 9
 }
 
 test "for loops" {
