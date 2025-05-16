@@ -49,8 +49,8 @@ build: fetch
 run: fetch
   zig build {{ZIG_OPT}} run
 [no-cd]
-test: fetch
-  zig build {{ZIG_OPT}} test --summary all
+test FILTER="": fetch
+  TEST_FILTER={{FILTER}} zig build {{ZIG_OPT}} test --summary all
 
 new PROJ:
   #!/usr/bin/env bash

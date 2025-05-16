@@ -112,6 +112,12 @@ pub fn main() !void {
 
     const total_tests = pass + fail;
     const status: Status = if (fail == 0) .pass else .fail;
+
+    // there might be no test matching the filter
+    if (total_tests == 0) {
+        std.process.exit(0);
+    }
+
     printer.status(status, "{s}: {d} of {d} test{s} passed\n", .{ current_file, pass, total_tests, if (total_tests != 1) "s" else "" });
     if (skip > 0) {
         printer.status(.skip, "{s}: {d} test{s} skipped\n", .{ current_file, skip, if (skip != 1) "s" else "" });
