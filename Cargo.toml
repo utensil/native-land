@@ -1,3 +1,19 @@
 # This was previously a workspace, but has been broken into individual projects.
 # Each project in yard-rs/ is now a standalone Cargo project with its own Cargo.toml.
 # To build all projects, use the justfile commands which iterate over each project.
+
+# This is a dummy package to satisfy Cargo when it looks for the root manifest
+[package]
+name = "native-land-root"
+version = "0.0.1"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[lib]
+# No actual library code, this is just a placeholder
+path = "src/lib.rs"
+
+[[bin]]
+name = "native-land"
+path = "src/main.rs"

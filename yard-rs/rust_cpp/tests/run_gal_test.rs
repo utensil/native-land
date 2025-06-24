@@ -8,5 +8,4 @@ mod run_gal_test {
     fn test_hello() {
         hello_pga();
     }
-
 }

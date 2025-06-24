@@ -23,10 +23,10 @@ fn main() {
 
 fn read_name() -> io::Result<String> {
     let result = ReadLine::new() // futures::empty()
-      .select(Timeout::new(Duration::from_secs(5), || {
-        io::Error::new(io::ErrorKind::Other, "timeout elapsed".to_string())
-      }))
-      .wait();
+        .select(Timeout::new(Duration::from_secs(5), || {
+            io::Error::new(io::ErrorKind::Other, "timeout elapsed".to_string())
+        }))
+        .wait();
 
     match result {
         Ok((name, _)) => Ok(name),

@@ -2,7 +2,7 @@
 
 use cpp::cpp;
 
-cpp!{{
+cpp! {{
     #include <iostream>
     // will need to add #include <bit> for clang
     // #include "ganim/ga/sga.hpp"
@@ -26,4 +26,3 @@ pub fn hello() {
         });
     }
 }
-
