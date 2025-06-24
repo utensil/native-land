@@ -21,6 +21,7 @@ yard-rs/nohup.out
 yard-rs/runpod-xp/.env
 yard-rs/runpod-xp/__pycache__/
 **/lcov.info
+lcov-*.info
 yard-rs/tch-xp/micromamba
 yard-rs/rust_cpp/libs
 notebooks/.ipynb_checkpoints

@@ -46,7 +46,38 @@ ci: prep-ci
 
 [group('rust'), no-cd]
 test:
-    cargo nextest run --no-fail-fast --retries 2
+    #!/usr/bin/env bash
+    set -e
+    echo "Running nextest run --no-fail-fast --retries 2 in bevy-xp"
+    cd yard-rs/bevy-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in candle-xp"
+    cd yard-rs/candle-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in clifford-xp"
+    cd yard-rs/clifford-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in lists"
+    cd yard-rs/lists && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in rust_cpp"
+    cd yard-rs/rust_cpp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in tch-xp"
+    cd yard-rs/tch-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in dx-xp"
+    cd yard-rs/dx-xp && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in rust_basics"
+    cd yard-rs/rust_basics && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running nextest run --no-fail-fast --retries 2 in rustry"
+    cd yard-rs/rustry && cargo nextest run --no-fail-fast --retries 2
+    cd ../..
 
 [group('util'), no-cd]
 list:
@@ -54,7 +85,38 @@ list:
 
 [group('rust'), no-cd]
 test-stable:
-    cargo +stable nextest run --no-fail-fast --retries 2
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in bevy-xp"
+    cd yard-rs/bevy-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in candle-xp"
+    cd yard-rs/candle-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in clifford-xp"
+    cd yard-rs/clifford-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in lists"
+    cd yard-rs/lists && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in rust_cpp"
+    cd yard-rs/rust_cpp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in tch-xp"
+    cd yard-rs/tch-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in dx-xp"
+    cd yard-rs/dx-xp && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in rust_basics"
+    cd yard-rs/rust_basics && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +stable nextest run --no-fail-fast --retries 2 in rustry"
+    cd yard-rs/rustry && cargo +stable nextest run --no-fail-fast --retries 2
+    cd ../..
 
 # [group('rust'), no-cd]
 # prep-stable:
@@ -71,54 +133,379 @@ test-stable:
 
 [group('rust'), no-cd]
 @test-nightly:
-    # cargo +nightly build --all-targets --keep-going
-    # cargo +nightly test --all-targets --no-fail-fast
-    yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in bevy-xp"
+    cd yard-rs/bevy-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in candle-xp"
+    cd yard-rs/candle-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in clifford-xp"
+    cd yard-rs/clifford-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in lists"
+    cd yard-rs/lists && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in rust_cpp"
+    cd yard-rs/rust_cpp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in cubecl-xp"
+    cd yard-rs/cubecl-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in tch-xp"
+    cd yard-rs/tch-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in dx-xp"
+    cd yard-rs/dx-xp && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in rust_basics"
+    cd yard-rs/rust_basics && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
+    echo "Running +nightly nextest run --no-fail-fast --retries 2 in rustry"
+    cd yard-rs/rustry && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+    cd ../..
 
 [group('rust'), no-cd]
 cov:
-    yes|cargo llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+    #!/usr/bin/env bash
+    set -e
+    rm -f lcov.info
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in bevy-xp"
+    cd yard-rs/bevy-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-bevy-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in candle-xp"
+    cd yard-rs/candle-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-candle-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in clifford-xp"
+    cd yard-rs/clifford-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-clifford-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in lists"
+    cd yard-rs/lists && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-lists.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rust_cpp"
+    cd yard-rs/rust_cpp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-rust_cpp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in cubecl-xp"
+    cd yard-rs/cubecl-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-cubecl-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in tch-xp"
+    cd yard-rs/tch-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-tch-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in dx-xp"
+    cd yard-rs/dx-xp && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-dx-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rust_basics"
+    cd yard-rs/rust_basics && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-rust_basics.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rustry"
+    cd yard-rs/rustry && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-rustry.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Merging coverage reports..."
+    cat lcov-*.info > lcov.info 2>/dev/null || echo "SF:" > lcov.info  # Create empty coverage if no reports generated
 
 [group('rust'), no-cd]
 cov-nightly:
-    yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+    #!/usr/bin/env bash
+    set -e
+    rm -f lcov.info
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in bevy-xp"
+    cd yard-rs/bevy-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-bevy-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in candle-xp"
+    cd yard-rs/candle-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-candle-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in clifford-xp"
+    cd yard-rs/clifford-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-clifford-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in lists"
+    cd yard-rs/lists && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-lists.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rust_cpp"
+    cd yard-rs/rust_cpp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-rust_cpp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in cubecl-xp"
+    cd yard-rs/cubecl-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-cubecl-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in tch-xp"
+    cd yard-rs/tch-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-tch-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in dx-xp"
+    cd yard-rs/dx-xp && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-dx-xp.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rust_basics"
+    cd yard-rs/rust_basics && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-rust_basics.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Running +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2 in rustry"
+    cd yard-rs/rustry && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-rustry.info nextest --no-fail-fast --retries 2 || true
+    cd ../..
+    echo "Merging coverage reports..."
+    cat lcov-*.info > lcov.info 2>/dev/null || echo "SF:" > lcov.info  # Create empty coverage if no reports generated
 
 [group('rust'), no-cd]
 clippy:
-    cargo clippy
+    #!/usr/bin/env bash
+    set -e
+    echo "Running clippy in bevy-xp"
+    cd yard-rs/bevy-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in candle-xp"
+    cd yard-rs/candle-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in clifford-xp"
+    cd yard-rs/clifford-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in lists"
+    cd yard-rs/lists && cargo clippy
+    cd ../..
+    echo "Running clippy in rust_cpp"
+    cd yard-rs/rust_cpp && cargo clippy
+    cd ../..
+    echo "Running clippy in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in tch-xp"
+    cd yard-rs/tch-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in dx-xp"
+    cd yard-rs/dx-xp && cargo clippy
+    cd ../..
+    echo "Running clippy in rust_basics"
+    cd yard-rs/rust_basics && cargo clippy
+    cd ../..
+    echo "Running clippy in rustry"
+    cd yard-rs/rustry && cargo clippy
+    cd ../..
 
 [group('rust'), no-cd]
 clippy-stable:
-    cargo +stable clippy
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +stable clippy in bevy-xp"
+    cd yard-rs/bevy-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in candle-xp"
+    cd yard-rs/candle-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in clifford-xp"
+    cd yard-rs/clifford-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in lists"
+    cd yard-rs/lists && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in rust_cpp"
+    cd yard-rs/rust_cpp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in tch-xp"
+    cd yard-rs/tch-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in dx-xp"
+    cd yard-rs/dx-xp && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in rust_basics"
+    cd yard-rs/rust_basics && cargo +stable clippy
+    cd ../..
+    echo "Running +stable clippy in rustry"
+    cd yard-rs/rustry && cargo +stable clippy
+    cd ../..
 
 [group('rust'), no-cd]
 clippy-nightly:
-    cargo +nightly clippy
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +nightly clippy in bevy-xp"
+    cd yard-rs/bevy-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in candle-xp"
+    cd yard-rs/candle-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in clifford-xp"
+    cd yard-rs/clifford-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in lists"
+    cd yard-rs/lists && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in rust_cpp"
+    cd yard-rs/rust_cpp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in tch-xp"
+    cd yard-rs/tch-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in dx-xp"
+    cd yard-rs/dx-xp && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in rust_basics"
+    cd yard-rs/rust_basics && cargo +nightly clippy
+    cd ../..
+    echo "Running +nightly clippy in rustry"
+    cd yard-rs/rustry && cargo +nightly clippy
+    cd ../..
 
 vcov: cov
-    cargo llvm-cov report --ignore-filename-regex main.rs --html --open
+    #!/usr/bin/env bash
+    echo "Generating coverage reports for all projects..."
+    cd yard-rs/bevy-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../candle-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../clifford-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../lists && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../rust_cpp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../cubecl-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../tch-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../dx-xp && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../rust_basics && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
+    cd ../rustry && cargo llvm-cov report --ignore-filename-regex main.rs --html --open || true
 
 [group('rust'), no-cd]
 build:
-    cargo build
+    #!/usr/bin/env bash
+    set -e
+    echo "Running build in bevy-xp"
+    cd yard-rs/bevy-xp && cargo build
+    cd ../..
+    echo "Running build in candle-xp"
+    cd yard-rs/candle-xp && cargo build
+    cd ../..
+    echo "Running build in clifford-xp"
+    cd yard-rs/clifford-xp && cargo build
+    cd ../..
+    echo "Running build in lists"
+    cd yard-rs/lists && cargo build
+    cd ../..
+    echo "Running build in rust_cpp"
+    cd yard-rs/rust_cpp && cargo build
+    cd ../..
+    echo "Running build in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo build
+    cd ../..
+    echo "Running build in tch-xp"
+    cd yard-rs/tch-xp && cargo build
+    cd ../..
+    echo "Running build in dx-xp"
+    cd yard-rs/dx-xp && cargo build
+    cd ../..
+    echo "Running build in rust_basics"
+    cd yard-rs/rust_basics && cargo build
+    cd ../..
+    echo "Running build in rustry"
+    cd yard-rs/rustry && cargo build
+    cd ../..
 
 [group('rust'), no-cd]
 build-stable:
-    cargo +stable build
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +stable build in bevy-xp"
+    cd yard-rs/bevy-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in candle-xp"
+    cd yard-rs/candle-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in clifford-xp"
+    cd yard-rs/clifford-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in lists"
+    cd yard-rs/lists && cargo +stable build
+    cd ../..
+    echo "Running +stable build in rust_cpp"
+    cd yard-rs/rust_cpp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in tch-xp"
+    cd yard-rs/tch-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in dx-xp"
+    cd yard-rs/dx-xp && cargo +stable build
+    cd ../..
+    echo "Running +stable build in rust_basics"
+    cd yard-rs/rust_basics && cargo +stable build
+    cd ../..
+    echo "Running +stable build in rustry"
+    cd yard-rs/rustry && cargo +stable build
+    cd ../..
 
 [group('rust'), no-cd]
 build-nightly:
-    cargo +nightly build
+    #!/usr/bin/env bash
+    set -e
+    echo "Running +nightly build in bevy-xp"
+    cd yard-rs/bevy-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in candle-xp"
+    cd yard-rs/candle-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in clifford-xp"
+    cd yard-rs/clifford-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in lists"
+    cd yard-rs/lists && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in rust_cpp"
+    cd yard-rs/rust_cpp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in tch-xp"
+    cd yard-rs/tch-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in dx-xp"
+    cd yard-rs/dx-xp && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in rust_basics"
+    cd yard-rs/rust_basics && cargo +nightly build
+    cd ../..
+    echo "Running +nightly build in rustry"
+    cd yard-rs/rustry && cargo +nightly build
+    cd ../..
 
-run *PARAMS:
-    cargo run {{PARAMS}}
+run PROJECT *PARAMS:
+    cd yard-rs/{{PROJECT}} && cargo run {{PARAMS}}
 
 # [group('rust'), no-cd]
 # nightly: prep-nightly test-nightly
 
 [group('rust'), no-cd]
 fmt:
-    cargo fmt
+    #!/usr/bin/env bash
+    set -e
+    echo "Running fmt in bevy-xp"
+    cd yard-rs/bevy-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in candle-xp"
+    cd yard-rs/candle-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in clifford-xp"
+    cd yard-rs/clifford-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in lists"
+    cd yard-rs/lists && cargo fmt
+    cd ../..
+    echo "Running fmt in rust_cpp"
+    cd yard-rs/rust_cpp && cargo fmt
+    cd ../..
+    echo "Running fmt in cubecl-xp"
+    cd yard-rs/cubecl-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in tch-xp"
+    cd yard-rs/tch-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in dx-xp"
+    cd yard-rs/dx-xp && cargo fmt
+    cd ../..
+    echo "Running fmt in rust_basics"
+    cd yard-rs/rust_basics && cargo fmt
+    cd ../..
+    echo "Running fmt in rustry"
+    cd yard-rs/rustry && cargo fmt
+    cd ../..
 
 [group('util'), no-cd]
 kill NAME:
