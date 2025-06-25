@@ -2,7 +2,7 @@
 # normally should use `just build/test/cov` etc. to set environment variables properly
 [env]
 LIBTORCH = { value = "../libtorch" , relative = true }
-DYLD_LIBRARY_PATH = { value = ".../libtorch/lib" , relative = true }
+DYLD_LIBRARY_PATH = { value = "../libtorch/lib" , relative = true }
 DYLD_FALLBACK_LIBRARY_PATH = { value = "../libtorch/lib" , relative = true }
 
 # This is to avoid using all cores of my 10-core machine, not working as expected
