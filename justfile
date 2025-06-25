@@ -332,5 +332,14 @@ clean:
         cd -
     done < <(find yard-rs -name "Cargo.toml" -exec dirname {} \;)
 
+fmt:
+    #!/usr/bin/env bash
+    while IFS= read -r project; do
+        echo "Formatting $project..."
+        cd "$project"
+        cargo fmt
+        cd -
+    done < <(find yard-rs -name "Cargo.toml" -exec dirname {} \;)
+
 
 
