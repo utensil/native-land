@@ -1,10 +1,20 @@
 # to install just:
 # run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+set unstable
 
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
-# export RUSTC_WRAPPER := "sccache"
+
+# https://github.com/mozilla/sccache/blob/main/docs/Local.md
+export SCCACHE_DIR := join(home_directory(), ".cache/sccache")
+export SCCACHE_CACHE_SIZE := "10G"
+# https://github.com/mozilla/sccache?tab=readme-ov-file#usage
+# By default, sccache will fail your build if it fails to successfully communicate with its associated server. To have sccache instead gracefully failover to the local compiler without stopping
+export SCCACHE_IGNORE_SERVER_IO_ERROR := "1"
+# Running sccache is like running ccache: prefix your compilation commands with it
+# Alternatively you can use the environment variable RUSTC_WRAPPER:
+export RUSTC_WRAPPER := which("sccache")
 # export CARGO_BUILD_JOBS := "4"
 
 # export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
@@ -31,6 +41,8 @@ prep-ci:
 
 ci: prep-ci
     #!/usr/bin/env bash
+    export RUSTC_WRAPPER=`which sccache`
+    echo "Using RUSTC_WRAPPER=$RUSTC_WRAPPER"
     ROOT_DIR=$(pwd)
     FAILED_PROJECTS=()
     PASSED_PROJECTS=()
@@ -271,6 +283,18 @@ cov-rsgpu:
 prep-cache: prep-binstall
     which sccache || (yes|cargo binstall sccache)
 
+cache:
+    sccache --show-adv-stats
+
+cache-reset:
+    sccache --zero-stats
+    sccache --stop-server
+    sccache --start-server
+
+cache-clean:
+    #!/usr/bin/env bash
+    find ~/.cache/sccache -type f -delete
+
 [unix]
 prep-uv:
     curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -297,6 +321,16 @@ prep-llvm17:
 
 prep-gcc:
     brew install gcc@13
+
+clean:
+    #!/usr/bin/env bash
+    while IFS= read -r project; do
+        echo "Cleaning $project..."
+        cd "$project"
+        cargo clean
+        rm -f Cargo.lock
+        cd -
+    done < <(find yard-rs -name "Cargo.toml" -exec dirname {} \;)
 
 
 
