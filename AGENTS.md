@@ -93,10 +93,43 @@ Common CI steps:
 - **Naming**: `snake_case` (vars), `PascalCase` (types)
 - **Error Handling**: Use `Result`/`Option`; avoid `unwrap()` in production
 
+### C++
+- Follow .clang-format rules (if present)
+- Use modern C++ standards (C++17/20 where available)
+
+### Zig
+- Follow official Zig style guide
+- Use error unions for error handling
+
 ### General
 - **Comments**: Add `AGENT-NOTE:` for non-trivial changes
 - **Documentation**: Include docstrings for public items
 - **Performance**: Profile before optimizing
+
+---
+
+## 6. Completion Checklist
+
+Before considering any task complete, ensure:
+
+### For Rust Projects
+1. `just fmt` - Format code correctly
+2. `just clippy` - Fix all linter warnings
+3. `just test` - Pass all tests locally
+4. `just ci` - Verify CI pipeline would pass
+
+### For C++ Projects
+1. `just run` - Build and run successfully
+2. `just run-win` - Verify Windows compatibility (if applicable)
+
+### For Zig Projects
+1. `just test` - Pass all tests
+2. Manual review - Zig's comptime requires careful verification
+
+### All Projects
+- Verify no debug prints remain
+- Confirm no secrets are exposed
+- Check GPU compatibility if applicable
 
 ---
 
@@ -111,9 +144,30 @@ Common CI steps:
 
 ## 7. Commit Standards
 
-- **Messages**: Use conventional commits (`feat:`, `fix:`, etc.)
-- **Scope**: One logical change per commit
-- **Tagging**: Mark AI-generated commits with `[AGENT]`
-- **Review**: Human must review all changes before merging
+### Message Format
+```
+<type>: <short description> [AGENT]
+
+<detailed summary>
+```
+
+### Required Elements
+- **Type**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, or `chore`
+- **Short Description**: Under 50 characters
+- **Detailed Summary**:
+  - Why the change was made
+  - Affected components
+  - Verification steps taken
+  - Any remaining TODOs
+
+### Examples
+```
+feat: add GPU memory tracking [AGENT]
+
+- Implemented Vulkan memory allocation tracking
+- Added metrics reporting to Prometheus
+- Verified with `just test` and manual inspection
+- Remaining: Windows DX12 support (tracked in #123)
+```
 
 🤖 Generated with [opencode](https://opencode.ai)
