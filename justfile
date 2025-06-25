@@ -15,9 +15,7 @@ LIBTORCH_PREFIX := clean(join(justfile_directory() , ".."))
 export LIBTORCH := join(LIBTORCH_PREFIX, "libtorch")
 env_sep := if os() == "windows" { ";" } else { ":" }
 export PATH := join(LIBTORCH, "lib") + env_sep + env_var("PATH")
-export LIBTORCH_BYPASS_VERSION_CHECK := "1"
-export DYLD_LIBRARY_PATH := join(LIBTORCH, "lib")
-export DYLD_FALLBACK_LIBRARY_PATH := join(LIBTORCH, "lib")
+
 
 default:
     just list
@@ -27,7 +25,6 @@ check:
     just
     echo "LIBTORCH=$LIBTORCH"
     echo "PATH=$PATH"
-    echo "DYLD_LIBRARY_PATH={{DYLD_LIBRARY_PATH}}"
 
 prep-ci:
     just prep-cache
@@ -585,35 +582,9 @@ prep-linux:
 #     curl -L --proto '=https' --tlsv1.2 -sSf https://micro.mamba.pm/install.sh | bash
 #     $HOME/.local/bin/micromamba --version
 
-LIBTORCH_FILENAME := if os() == "windows" {
-    "libtorch-win-shared-with-deps-2.4.0%2Bcpu.zip"
-} else if os() == "linux" {
-    "libtorch-cxx11-abi-shared-with-deps-2.4.0%2Bcpu.zip"
-} else if os() == "macos" {
-    if arch() == "aarch64" {
-        "libtorch-macos-arm64-2.4.0.zip"
-    } else {
-        "libtorch-macos-x86_64-2.4.0.zip"
-    }
-} else {
-    ""
-}
-
-LIBTORCH_ZIP_PATH := clean(join(LIBTORCH_PREFIX, LIBTORCH_FILENAME))
-LIBTORCH_DIR := clean(join(LIBTORCH_PREFIX, "libtorch"))
-
 [group('tch')]
 prep-tch:
-    #!/usr/bin/env bash
-    # $HOME/.local/bin/micromamba env create -y -f yard-rs/tch-xp/environment.yml
-    if [[ ! -f {{ LIBTORCH_PREFIX / LIBTORCH_FILENAME }} ]]; then
-        curl {{ "https://download.pytorch.org/libtorch/cpu" / LIBTORCH_FILENAME }} -o "{{ LIBTORCH_ZIP_PATH }}"
-    fi
-    echo "Downloaded to {{ LIBTORCH_ZIP_PATH }}"
-    if [[ ! -d {{ LIBTORCH_DIR }} ]]; then
-        unzip -o "{{ LIBTORCH_ZIP_PATH }}" -d "{{ LIBTORCH_PREFIX }}" 2>&1 > /dev/null
-    fi
-    echo "Unzipped to {{ LIBTORCH_DIR }}"
+    cd yard-rs/tch-xp && just prep-tch
 
 [group('rust-gpu')]
 test-rsgpu:
