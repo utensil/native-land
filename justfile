@@ -6,6 +6,9 @@ export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
 
+# https://github.com/mozilla/sccache/blob/main/docs/Local.md
+export SCCACHE_DIR := join(home_directory(), ".cache/sccache")
+export SCCACHE_CACHE_SIZE := "10G"
 # https://github.com/mozilla/sccache?tab=readme-ov-file#usage
 # By default, sccache will fail your build if it fails to successfully communicate with its associated server. To have sccache instead gracefully failover to the local compiler without stopping
 export SCCACHE_IGNORE_SERVER_IO_ERROR := "1"
