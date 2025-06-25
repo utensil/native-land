@@ -139,17 +139,13 @@ ci: prep-ci
     # cd yard-rs/krnl-xp && just test
     # just cov-rsgpu
 
-[group('rust'), no-cd]
-test:
-    cargo nextest run --no-fail-fast --retries 2
+
 
 [group('util'), no-cd]
 list:
     just --list
 
-[group('rust'), no-cd]
-test-stable:
-    cargo +stable nextest run --no-fail-fast --retries 2
+
 
 # [group('rust'), no-cd]
 # prep-stable:
@@ -164,57 +160,32 @@ test-stable:
 #     rustup component add rust-src --toolchain nightly
 #     rustup component add rust-analyzer --toolchain nightly
 
-[group('rust'), no-cd]
-@test-nightly:
-    # cargo +nightly build --all-targets --keep-going
-    # cargo +nightly test --all-targets --no-fail-fast
-    yes|cargo +nightly nextest run --no-fail-fast --retries 2
 
-[group('rust'), no-cd]
-cov:
-    yes|cargo llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
 
-[group('rust'), no-cd]
-cov-nightly:
-    yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
 
-[group('rust'), no-cd]
-clippy:
-    cargo clippy
 
-[group('rust'), no-cd]
-clippy-stable:
-    cargo +stable clippy
 
-[group('rust'), no-cd]
-clippy-nightly:
-    cargo +nightly clippy
 
-[group('rust'), no-cd]
-vcov: cov
-    cargo llvm-cov report --ignore-filename-regex main.rs --html --open
 
-[group('rust'), no-cd]
-build:
-    cargo build
 
-[group('rust'), no-cd]
-build-stable:
-    cargo +stable build
 
-[group('rust'), no-cd]
-build-nightly:
-    cargo +nightly build
 
-run *PARAMS:
-    cargo run {{PARAMS}}
+
+
+
+
+
+
+
+
+
+
+
 
 # [group('rust'), no-cd]
 # nightly: prep-nightly test-nightly
 
-[group('rust'), no-cd]
-fmt:
-    cargo fmt
+
 
 [group('util'), no-cd]
 kill NAME:
@@ -259,11 +230,7 @@ prep-linux:
 @prep-binstall:
     which cargo-binstall || cargo install cargo-binstall
 
-[group('rust'), no-cd]
-@prep-test: prep-binstall
-    which cargo-nextest || (yes|cargo binstall cargo-nextest --secure)
-    which cargo-llvm-cov || (yes|cargo binstall cargo-llvm-cov --secure)
-    which cargo-deny || (yes|cargo binstall cargo-deny --secure)
+
 
 # clone-ex:
 #     #!/usr/bin/env bash
@@ -331,7 +298,5 @@ prep-llvm17:
 prep-gcc:
     brew install gcc@13
 
-prep-rust:
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
-    just add-zrc '. $HOME/.cargo/env'
+
 

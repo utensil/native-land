@@ -25,6 +25,89 @@ check:
     echo "PATH=$PATH"
     echo "DYLD_LIBRARY_PATH={{DYLD_LIBRARY_PATH}}"
 
+[group('rust'), no-cd]
+test:
+    cargo nextest run --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+test-stable:
+    cargo +stable nextest run --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+@test-nightly:
+    yes|cargo +nightly nextest run --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+cov:
+    yes|cargo llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+cov-nightly:
+    yes|cargo +nightly llvm-cov --branch --lcov --output-path lcov.info nextest --no-fail-fast --retries 2
+
+[group('rust'), no-cd]
+clippy:
+    cargo clippy
+
+[group('rust'), no-cd]
+clippy-stable:
+    cargo +stable clippy
+
+[group('rust'), no-cd]
+clippy-nightly:
+    cargo +nightly clippy
+
+[group('rust'), no-cd]
+vcov: cov
+    cargo llvm-cov report --ignore-filename-regex main.rs --html --open
+
+[group('rust'), no-cd]
+build:
+    cargo build
+
+[group('rust'), no-cd]
+build-stable:
+    cargo +stable build
+
+[group('rust'), no-cd]
+build-nightly:
+    cargo +nightly build
+
+[group('rust'), no-cd]
+run *PARAMS:
+    cargo run {{PARAMS}}
+
+[group('rust'), no-cd]
+fmt:
+    cargo fmt
+
+[private]
+@prep-binstall-unix:
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+
+[linux, private]
+@prep-binstall:
+    which cargo-binstall || (just prep-binstall-unix)
+
+[macos, private]
+@prep-binstall:
+    which cargo-binstall || (just prep-binstall-unix) || brew install cargo-binstall
+
+[windows, private]
+@prep-binstall:
+    which cargo-binstall || cargo install cargo-binstall
+
+[group('rust'), no-cd]
+@prep-test: prep-binstall
+    which cargo-nextest || (yes|cargo binstall cargo-nextest --secure)
+    which cargo-llvm-cov || (yes|cargo binstall cargo-llvm-cov --secure)
+    which cargo-deny || (yes|cargo binstall cargo-deny --secure)
+
+[group('rust'), no-cd]
+prep-rust:
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+    just add-zrc '. $HOME/.cargo/env'
+
 [group('dx')]
 prep-dx:
     cargo install dioxus-cli
