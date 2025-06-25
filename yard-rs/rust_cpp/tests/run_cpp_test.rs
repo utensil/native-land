@@ -2,8 +2,8 @@ extern crate chrono;
 
 #[cfg(test)]
 mod run_cpp_test {
-    use rust_cpp::run_cpp::*;
     use chrono::Utc;
+    use rust_cpp::run_cpp::*;
 
     #[test]
     fn test_printf() {

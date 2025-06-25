@@ -2,7 +2,7 @@
 
 use cpp::cpp;
 
-cpp!{{
+cpp! {{
     #include <iostream>
     // #include <gal/vga.hpp>
     // #include <gal/pga.hpp>
@@ -37,4 +37,3 @@ pub fn hello() {
         });
     }
 }
-
