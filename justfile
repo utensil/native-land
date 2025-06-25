@@ -278,7 +278,7 @@ prep-cache: prep-binstall
 cache:
     sccache --show-stats
 
-cache-clean:
+cache-reset:
     sccache --zero-stats
     sccache --stop-server
     sccache --start-server
