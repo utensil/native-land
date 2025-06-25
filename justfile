@@ -49,11 +49,14 @@ ci: prep-ci
     # Determine test command based on OS
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         TEST_COMMAND="cov"
-        TEST_OUTPUT_HEADER="COVERAGE OUTPUT"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        TEST_COMMAND="cov"
     else
         TEST_COMMAND="test"
-        TEST_OUTPUT_HEADER="TEST OUTPUT"
+        export WGPU_BACKEND=dx12
+        export BEVY_CI_FORCE_WINIT_BACKEND=windows
     fi
+    TEST_OUTPUT_HEADER="just $TEST_COMMAND OUTPUT"
     
     for project in yard-rs/bevy-xp yard-rs/candle-xp yard-rs/clifford-xp yard-rs/cubecl-xp yard-rs/dx-xp yard-rs/lists yard-rs/rust_basics yard-rs/rust_cpp yard-rs/rustry yard-rs/tch-xp; do
         echo -e "${BLUE}Running CI for $project...${NC}"
@@ -187,6 +190,7 @@ clippy-stable:
 clippy-nightly:
     cargo +nightly clippy
 
+[group('rust'), no-cd]
 vcov: cov
     cargo llvm-cov report --ignore-filename-regex main.rs --html --open
 
