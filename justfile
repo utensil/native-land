@@ -29,7 +29,6 @@ prep-ci:
     just prep-cache
     just prep-tch
 
-[linux]
 ci: prep-ci
     #!/usr/bin/env bash
     ROOT_DIR=$(pwd)
@@ -44,6 +43,15 @@ ci: prep-ci
     BLUE='\033[0;34m'
     GRAY='\033[0;90m'
     NC='\033[0m' # No Color
+    
+    # Determine test command based on OS
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        TEST_COMMAND="cov"
+        TEST_OUTPUT_HEADER="COVERAGE OUTPUT"
+    else
+        TEST_COMMAND="test"
+        TEST_OUTPUT_HEADER="TEST OUTPUT"
+    fi
     
     for project in yard-rs/bevy-xp yard-rs/candle-xp yard-rs/clifford-xp yard-rs/cubecl-xp yard-rs/dx-xp yard-rs/lists yard-rs/rust_basics yard-rs/rust_cpp yard-rs/rustry yard-rs/tch-xp; do
         echo -e "${BLUE}Running CI for $project...${NC}"
@@ -61,26 +69,26 @@ ci: prep-ci
             continue
         fi
         
-        # Run cov and capture output with colors preserved
-        COV_OUTPUT=$(script -q /dev/null just cov 2>&1)
-        COV_EXIT_CODE=$?
+        # Run test/cov and capture output with colors preserved
+        TEST_OUTPUT=$(script -q /dev/null just $TEST_COMMAND 2>&1)
+        TEST_EXIT_CODE=$?
         
-        if [ $COV_EXIT_CODE -eq 0 ]; then
+        if [ $TEST_EXIT_CODE -eq 0 ]; then
             echo -e "${GREEN}Tests passed for $project${NC}"
             ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
             ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
-            ALL_OUTPUT+="\n=== COVERAGE OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$COV_OUTPUT\n"
+            ALL_OUTPUT+="\n=== $TEST_OUTPUT_HEADER for $project ===\n"
+            ALL_OUTPUT+="$TEST_OUTPUT\n"
             PASSED_PROJECTS+=("$project")
-        elif echo "$COV_OUTPUT" | grep -q "no tests to run"; then
+        elif echo "$TEST_OUTPUT" | grep -q "no tests to run"; then
             echo -e "${GRAY}No tests found for $project${NC}"
             NO_TESTS_PROJECTS+=("$project")
         else
-            echo -e "${RED}Coverage failed for $project${NC}"
+            echo -e "${RED}Tests failed for $project${NC}"
             ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
             ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
-            ALL_OUTPUT+="\n=== COVERAGE OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$COV_OUTPUT\n"
+            ALL_OUTPUT+="\n=== $TEST_OUTPUT_HEADER for $project ===\n"
+            ALL_OUTPUT+="$TEST_OUTPUT\n"
             FAILED_PROJECTS+=("$project")
         fi
     done
@@ -113,92 +121,6 @@ ci: prep-ci
     
     # cd yard-rs/krnl-xp && just test
     # just cov-rsgpu
-
-[macos]
-[windows]
-ci: prep-ci
-    #!/usr/bin/env bash
-    ROOT_DIR=$(pwd)
-    FAILED_PROJECTS=()
-    PASSED_PROJECTS=()
-    NO_TESTS_PROJECTS=()
-    ALL_OUTPUT=""
-    
-    # Color codes
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    BLUE='\033[0;34m'
-    GRAY='\033[0;90m'
-    NC='\033[0m' # No Color
-    
-    for project in yard-rs/bevy-xp yard-rs/candle-xp yard-rs/clifford-xp yard-rs/cubecl-xp yard-rs/dx-xp yard-rs/lists yard-rs/rust_basics yard-rs/rust_cpp yard-rs/rustry yard-rs/tch-xp; do
-        echo -e "${BLUE}Running CI for $project...${NC}"
-        cd "$ROOT_DIR/$project"
-        
-        # Run clippy and capture output
-        CLIPPY_OUTPUT=$(just clippy 2>&1)
-        CLIPPY_EXIT_CODE=$?
-        
-        if [ $CLIPPY_EXIT_CODE -ne 0 ]; then
-            echo -e "${RED}Clippy failed for $project${NC}"
-            ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
-            FAILED_PROJECTS+=("$project")
-            continue
-        fi
-        
-        # Run test and capture output with colors preserved
-        TEST_OUTPUT=$(script -q /dev/null just test 2>&1)
-        TEST_EXIT_CODE=$?
-        
-        if [ $TEST_EXIT_CODE -eq 0 ]; then
-            echo -e "${GREEN}Tests passed for $project${NC}"
-            ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
-            ALL_OUTPUT+="\n=== TEST OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$TEST_OUTPUT\n"
-            PASSED_PROJECTS+=("$project")
-        elif echo "$TEST_OUTPUT" | grep -q "no tests to run"; then
-            echo -e "${GRAY}No tests found for $project${NC}"
-            NO_TESTS_PROJECTS+=("$project")
-        else
-            echo -e "${RED}Tests failed for $project${NC}"
-            ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
-            ALL_OUTPUT+="\n=== TEST OUTPUT for $project ===\n"
-            ALL_OUTPUT+="$TEST_OUTPUT\n"
-            FAILED_PROJECTS+=("$project")
-        fi
-    done
-    
-    # Print all captured output (only for projects with tests)
-    echo -e "$ALL_OUTPUT"
-    
-    # Print summary with colors
-    echo ""
-    echo "=== CI SUMMARY ==="
-    echo -e "${GREEN}PASSED: ${#PASSED_PROJECTS[@]} projects${NC}"
-    for project in "${PASSED_PROJECTS[@]}"; do
-        echo -e "  ${GREEN}✓${NC} $project"
-    done
-    
-    echo -e "${GRAY}NO TESTS: ${#NO_TESTS_PROJECTS[@]} projects${NC}"
-    for project in "${NO_TESTS_PROJECTS[@]}"; do
-        echo -e "  ${GRAY}-${NC} $project"
-    done
-    
-    echo -e "${RED}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
-    for project in "${FAILED_PROJECTS[@]}"; do
-        echo -e "  ${RED}✗${NC} $project"
-    done
-    
-    # Exit with failure if any projects actually failed
-    if [ ${#FAILED_PROJECTS[@]} -gt 0 ]; then
-        exit 1
-    fi
-    
-    # cd yard-rs/krnl-xp && just test
-    # just test-rsgpu
 
 [group('rust'), no-cd]
 test:
