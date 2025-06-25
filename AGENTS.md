@@ -110,26 +110,58 @@ Common CI steps:
 
 ## 6. Completion Checklist
 
-Before considering any task complete, ensure:
+### Project Definition
+A "project" is any directory under:
+- `yard-rs/` (Rust projects)
+- `yard-cpp/` (C++ projects) 
+- `yard-zig/` (Zig projects)
+that contains its own build configuration (e.g., `Cargo.toml`, `xmake.lua`, `build.zig`).
 
-### For Rust Projects
-1. `just fmt` - Format code correctly
-2. `just clippy` - Fix all linter warnings
-3. `just test` - Pass all tests locally
-4. `just ci` - Verify CI pipeline would pass
+### Verification Steps
+For any modified project:
 
-### For C++ Projects
-1. `just run` - Build and run successfully
-2. `just run-win` - Verify Windows compatibility (if applicable)
+1. **Project-Level Verification**:
+   ```bash
+   cd path/to/project && just test  # All languages
+   ```
+   
+2. **Language-Specific Checks**:
 
-### For Zig Projects
-1. `just test` - Pass all tests
-2. Manual review - Zig's comptime requires careful verification
+   **Rust Projects**:
+   ```bash
+   cd yard-rs/project-name && just fmt && just clippy
+   # Then verify all Rust projects:
+   cd yard-rs && just ci  # Runs fmt, clippy, test, cov for all
+   ```
+   *Reference*: `.github/workflows/main.yml`
 
-### All Projects
-- Verify no debug prints remain
-- Confirm no secrets are exposed
-- Check GPU compatibility if applicable
+   **C++ Projects**:
+   ```bash
+   cd yard-cpp/project-name && just run
+   # Windows compatibility:
+   cd yard-cpp/project-name && just run-win
+   ```
+   *Reference*: `.github/workflows/cpp.yml`
+
+   **Zig Projects**:
+   ```bash
+   cd yard-zig/project-name && just test
+   ```
+   *Reference*: `.github/workflows/zig.yml`
+
+3. **Final Checks**:
+   - No debug prints remain
+   - No secrets are exposed
+   - GPU compatibility verified (if applicable)
+   - Documentation updated for API changes
+   - CI workflows checked for new requirements
+
+### CI Reference Paths
+- Rust: `.github/workflows/main.yml`
+- C++: `.github/workflows/cpp.yml` 
+- Zig: `.github/workflows/zig.yml`
+- Notebooks: `.github/workflows/nb.yml`
+- Monitoring: `.github/workflows/runpod-monit.yml`
 
 ---
 
