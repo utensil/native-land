@@ -109,10 +109,14 @@ ci: prep-ci
         echo -e "  ${GRAY}-${NC} $project"
     done
     
-    echo -e "${RED}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
-    for project in "${FAILED_PROJECTS[@]}"; do
-        echo -e "  ${RED}✗${NC} $project"
-    done
+    if [ ${#FAILED_PROJECTS[@]} -gt 0 ]; then
+        echo -e "${RED}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
+        for project in "${FAILED_PROJECTS[@]}"; do
+            echo -e "  ${RED}✗${NC} $project"
+        done
+    else
+        echo -e "${BLUE}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
+    fi
     
     # Exit with failure if any projects actually failed
     if [ ${#FAILED_PROJECTS[@]} -gt 0 ]; then
