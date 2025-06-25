@@ -470,8 +470,9 @@ build-nightly:
     cd yard-rs/rustry && cargo +nightly build
     cd ../..
 
-run PROJECT *PARAMS:
-    cd yard-rs/{{PROJECT}} && cargo run {{PARAMS}}
+[group('rust'), no-cd]
+run *PARAMS:
+    cargo run {{PARAMS}}
 
 # [group('rust'), no-cd]
 # nightly: prep-nightly test-nightly
@@ -655,4 +656,143 @@ prep-gcc:
 prep-rust:
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
     just add-zrc '. $HOME/.cargo/env'
+
+# Auto-discovery tasks for all rust projects
+[group('rust'), no-cd]
+test-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running nextest run --no-fail-fast --retries 2 in $dir"
+        cd yard-rs/$dir && cargo nextest run --no-fail-fast --retries 2
+        cd ../..
+    done
+
+[group('rust'), no-cd] 
+test-stable-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +stable nextest run --no-fail-fast --retries 2 in $dir"
+        cd yard-rs/$dir && cargo +stable nextest run --no-fail-fast --retries 2
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+@test-nightly-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +nightly nextest run --no-fail-fast --retries 2 in $dir"
+        cd yard-rs/$dir && yes|cargo +nightly nextest run --no-fail-fast --retries 2
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+build-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running build in $dir"
+        cd yard-rs/$dir && cargo build
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+build-stable-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +stable build in $dir"
+        cd yard-rs/$dir && cargo +stable build
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+build-nightly-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +nightly build in $dir"
+        cd yard-rs/$dir && cargo +nightly build
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+fmt-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running fmt in $dir"
+        cd yard-rs/$dir && cargo fmt
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+clippy-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running clippy in $dir"
+        cd yard-rs/$dir && cargo clippy --all-targets --all-features -- -D warnings
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+clippy-stable-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +stable clippy in $dir"
+        cd yard-rs/$dir && cargo +stable clippy --all-targets --all-features -- -D warnings
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+clippy-nightly-all:
+    #!/usr/bin/env bash
+    set -e
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +nightly clippy in $dir"
+        cd yard-rs/$dir && cargo +nightly clippy --all-targets --all-features -- -D warnings
+        cd ../..
+    done
+
+[group('rust'), no-cd]
+cov-all:
+    #!/usr/bin/env bash
+    set -e
+    rm -f lcov.info
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running llvm-cov --branch --lcov --output-path lcov-$dir.info nextest --no-fail-fast --retries 2 in $dir"
+        cd yard-rs/$dir && yes|cargo llvm-cov --branch --lcov --output-path ../../lcov-$dir.info nextest --no-fail-fast --retries 2 || true
+        cd ../..
+    done
+    lcov $(find . -name "lcov-*.info" | sed 's/^/--add-tracefile /') --output-file lcov.info || true
+
+[group('rust'), no-cd]
+cov-nightly-all:
+    #!/usr/bin/env bash
+    set -e
+    rm -f lcov.info
+    for dir in $(find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort); do
+        echo "Running +nightly llvm-cov --branch --lcov --output-path lcov-$dir.info nextest --no-fail-fast --retries 2 in $dir"
+        cd yard-rs/$dir && yes|cargo +nightly llvm-cov --branch --lcov --output-path ../../lcov-$dir.info nextest --no-fail-fast --retries 2 || true
+        cd ../..
+    done
+    lcov $(find . -name "lcov-*.info" | sed 's/^/--add-tracefile /') --output-file lcov.info || true
+
+[group('rust'), no-cd]
+run-all PROJECT *PARAMS:
+    #!/usr/bin/env bash
+    set -e
+    if [ -d "yard-rs/{{PROJECT}}" ] && [ -f "yard-rs/{{PROJECT}}/Cargo.toml" ]; then
+        echo "Running cargo run {{PARAMS}} in {{PROJECT}}"
+        cd yard-rs/{{PROJECT}} && cargo run {{PARAMS}}
+    else
+        echo "Error: Project '{{PROJECT}}' not found in yard-rs/ or is not a valid Rust project"
+        echo "Available projects:"
+        find yard-rs -maxdepth 1 -type d -exec test -f {}/Cargo.toml \; -print | sed 's|yard-rs/||' | sort
+        exit 1
+    fi
 
