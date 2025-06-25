@@ -641,9 +641,7 @@ fn tcp_forward(
         });
     }
 
-    println!(
-        "[Tcp] {listen_addr} -> {forward_addr}{accepted_ips_desc}"
-    );
+    println!("[Tcp] {listen_addr} -> {forward_addr}{accepted_ips_desc}");
 
     let done = listener
         .incoming()
@@ -860,8 +858,6 @@ fn main() {
     .unwrap_or_else(|err| println!("{err}"));
 }
 
-
-
 // The following are adpated from https://github.com/neosmart/tcpproxy/blob/master/src/main.rs
 
 // This is a custom type used to have a custom implementation of the
@@ -948,9 +944,7 @@ fn udp_forward(
         });
     }
 
-    println!(
-        "[Udp] {listen_addr} -> {forward_addr}{accepted_ips_desc}"
-    );
+    println!("[Udp] {listen_addr} -> {forward_addr}{accepted_ips_desc}");
 
     let responder = local.try_clone()?;
     let (main_sender, main_receiver) = channel::<(_, Vec<u8>)>();
@@ -960,9 +954,7 @@ fn udp_forward(
             let (dest, buf) = main_receiver.recv().unwrap();
             let to_send = buf.as_slice();
             responder.send_to(to_send, dest).unwrap_or_else(|_| {
-                panic!(
-                    "Failed to forward response from upstream server to client {dest}"
-                )
+                panic!("Failed to forward response from upstream server to client {dest}")
             });
         }
     });

@@ -3,8 +3,8 @@ use crate::CompiledShaderModules;
 // use std::path::PathBuf;
 // use std::borrow::Cow;
 // use std::time::Duration;
-use wgpu::util::DeviceExt;
 use std::collections::HashMap;
+use wgpu::util::DeviceExt;
 
 pub fn start() -> HashMap<u32, u32> {
     // let manifest_dir = env!("CARGO_MANIFEST_DIR");
@@ -27,7 +27,9 @@ pub fn start() -> HashMap<u32, u32> {
     // let compiled_shader_modules = vec![(None, load_spv_module(path))];
     let compiled_shader_modules = vec![(None, wgpu::include_spirv_raw!(env!("shaders.spv")))];
 
-    futures::executor::block_on(start_internal(CompiledShaderModules { named_spv_modules: compiled_shader_modules }))
+    futures::executor::block_on(start_internal(CompiledShaderModules {
+        named_spv_modules: compiled_shader_modules,
+    }))
 }
 
 async fn start_internal(compiled_shader_modules: CompiledShaderModules) -> HashMap<u32, u32> {
@@ -203,7 +205,9 @@ async fn start_internal(compiled_shader_modules: CompiledShaderModules) -> HashM
     // timestamp_readback_buffer.unmap();
     // let mut max = 0;
 
-    src_range.zip(result.iter().copied()).collect::<HashMap<_, _>>()
+    src_range
+        .zip(result.iter().copied())
+        .collect::<HashMap<_, _>>()
 
     // for (src, out) in src_range.zip(result.iter().copied()) {
     //     if out == u32::MAX {

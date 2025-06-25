@@ -39,4 +39,3 @@ pub fn main_cs(
     let index = id.x as usize;
     prime_indices[index] = collatz(prime_indices[index]).unwrap_or(u32::MAX);
 }
-

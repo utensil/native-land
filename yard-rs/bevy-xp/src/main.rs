@@ -71,5 +71,3 @@ fn test(compute_worker: Res<AppComputeWorker<SimpleComputeWorker>>) {
 
     println!("got {result:?}") // [16., 25., 36., 49.]
 }
-
-
