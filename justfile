@@ -1,11 +1,16 @@
 # to install just:
 # run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+set unstable
 
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
-set unstable
 
+# https://github.com/mozilla/sccache?tab=readme-ov-file#usage
+# By default, sccache will fail your build if it fails to successfully communicate with its associated server. To have sccache instead gracefully failover to the local compiler without stopping
+export SCCACHE_IGNORE_SERVER_IO_ERROR := "1"
+# Running sccache is like running ccache: prefix your compilation commands with it
+# Alternatively you can use the environment variable RUSTC_WRAPPER:
 export RUSTC_WRAPPER := which("sccache")
 # export CARGO_BUILD_JOBS := "4"
 
