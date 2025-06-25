@@ -2,9 +2,9 @@
 # [Rust: The Basics](https://stepik.org/lesson/9268/)
 name = "rust_basics"
 authors = ["utensil <utensilcandel@gmail.com>"]
-edition.workspace = true
-license.workspace = true
-version.workspace = true
+edition = "2021"
+license = "MIT"
+version = "0.0.1"
 publish = false
 
 [dependencies]

@@ -1,9 +1,9 @@
 [package]
 name = "bevy-xp"
-edition.workspace = true
-license.workspace = true
-readme.workspace = true
-version.workspace = true
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+version = "0.0.1"
 
 # https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
 [dependencies]

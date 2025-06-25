@@ -1,10 +1,10 @@
 [package]
 name = "rustry"
 authors = ["utensil <utensilcandel@gmail.com>"]
-edition.workspace = true
-license.workspace = true
-readme.workspace = true
-version.workspace = true
+edition = "2021"
+license = "MIT"
+readme = "README.md"
+version = "0.0.1"
 
 [dependencies]
 tokio = "0.1"
