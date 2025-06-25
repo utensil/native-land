@@ -278,6 +278,11 @@ prep-cache: prep-binstall
 cache:
     sccache --show-stats
 
+cache-clean:
+    sccache --zero-stats
+    sccache --stop-server
+    sccache --start-server
+
 [unix]
 prep-uv:
     curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -304,6 +309,16 @@ prep-llvm17:
 
 prep-gcc:
     brew install gcc@13
+
+clean:
+    #!/usr/bin/env bash
+    while IFS= read -r project; do
+        echo "Cleaning $project..."
+        cd "$project"
+        cargo clean
+        rm -f Cargo.lock
+        cd -
+    done < <(find yard-rs -name "Cargo.toml" -exec dirname {} \;)
 
 
 
