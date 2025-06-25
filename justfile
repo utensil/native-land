@@ -4,7 +4,9 @@
 export HOMEBREW_NO_AUTO_UPDATE := "1"
 export BINSTALL_DISABLE_TELEMETRY := "true"
 export RUST_BACKTRACE :="1"
-# export RUSTC_WRAPPER := "sccache"
+set unstable
+
+export RUSTC_WRAPPER := which("sccache")
 # export CARGO_BUILD_JOBS := "4"
 
 # export MAMBA_ROOT_PREFIX := clean(join(justfile_directory(), "..", "micromamba"))
@@ -31,6 +33,8 @@ prep-ci:
 
 ci: prep-ci
     #!/usr/bin/env bash
+    export RUSTC_WRAPPER=`which sccache`
+    echo "Using RUSTC_WRAPPER=$RUSTC_WRAPPER"
     ROOT_DIR=$(pwd)
     FAILED_PROJECTS=()
     PASSED_PROJECTS=()
@@ -270,6 +274,9 @@ cov-rsgpu:
 
 prep-cache: prep-binstall
     which sccache || (yes|cargo binstall sccache)
+
+cache:
+    sccache --show-stats
 
 [unix]
 prep-uv:
