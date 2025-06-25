@@ -63,7 +63,7 @@ fn with_context<T, E>(result: Result<T, E>, msg: &str) -> Result<T, String>
 where
     E: Display,
 {
-    result.map_err(|err| format!("{}({})", err, msg))
+    result.map_err(|err| format!("{err}({msg})"))
 }
 
 pub trait ErrWithMsg<T>
@@ -89,7 +89,7 @@ where
     E: Display,
 {
     fn map_err_with_msg(self, msg: String) -> Result<T, String> {
-        self.map_err(|err| format!("{}: {}", msg, err))
+        self.map_err(|err| format!("{msg}: {err}"))
     }
 }
 
@@ -98,7 +98,7 @@ impl<T> ErrWithMsg<T> for Option<T> {
         if let Some(t) = self {
             Ok(t)
         } else {
-            Err(format!("{}: expecting Some, got None", msg))
+            Err(format!("{msg}: expecting Some, got None"))
         }
     }
 }
@@ -143,20 +143,20 @@ fn spawn_hello_task(
     listen_ip_str: String,
     listen_port: u16,
 ) -> Result<(), Box<dyn Error>> {
-    let listen_addr_str = format!("{}:{}", listen_ip_str, listen_port);
+    let listen_addr_str = format!("{listen_ip_str}:{listen_port}");
     let listen_addr = listen_addr_str
         .parse::<SocketAddr>()
-        .unless(format!("failed to listen to {}", listen_addr_str))?;
+        .unless(format!("failed to listen to {listen_addr_str}"))?;
 
     let listener = with_context(TcpListener::bind(&listen_addr), &listen_addr_str)?;
-    println!("Listening on: {}", listen_addr);
+    println!("Listening on: {listen_addr}");
 
     let task = listener.incoming().for_each(send_hello).map_err(|err| {
         // All tasks must have an `Error` type of `()`. This forces error
         // handling and helps avoid silencing failures.
         //
         // In our example, we are only going to log the error to STDOUT.
-        println!("accept error = {:?}", err);
+        println!("accept error = {err:?}");
     });
 
     rt.spawn(task);
@@ -179,7 +179,7 @@ fn hello_main() -> Result<(), Box<dyn Error>> {
 
     rt.shutdown_on_idle()
         .wait()
-        .map_err(|err| format!("{:?}", err))?;
+        .map_err(|err| format!("{err:?}"))?;
 
     Ok(())
 }
@@ -623,9 +623,9 @@ fn tcp_forward(
     forward_port: i32,
     accepts: &Option<Ips>,
 ) -> Result<(), Box<dyn Error>> {
-    let listen_addr_str = format!("{}:{}", listen_ip, listen_port);
+    let listen_addr_str = format!("{listen_ip}:{listen_port}");
     let listen_addr = with_context(listen_addr_str.parse::<SocketAddr>(), &listen_addr_str)?;
-    let forward_addr_str = format!("{}:{}", forward_ip, forward_port);
+    let forward_addr_str = format!("{forward_ip}:{forward_port}");
     let forward_addr = with_context(forward_addr_str.parse::<SocketAddr>(), &forward_addr_str)?;
 
     // Create a Tcp listener which will listen for incoming connections.
@@ -642,13 +642,12 @@ fn tcp_forward(
     }
 
     println!(
-        "[Tcp] {} -> {}{}",
-        listen_addr, forward_addr, accepted_ips_desc
+        "[Tcp] {listen_addr} -> {forward_addr}{accepted_ips_desc}"
     );
 
     let done = listener
         .incoming()
-        .map_err(|e| println!("error accepting socket; error = {:?}", e))
+        .map_err(|e| println!("error accepting socket; error = {e:?}"))
         .for_each(move |client| {
             let peer_ip = client.peer_addr().unwrap().ip();
             if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
@@ -662,7 +661,7 @@ Connection: close
 403 Forbidden",
                 )
                 .then(move |_res| {
-                    println!("Incoming client rejected: {:?}", peer_ip);
+                    println!("Incoming client rejected: {peer_ip:?}");
                     Ok(())
                 });
 
@@ -700,13 +699,12 @@ Connection: close
                         })
                         .map(move |(from_client, from_server)| {
                             println!(
-                                "client wrote {} bytes and received {} bytes",
-                                from_client, from_server
+                                "client wrote {from_client} bytes and received {from_server} bytes"
                             );
                         })
                         .map_err(|e| {
                             // Don't panic. Maybe the client just disconnected too soon.
-                            println!("error: {}", e);
+                            println!("error: {e}");
                         });
 
                 tokio::spawn(proxy);
@@ -859,7 +857,7 @@ fn main() {
         "help" => print_help(),
         _ => print_help(),
     }
-    .unwrap_or_else(|err| println!("{}", err));
+    .unwrap_or_else(|err| println!("{err}"));
 }
 
 // The following are adpated from https://github.com/neosmart/tcpproxy/blob/master/src/main.rs
@@ -922,7 +920,7 @@ fn debug(msg: String) {
     }
 
     if debug {
-        println!("{}", msg);
+        println!("{msg}");
     }
 }
 
@@ -933,10 +931,10 @@ fn udp_forward(
     forward_port: i32,
     accepts: &Option<Ips>,
 ) -> Result<(), Box<dyn Error>> {
-    let listen_addr = format!("{}:{}", listen_ip, listen_port);
+    let listen_addr = format!("{listen_ip}:{listen_port}");
     let local = UdpSocket::bind(&listen_addr)?;
 
-    let forward_addr = format!("{}:{}", forward_ip, forward_port);
+    let forward_addr = format!("{forward_ip}:{forward_port}");
 
     let mut accepted_ips: HashSet<std::net::IpAddr> = HashSet::new();
     let mut accepted_ips_desc = String::new();
@@ -949,8 +947,7 @@ fn udp_forward(
     }
 
     println!(
-        "[Udp] {} -> {}{}",
-        listen_addr, forward_addr, accepted_ips_desc
+        "[Udp] {listen_addr} -> {forward_addr}{accepted_ips_desc}"
     );
 
     let responder = local.try_clone()?;
@@ -962,8 +959,7 @@ fn udp_forward(
             let to_send = buf.as_slice();
             responder.send_to(to_send, dest).unwrap_or_else(|_| {
                 panic!(
-                    "Failed to forward response from upstream server to client {}",
-                    dest
+                    "Failed to forward response from upstream server to client {dest}"
                 )
             });
         }
@@ -974,21 +970,21 @@ fn udp_forward(
     loop {
         let (num_bytes, src_addr) = local.recv_from(&mut buf).expect("Didn't receive data");
 
-        println!("{}", src_addr);
+        println!("{src_addr}");
 
         let peer_ip = src_addr.ip();
         if !accepted_ips.is_empty() && !accepted_ips.contains(&peer_ip) {
-            println!("Incoming client rejected: {:?}", peer_ip);
+            println!("Incoming client rejected: {peer_ip:?}");
             continue;
         }
 
         //we create a new thread for each unique client
         let mut remove_existing = false;
         loop {
-            debug(format!("Received packet from client {}", src_addr));
+            debug(format!("Received packet from client {src_addr}"));
 
             let mut ignore_failure = true;
-            let client_id = format!("{}", src_addr);
+            let client_id = format!("{src_addr}");
 
             if remove_existing {
                 debug("Removing existing forwarder from map.".to_string());
@@ -1035,7 +1031,7 @@ fn udp_forward(
                                 }
                                 Err(_) => {
                                     if local_timed_out.load(Ordering::Relaxed) {
-                                        debug(format!("Terminating forwarder thread for client {} due to timeout", src_addr));
+                                        debug(format!("Terminating forwarder thread for client {src_addr} due to timeout"));
                                         break;
                                     }
                                 }
@@ -1047,15 +1043,14 @@ fn udp_forward(
                         match receiver.recv_timeout(Duration::from_millis(TIMEOUT)) {
                             Ok(from_client) => {
                                 upstream_send.send_to(from_client.as_slice(), &forward_addr_copy)
-                                    .unwrap_or_else(|_| panic!("Failed to forward packet from client {} to upstream server!", src_addr));
+                                    .unwrap_or_else(|_| panic!("Failed to forward packet from client {src_addr} to upstream server!"));
                                 timeouts = 0; //reset timeout count
                             }
                             Err(_) => {
                                 timeouts += 1;
                                 if timeouts >= 10 {
                                     debug(format!(
-                                        "Disconnecting forwarder for client {} due to timeout",
-                                        src_addr
+                                        "Disconnecting forwarder for client {src_addr} due to timeout"
                                     ));
                                     timed_out.store(true, Ordering::Relaxed);
                                     break;
@@ -1075,14 +1070,12 @@ fn udp_forward(
                 Err(_) => {
                     if !ignore_failure {
                         panic!(
-                            "Failed to send message to datagram forwarder for client {}",
-                            client_id
+                            "Failed to send message to datagram forwarder for client {client_id}"
                         );
                     }
                     //client previously timed out
                     debug(format!(
-                        "New connection received from previously timed-out client {}",
-                        client_id
+                        "New connection received from previously timed-out client {client_id}"
                     ));
                     remove_existing = true;
                     continue;

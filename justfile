@@ -35,6 +35,7 @@ ci: prep-ci
     FAILED_PROJECTS=()
     PASSED_PROJECTS=()
     NO_TESTS_PROJECTS=()
+    CLIPPY_FAILED_PROJECTS=()
     ALL_OUTPUT=""
     
     # Color codes
@@ -42,6 +43,7 @@ ci: prep-ci
     GREEN='\033[0;32m'
     BLUE='\033[0;34m'
     GRAY='\033[0;90m'
+    YELLOW='\033[0;33m'
     NC='\033[0m' # No Color
     
     # Determine test command based on OS
@@ -65,6 +67,7 @@ ci: prep-ci
             echo -e "${RED}Clippy failed for $project${NC}"
             ALL_OUTPUT+="\n=== CLIPPY OUTPUT for $project ===\n"
             ALL_OUTPUT+="$CLIPPY_OUTPUT\n"
+            CLIPPY_FAILED_PROJECTS+=("$project")
             FAILED_PROJECTS+=("$project")
             continue
         fi
@@ -109,16 +112,23 @@ ci: prep-ci
         echo -e "  ${GRAY}-${NC} $project"
     done
     
+    if [ ${#CLIPPY_FAILED_PROJECTS[@]} -gt 0 ]; then
+        echo -e "${YELLOW}CLIPPY FAILED: ${#CLIPPY_FAILED_PROJECTS[@]} projects${NC}"
+        for project in "${CLIPPY_FAILED_PROJECTS[@]}"; do
+            echo -e "  ${YELLOW}⚠${NC} $project"
+        done
+    fi
+    
     if [ ${#FAILED_PROJECTS[@]} -gt 0 ]; then
-        echo -e "${RED}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
+        echo -e "${RED}TOTAL FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
         for project in "${FAILED_PROJECTS[@]}"; do
             echo -e "  ${RED}✗${NC} $project"
         done
     else
-        echo -e "${BLUE}FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
+        echo -e "${BLUE}TOTAL FAILED: ${#FAILED_PROJECTS[@]} projects${NC}"
     fi
     
-    # Exit with failure if any projects actually failed
+    # Exit with failure if any projects actually failed (clippy or tests)
     if [ ${#FAILED_PROJECTS[@]} -gt 0 ]; then
         exit 1
     fi
