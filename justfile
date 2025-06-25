@@ -284,12 +284,16 @@ prep-cache: prep-binstall
     which sccache || (yes|cargo binstall sccache)
 
 cache:
-    sccache --show-stats
+    sccache --show-adv-stats
 
 cache-reset:
     sccache --zero-stats
     sccache --stop-server
     sccache --start-server
+
+cache-clean:
+    #!/usr/bin/env bash
+    find ~/.cache/sccache -type f -delete
 
 [unix]
 prep-uv:
