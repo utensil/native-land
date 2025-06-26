@@ -67,7 +67,7 @@ jobs:
           components: rustfmt clippy
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.36.0,cargo-binstall,sccache
+          tool: just@1.39.0,cargo-binstall,sccache
       - name: Setup Python via uv
         uses: astral-sh/setup-uv@v3
         with:

@@ -21,7 +21,7 @@ jobs:
           asdf_branch: v0.15.0
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.36.0
+          tool: just@1.39.0
       - name: Install Zig
         run: |
           cd yard-zig/basic-xp

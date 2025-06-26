@@ -45,7 +45,7 @@ jobs:
       #     fetch-depth: 2
       - uses: extractions/setup-just@v2
         with:
-          just-version: 1.36.0
+          just-version: 1.39.0
       # - name: Install the stable toolchain
       #   uses: dtolnay/rust-toolchain@stable
       #   with:
