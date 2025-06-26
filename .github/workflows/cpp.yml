@@ -67,7 +67,7 @@ jobs:
       #     key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
       - name: Setup Linux for GPU
         if: runner.os == 'Linux'
-        uses: tracel-ai/github-actions/setup-linux@v1
+        uses: tracel-ai/github-actions/setup-linux@v3
         with:
           vulkan-sdk-version: ${{ env.VULKAN_SDK_VERSION }}
           mesa-version: ${{ env.MESA_VERSION }}
