@@ -63,10 +63,8 @@ ci: prep-ci
         TEST_COMMAND="cov"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         TEST_COMMAND="cov"
-    else
+    else # windows
         TEST_COMMAND="test"
-        export WGPU_BACKEND=dx12
-        export BEVY_CI_FORCE_WINIT_BACKEND=windows
     fi
     TEST_OUTPUT_HEADER="just $TEST_COMMAND OUTPUT"
     
@@ -150,8 +148,6 @@ ci: prep-ci
     
     # cd yard-rs/krnl-xp && just test
     # just cov-rsgpu
-
-
 
 [group('util'), no-cd]
 list:
