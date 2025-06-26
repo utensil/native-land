@@ -64,16 +64,6 @@ jobs:
       #   uses: dtolnay/rust-toolchain@stable
       #   with:
       #     components: rustfmt
-      - name: Install the nightly toolchain
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          components: rustfmt clippy
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: just@1.39.0,cargo-binstall,cargo-nextest,cargo-llvm-cov,deepsource,sccache
-      - name: quick check
-        run: |
-          just check
       - uses: actions/cache@v4
         with:
           path: |
@@ -85,6 +75,16 @@ jobs:
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
           restore-keys: |
             ${{ runner.os }}-cargo-test-  
+      - name: Install the nightly toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt clippy
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just@1.39.0,cargo-binstall,cargo-nextest,cargo-llvm-cov,deepsource,sccache
+      - name: quick check
+        run: |
+          just check
       - name: Setup Linux for GPU
         if: runner.os == 'Linux'
         uses: tracel-ai/github-actions/setup-linux@v1
