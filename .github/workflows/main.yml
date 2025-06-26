@@ -36,7 +36,7 @@ jobs:
         os:
           # see https://github.com/actions/runner-images
           - ubuntu-22.04
-          - windows-2022
+          # - windows-2022
           # macos-15 is deploying, macos-latest is still macos-14
           - macos-15
         lang: ["Rust"]
