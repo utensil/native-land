@@ -56,3 +56,21 @@ test "multiline strings preserve trailing whitespace" {
     const first_line = lines.next().?;
     try expect(first_line[first_line.len - 1] == ' ');
 }
+
+// @embedFile: compile-time file embedding
+test "@embedFile vs multiline strings" {
+    // Embed this source file at compile-time
+    const embedded = @embedFile("string_literals.zig");
+    
+    // Key difference: @embedFile reads external files, multiline strings are inline
+    try expect(embedded.len > 0);
+    try expect(std.mem.indexOf(u8, embedded, "multiline string literals").? > 0);
+    
+    // Both are resolved at compile-time with zero runtime cost
+    const inline_code = 
+        \\const x = 42;
+        \\if (x > 0) print("positive");
+    ;
+    
+    try expect(std.mem.indexOf(u8, inline_code, "const x").? == 0);
+}
