@@ -75,8 +75,8 @@ test "exact decimal arithmetic using integers" {
 test "comprehensive decimal fraction precision issues" {
     const tolerance = 1e-15;
     
-    // Extended test cases for decimal fractions that can't be exactly represented
-    const test_cases = [_]struct { a: f64, b: f64, expected: f64 }{
+    // Test cases that should NOT be exactly representable (require tolerance)
+    const imprecise_cases = [_]struct { a: f64, b: f64, expected: f64 }{
         .{ .a = 0.09, .b = 0.01, .expected = 0.1 },
         .{ .a = 0.1, .b = 0.2, .expected = 0.3 },
         .{ .a = 0.3, .b = 0.6, .expected = 0.9 },
@@ -84,36 +84,47 @@ test "comprehensive decimal fraction precision issues" {
         .{ .a = 1.2, .b = -0.1, .expected = 1.1 },
         .{ .a = 1.1, .b = 2.2, .expected = 3.3 },
         .{ .a = -1.0, .b = 1.15, .expected = 0.15 },
-        // Additional problematic cases
         .{ .a = 0.7, .b = 0.1, .expected = 0.8 },
         .{ .a = 2.2, .b = 1.1, .expected = 3.3 },
-        .{ .a = 0.58, .b = 0.42, .expected = 1.0 },
     };
     
-    print("Comprehensive decimal fraction precision test:\n", .{});
-    
-    for (test_cases) |case| {
+    print("Testing imprecise decimal fraction cases:\n", .{});
+    for (imprecise_cases) |case| {
         const result = case.a + case.b;
         print("Testing: {} + {} = {} (expected: {})\n", .{ case.a, case.b, result, case.expected });
         
-        // Check if this case shows precision issues
-        if (result != case.expected) {
-            // Show that floating-point arithmetic is not exact for this case
-            try testing.expect(result != case.expected);
-            
-            // But the result should be very close
-            try testing.expectApproxEqRel(result, case.expected, tolerance);
-            
-            // Show the actual precision error
-            const precision_error = @abs(result - case.expected);
-            if (precision_error > 1e-16) {
-                print("  Precision error: {}\n", .{precision_error});
-            }
-        } else {
-            // Some cases might be exactly representable
-            print("  Note: This case is exactly representable in IEEE 754\n", .{});
-            try testing.expectEqual(result, case.expected);
+        // These should NOT be exactly equal due to IEEE 754 precision limits
+        try testing.expect(result != case.expected);
+        
+        // But should be very close
+        try testing.expectApproxEqRel(result, case.expected, tolerance);
+        
+        // Show the precision error
+        const precision_error = @abs(result - case.expected);
+        if (precision_error > 1e-16) {
+            print("  Precision error: {}\n", .{precision_error});
         }
+    }
+}
+
+test "exact decimal fraction representations" {
+    // Test cases that ARE exactly representable in IEEE 754
+    const exact_cases = [_]struct { a: f64, b: f64, expected: f64 }{
+        .{ .a = 0.58, .b = 0.42, .expected = 1.0 },
+        .{ .a = 0.5, .b = 0.25, .expected = 0.75 },
+        .{ .a = 0.125, .b = 0.375, .expected = 0.5 },
+        .{ .a = 2.0, .b = 3.0, .expected = 5.0 },
+        .{ .a = 1.5, .b = 2.5, .expected = 4.0 },
+    };
+    
+    print("Testing exact decimal fraction cases:\n", .{});
+    for (exact_cases) |case| {
+        const result = case.a + case.b;
+        print("Testing: {} + {} = {} (expected: {})\n", .{ case.a, case.b, result, case.expected });
+        
+        // These should be exactly equal
+        try testing.expectEqual(result, case.expected);
+        print("  Note: Exactly representable in IEEE 754\n", .{});
     }
 }
 
