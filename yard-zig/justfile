@@ -124,17 +124,19 @@ fix-zls:
   echo "3. Removed ZLS config file (using defaults)"
   echo ""
   
-  # Check PATH ordering
-  if echo "$PATH" | tr ':' '\n' | grep -n "local/bin\|asdf" | head -2 | grep -q "asdf.*1:"; then
+  # Check PATH ordering - only consider first occurrence of each
+  LOCAL_BIN_POS=$(echo "$PATH" | tr ':' '\n' | grep -n "^$HOME/.local/bin$" | head -1 | cut -d: -f1)
+  ASDF_SHIMS_POS=$(echo "$PATH" | tr ':' '\n' | grep -n "^$HOME/.asdf/shims$" | head -1 | cut -d: -f1)
+  
+  if [ -n "$LOCAL_BIN_POS" ] && [ -n "$ASDF_SHIMS_POS" ] && [ "$LOCAL_BIN_POS" -lt "$ASDF_SHIMS_POS" ]; then
     echo "✓ PATH is correctly ordered (.local/bin before asdf shims)"
   else
-    echo "⚠ PATH ordering issue detected."
-    echo "Current PATH order:"
+    echo "ℹ️  PATH check (in this subprocess environment):"
     echo "$PATH" | tr ':' '\n' | grep -n "local/bin\|asdf" | head -5
     echo ""
-    echo "For ZLS to work properly, add this to your shell profile:"
-    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
-    echo "Or run: export PATH=\"\$HOME/.local/bin:\$PATH\" in your current shell"
+    echo "Note: This subprocess may not reflect your actual shell PATH."
+    echo "If your shell has ~/.local/bin before ~/.asdf/shims, ZLS should work fine."
+    echo "Otherwise, ensure ~/.local/bin comes first in your PATH."
   fi
   
   echo ""
