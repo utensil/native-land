@@ -77,4 +77,113 @@ try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
   zig build
   ./zig-out/bin/llm --num-tokens={{NUM_TOKENS}} --model-type={{MODEL_TYPE}} "{{INPUT}}"
 
+# Setup ZLS configuration to fix standard library path issue
+[no-cd]
+setup-zls:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  
+  # Get the actual Zig installation path
+  if command -v asdf >/dev/null 2>&1 && asdf current zig >/dev/null 2>&1; then
+    ZIG_PATH=$(asdf where zig)
+    ZIG_EXE="$ZIG_PATH/bin/zig"
+    ZIG_LIB="$ZIG_PATH/lib"
+  else
+    ZIG_EXE=$(which zig)
+    ZIG_PATH=$(dirname $(dirname $ZIG_EXE))
+    ZIG_LIB="$ZIG_PATH/lib"
+  fi
+  
+  echo "Setting up ZLS configuration..."
+  echo "Zig path: $ZIG_PATH"
+  echo "Zig exe: $ZIG_EXE"
+  echo "Zig lib: $ZIG_LIB"
+  
+  # Create ZLS config directory if it doesn't exist
+  mkdir -p "$HOME/Library/Application Support"
+  
+  # Create zls.json configuration file
+  cat > "$HOME/Library/Application Support/zls.json" << EOF
+  {
+      "zig_exe_path": "$ZIG_EXE",
+      "zig_lib_path": "$ZIG_LIB",
+      "builtin_path": "$ZIG_LIB/std/builtin.zig",
+      "enable_semantic_tokens": true,
+      "enable_snippets": true,
+      "enable_argument_placeholders": true,
+      "enable_build_on_save": true,
+      "enable_autofix": true,
+      "warn_style": true,
+      "highlight_global_var_declarations": true
+  }
+  EOF
+  
+  echo "ZLS configuration created at: $HOME/Library/Application Support/zls.json"
+
+# Fix ZLS by creating proper configuration and restarting
+[no-cd]
+fix-zls: setup-zls
+  #!/usr/bin/env bash
+  set -euo pipefail
+  
+  echo "Fixing ZLS standard library issue..."
+  
+  # Kill any running ZLS processes
+  pkill -f zls || echo "No ZLS processes to kill"
+  
+  # Clear ZLS cache
+  rip "$HOME/Library/Caches/zls"
+  mkdir -p "$HOME/Library/Caches/zls"
+  
+  echo "ZLS has been configured and cache cleared."
+  echo "Please restart your editor to pick up the new ZLS configuration."
+  echo ""
+  echo "Configuration file location: $HOME/Library/Application Support/zls.json"
+
+# Check ZLS status and configuration
+[no-cd]
+check-zls:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  
+  echo "ZLS Status Check:"
+  echo "=================="
+  
+  echo "ZLS version:"
+  zls --version
+  
+  echo ""
+  echo "ZLS environment:"
+  zls env
+  
+  echo ""
+  echo "Zig environment:"
+  zig env
+  
+  echo ""
+  echo "ZLS configuration file:"
+  if [ -f "$HOME/Library/Application Support/zls.json" ]; then
+      cat "$HOME/Library/Application Support/zls.json"
+  else
+      echo "No ZLS configuration file found"
+  fi
+  
+  echo ""
+  echo "Recent ZLS logs:"
+  if [ -f "$HOME/Library/Caches/zls/zls.log" ]; then
+      tail -10 "$HOME/Library/Caches/zls/zls.log"
+  else
+      echo "No ZLS log file found"
+  fi
+
+# Clean all build artifacts across projects
+[no-cd]
+clean-all:
+  #!/usr/bin/env bash
+  echo "Cleaning all Zig projects..."
+  find . -name "zig-cache" -type d -exec rip {} + 2>/dev/null || true
+  find . -name ".zig-cache" -type d -exec rip {} + 2>/dev/null || true
+  find . -name "zig-out" -type d -exec rip {} + 2>/dev/null || true
+  echo "All build artifacts cleaned."
+
 
