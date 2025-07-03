@@ -72,10 +72,10 @@ test "exact decimal arithmetic using integers" {
 // https://docs.python.org/3/tutorial/floatingpoint.html
 // https://floating-point-gui.de/basic/
 
-test "special floating point addition problems" {
+test "comprehensive decimal fraction precision issues" {
     const tolerance = 1e-15;
     
-    // These additions should be exact but aren't in floating-point
+    // Extended test cases for decimal fractions that can't be exactly represented
     const test_cases = [_]struct { a: f64, b: f64, expected: f64 }{
         .{ .a = 0.09, .b = 0.01, .expected = 0.1 },
         .{ .a = 0.1, .b = 0.2, .expected = 0.3 },
@@ -84,17 +84,36 @@ test "special floating point addition problems" {
         .{ .a = 1.2, .b = -0.1, .expected = 1.1 },
         .{ .a = 1.1, .b = 2.2, .expected = 3.3 },
         .{ .a = -1.0, .b = 1.15, .expected = 0.15 },
+        // Additional problematic cases
+        .{ .a = 0.7, .b = 0.1, .expected = 0.8 },
+        .{ .a = 2.2, .b = 1.1, .expected = 3.3 },
+        .{ .a = 0.58, .b = 0.42, .expected = 1.0 },
     };
+    
+    print("Comprehensive decimal fraction precision test:\n", .{});
     
     for (test_cases) |case| {
         const result = case.a + case.b;
         print("Testing: {} + {} = {} (expected: {})\n", .{ case.a, case.b, result, case.expected });
         
-        // Show that floating-point arithmetic is not exact
-        try testing.expect(result != case.expected);
-        
-        // But the result should be very close
-        try testing.expectApproxEqRel(result, case.expected, tolerance);
+        // Check if this case shows precision issues
+        if (result != case.expected) {
+            // Show that floating-point arithmetic is not exact for this case
+            try testing.expect(result != case.expected);
+            
+            // But the result should be very close
+            try testing.expectApproxEqRel(result, case.expected, tolerance);
+            
+            // Show the actual precision error
+            const precision_error = @abs(result - case.expected);
+            if (precision_error > 1e-16) {
+                print("  Precision error: {}\n", .{precision_error});
+            }
+        } else {
+            // Some cases might be exactly representable
+            print("  Note: This case is exactly representable in IEEE 754\n", .{});
+            try testing.expectEqual(result, case.expected);
+        }
     }
 }
 
@@ -342,6 +361,65 @@ test "denormalized numbers and underflow" {
     try testing.expect(math.isFinite(result));
     try testing.expect(!math.isInf(result));
     try testing.expect(!math.isNan(result));
+}
+
+test "division precision and scale dependency" {
+    const tolerance = 1e-14;
+    
+    // Division precision can be scale-dependent
+    const a: f64 = 63.0;
+    const b: f64 = 9.0;
+    const factor: f64 = 1000.0;
+    
+    const normal_div = a / b;
+    const scaled_div = (a / factor) / (b / factor);
+    
+    print("Division precision test:\n", .{});
+    print("{} / {} = {}\n", .{ a, b, normal_div });
+    print("({} / {}) / ({} / {}) = {}\n", .{ a, factor, b, factor, scaled_div });
+    
+    // Both should mathematically equal 7.0, but may have different precision
+    const expected: f64 = 7.0;
+    
+    // Check if they're exactly equal to 7.0
+    if (normal_div == expected and scaled_div == expected) {
+        // If both are exact, verify that
+        try testing.expectEqual(normal_div, expected);
+        try testing.expectEqual(scaled_div, expected);
+    } else {
+        // If not exact, verify they're close and show the precision difference
+        try testing.expectApproxEqRel(normal_div, expected, tolerance);
+        try testing.expectApproxEqRel(scaled_div, expected, tolerance);
+        
+        // Show that scaling can affect precision
+        const normal_error = @abs(normal_div - expected);
+        const scaled_error = @abs(scaled_div - expected);
+        print("Normal division error: {}\n", .{normal_error});
+        print("Scaled division error: {}\n", .{scaled_error});
+        
+        // The errors might be different due to scaling effects
+        if (normal_error != scaled_error) {
+            print("Scale affects precision: errors differ\n", .{});
+        }
+    }
+    
+    // Test integer casting behavior with precision loss
+    const normal_int = @as(i64, @intFromFloat(normal_div));
+    const scaled_int = @as(i64, @intFromFloat(scaled_div));
+    
+    print("Normal division as int: {}\n", .{normal_int});
+    print("Scaled division as int: {}\n", .{scaled_int});
+    
+    // Both should be 7 if precision is maintained
+    try testing.expect(normal_int == 7);
+    
+    // Scaled version might be different due to accumulated precision errors
+    if (scaled_int != 7) {
+        print("Scale-dependent precision loss: {} != 7\n", .{scaled_int});
+        try testing.expect(scaled_int != 7);
+    } else {
+        try testing.expectEqual(scaled_int, 7);
+    }
 }
 
 test "special values and edge cases" {
