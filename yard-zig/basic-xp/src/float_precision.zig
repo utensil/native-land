@@ -3,18 +3,15 @@ const testing = std.testing;
 const print = std.debug.print;
 const math = std.math;
 
-// Demonstrates floating-point precision issues similar to Python's behavior
-// where repeatedly adding 0.1 doesn't result in exactly 1.0
+// Demonstrates floating-point precision issues where repeatedly adding 0.1 doesn't result in exactly 1.0
 test "floating point precision demonstration" {
     var sum: f64 = 0.0;
     
-    // Add 0.1 ten times, similar to the Python example
+    // Add 0.1 ten times
     for (0..10) |_| {
         sum += 0.1;
     }
     
-    // The sum should theoretically be 1.0, but due to floating-point precision
-    // it will be slightly less, similar to Python's 0.9999999999999999
     print("Sum after adding 0.1 ten times: {}\n", .{sum});
     print("Expected: 1.0, Actual: {}\n", .{sum});
     print("Difference from 1.0: {}\n", .{1.0 - sum});
@@ -25,15 +22,8 @@ test "floating point precision demonstration" {
     // Verify that the sum is very close to 1.0 (within floating-point precision)
     try testing.expectApproxEqRel(sum, 1.0, 1e-15);
     
-    // Show that this matches the same precision issue as Python
-    const python_result: f64 = 0.9999999999999999; // What Python produces
-    print("Python result: {}\n", .{python_result});
-    print("Zig result:    {}\n", .{sum});
-    print("Both languages show the same IEEE 754 precision behavior\n", .{});
-    
-    // Both should be approximately equal to the mathematically correct result (1.0)
-    try testing.expect(python_result != 1.0);
-    try testing.expectApproxEqRel(python_result, 1.0, 1e-15);
+    // Verify exact match with the actual IEEE 754 result
+    try testing.expectEqual(sum, 0.9999999999999999);
 }
 
 // Alternative demonstration using f32 to show even more pronounced precision issues
