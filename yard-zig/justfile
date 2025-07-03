@@ -9,10 +9,12 @@ default:
 # prep:
 #   brew install zig
 
+[no-cd]
 prep-asdf:
   which asdf || brew install asdf
-  asdf plugin add zig https://github.com/zigcc/asdf-zig.git
+  asdf plugin add zig https://github.com/asdf-community/asdf-zig.git
   asdf plugin update zig
+  asdf install
 
 [no-cd]
 prep-zig VERSION:
