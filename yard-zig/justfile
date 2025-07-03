@@ -50,6 +50,7 @@ build: fetch
 [no-cd]
 run: fetch
   zig build {{ZIG_OPT}} run
+
 [no-cd]
 test FILTER="": fetch
   TEST_FILTER={{FILTER}} zig build {{ZIG_OPT}} test --summary all
@@ -77,70 +78,69 @@ try-mlx INPUT MODEL_TYPE="qwen" NUM_TOKENS="1000":
   zig build
   ./zig-out/bin/llm --num-tokens={{NUM_TOKENS}} --model-type={{MODEL_TYPE}} "{{INPUT}}"
 
-# Setup ZLS configuration to fix standard library path issue
+# Fix ZLS standard library issue without config file
 [no-cd]
-setup-zls:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  
-  # Get the actual Zig installation path
-  if command -v asdf >/dev/null 2>&1 && asdf current zig >/dev/null 2>&1; then
-    ZIG_PATH=$(asdf where zig)
-    ZIG_EXE="$ZIG_PATH/bin/zig"
-    ZIG_LIB="$ZIG_PATH/lib"
-  else
-    ZIG_EXE=$(which zig)
-    ZIG_PATH=$(dirname $(dirname $ZIG_EXE))
-    ZIG_LIB="$ZIG_PATH/lib"
-  fi
-  
-  echo "Setting up ZLS configuration..."
-  echo "Zig path: $ZIG_PATH"
-  echo "Zig exe: $ZIG_EXE"
-  echo "Zig lib: $ZIG_LIB"
-  
-  # Create ZLS config directory if it doesn't exist
-  mkdir -p "$HOME/Library/Application Support"
-  
-  # Create zls.json configuration file
-  cat > "$HOME/Library/Application Support/zls.json" << EOF
-  {
-      "zig_exe_path": "$ZIG_EXE",
-      "zig_lib_path": "$ZIG_LIB",
-      "builtin_path": "$ZIG_LIB/std/builtin.zig",
-      "enable_semantic_tokens": true,
-      "enable_snippets": true,
-      "enable_argument_placeholders": true,
-      "enable_build_on_save": true,
-      "enable_autofix": true,
-      "warn_style": true,
-      "highlight_global_var_declarations": true
-  }
-  EOF
-  
-  echo "ZLS configuration created at: $HOME/Library/Application Support/zls.json"
-
-# Fix ZLS by creating proper configuration and restarting
-[no-cd]
-fix-zls: setup-zls
+fix-zls:
   #!/usr/bin/env bash
   set -euo pipefail
   
   echo "Fixing ZLS standard library issue..."
   
+  # Get the actual Zig installation path
+  if command -v asdf >/dev/null 2>&1 && asdf current zig >/dev/null 2>&1; then
+    ZIG_PATH=$(asdf where zig)
+    ZIG_EXE="$ZIG_PATH/bin/zig"
+  else
+    ZIG_EXE=$(which zig)
+  fi
+  
+  echo "Found Zig at: $ZIG_EXE"
+  
+  # Create a local bin directory and symlink
+  mkdir -p "$HOME/.local/bin"
+  
+  # Remove existing symlink if it exists
+  rm -f "$HOME/.local/bin/zig"
+  
+  # Create symlink to the actual zig binary (not the shim)
+  ln -sf "$ZIG_EXE" "$HOME/.local/bin/zig"
+  
+  echo "Created symlink: $HOME/.local/bin/zig -> $ZIG_EXE"
+  
   # Kill any running ZLS processes
   pkill -f zls || echo "No ZLS processes to kill"
   
   # Clear ZLS cache
-  rip "$HOME/Library/Caches/zls"
+  rm -rf "$HOME/Library/Caches/zls"
   mkdir -p "$HOME/Library/Caches/zls"
   
-  echo "ZLS has been configured and cache cleared."
-  echo "Please restart your editor to pick up the new ZLS configuration."
+  # Remove any existing ZLS config file to use defaults
+  rm -f "$HOME/Library/Application Support/zls.json"
+  
   echo ""
-  echo "Configuration file location: $HOME/Library/Application Support/zls.json"
+  echo "ZLS fix applied:"
+  echo "1. Created symlink to actual Zig binary"
+  echo "2. Cleared ZLS cache"
+  echo "3. Removed ZLS config file (using defaults)"
+  echo ""
+  
+  # Check PATH ordering
+  if echo "$PATH" | tr ':' '\n' | grep -n "local/bin\|asdf" | head -2 | grep -q "asdf.*1:"; then
+    echo "✓ PATH is correctly ordered (.local/bin before asdf shims)"
+  else
+    echo "⚠ PATH ordering issue detected."
+    echo "Current PATH order:"
+    echo "$PATH" | tr ':' '\n' | grep -n "local/bin\|asdf" | head -5
+    echo ""
+    echo "For ZLS to work properly, add this to your shell profile:"
+    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+    echo "Or run: export PATH=\"\$HOME/.local/bin:\$PATH\" in your current shell"
+  fi
+  
+  echo ""
+  echo "Restart your editor to apply the changes."
 
-# Check ZLS status and configuration
+# Check ZLS status and provide PATH guidance
 [no-cd]
 check-zls:
   #!/usr/bin/env bash
@@ -157,15 +157,29 @@ check-zls:
   zls env
   
   echo ""
+  echo "Zig binary locations:"
+  echo "which zig: $(which zig)"
+  if [ -L "$HOME/.local/bin/zig" ]; then
+    echo "Local symlink: $HOME/.local/bin/zig -> $(readlink $HOME/.local/bin/zig)"
+  else
+    echo "No local symlink found"
+  fi
+  
+  echo ""
+  echo "PATH check (showing relevant entries):"
+  echo "$PATH" | tr ':' '\n' | grep -E "(local/bin|asdf)" | head -5
+  
+  echo ""
   echo "Zig environment:"
   zig env
   
   echo ""
   echo "ZLS configuration file:"
   if [ -f "$HOME/Library/Application Support/zls.json" ]; then
+      echo "Config file exists (consider removing it):"
       cat "$HOME/Library/Application Support/zls.json"
   else
-      echo "No ZLS configuration file found"
+      echo "No ZLS configuration file (good - using defaults)"
   fi
   
   echo ""
@@ -181,9 +195,7 @@ check-zls:
 clean-all:
   #!/usr/bin/env bash
   echo "Cleaning all Zig projects..."
-  find . -name "zig-cache" -type d -exec rip {} + 2>/dev/null || true
-  find . -name ".zig-cache" -type d -exec rip {} + 2>/dev/null || true
-  find . -name "zig-out" -type d -exec rip {} + 2>/dev/null || true
+  find . -name "zig-cache" -type d -exec rm -rf {} + 2>/dev/null || true
+  find . -name ".zig-cache" -type d -exec rm -rf {} + 2>/dev/null || true
+  find . -name "zig-out" -type d -exec rm -rf {} + 2>/dev/null || true
   echo "All build artifacts cleaned."
-
-
