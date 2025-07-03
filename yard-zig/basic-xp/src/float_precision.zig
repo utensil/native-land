@@ -31,6 +31,7 @@ test "floating point precision demonstration" {
     print("Zig result:    {}\n", .{sum});
     
     // The results should be very similar (both demonstrate the same precision issue)
+    // Note: In Zig, these are actually exactly equal since they're the same IEEE 754 representation
     try testing.expectApproxEqRel(sum, expected_python_result, 1e-15);
 }
 
