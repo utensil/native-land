@@ -1,3 +1,17 @@
+// Floating-point precision test cases inspired by and referencing:
+// https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems
+// https://www.exploringbinary.com/why-0-point-1-does-not-exist-in-floating-point/
+// https://www.exploringbinary.com/floating-point-questions-are-endless-on-stackoverflow-com/
+// https://docs.python.org/3/tutorial/floatingpoint.html
+// https://floating-point-gui.de/basic/
+// https://www.baeldung.com/cs/floating-point-numbers-inaccuracy
+// https://riskledger.com/resources/floating-point-numbers
+// https://www.johndcook.com/blog/2025/06/27/most-ints-are-not-floats/
+// https://leancrew.com/all-this/2025/06/in-defense-of-floating-point/
+//
+// These test cases demonstrate IEEE 754 floating-point precision limitations
+// and the need for tolerance-based comparisons in decimal arithmetic.
+
 const std = @import("std");
 const testing = std.testing;
 const print = std.debug.print;
