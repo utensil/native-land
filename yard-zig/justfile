@@ -16,11 +16,29 @@ prep-asdf:
   asdf plugin update zig
   asdf install
 
+prep-mise:
+  #!/usr/bin/env zsh
+  which mise || brew install mise
+  echo 'Ensure run the following in ~/.bashrc or ~/.zshrc:'
+  echo 'eval "$(mise activate ${0:t})"'
+  cat << 'EOF'
+  e.g. echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+  EOF
+  # mise supports zig with a core plugin
+
+# [no-cd]
+# prep-zig VERSION:
+#   asdf install zig {{VERSION}}
+#   asdf set zig {{VERSION}}
+#   # now zig is available either by `asdf which zig` or adding $HOME/.asdf/shims to your PATH
+
+# master
+# ref:master
+# requires latest mise since zig 0.14.1
+# see https://github.com/jdx/mise/pull/5182
 [no-cd]
 prep-zig VERSION:
-  asdf install zig {{VERSION}}
-  asdf set zig {{VERSION}}
-  # now zig is available either by `asdf which zig` or adding $HOME/.asdf/shims to your PATH
+  mise use zig@{{VERSION}}
 
 # REPO looks like git+https://HOST/USER/REPO.git
 [no-cd]
