@@ -17,7 +17,7 @@ prep-asdf:
   asdf install
 
 prep-mise:
-  #!/usr/bin/env zsh
+  #!/usr/bin/env bash
   which mise || brew install mise
   echo 'Ensure run the following in ~/.bashrc or ~/.zshrc:'
   echo 'eval "$(mise activate $(basename "$0"))"'
