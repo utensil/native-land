@@ -49,6 +49,7 @@ fetch:
   unset HTTPS_PROXY
   unset http_proxy
   unset https_proxy
+  which zig
   zig build --fetch {{ZIG_OPT}} 
 
 [no-cd]
