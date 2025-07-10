@@ -20,7 +20,7 @@ prep-mise:
   #!/usr/bin/env zsh
   which mise || brew install mise
   echo 'Ensure run the following in ~/.bashrc or ~/.zshrc:'
-  echo 'eval "$(mise activate ${0:t})"'
+  echo 'eval "$(mise activate $(basename "$0"))"'
   cat << 'EOF'
   e.g. echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
   EOF
