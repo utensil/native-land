@@ -43,7 +43,7 @@ test "while loops" {
 test "for loops" {
     const nums = [_]u8{ 10, 20, 30 };
     var sum: u8 = 0;
-    
+
     // Basic for
     for (nums) |num| {
         sum += num;
@@ -124,7 +124,7 @@ test "payload captures" {
     }
 
     // Pointer capture in for loop
-    var data = [_]u8{1, 2, 3};
+    var data = [_]u8{ 1, 2, 3 };
     for (&data) |*byte| byte.* += 1;
     try expect(data[0] == 2);
     try expect(data[1] == 3);
@@ -138,4 +138,69 @@ test "inline loops" {
         sum += @sizeOf(T);
     }
     try expect(sum == 9); // 4 + 4 + 1
+}
+
+// https://www.reddit.com/r/Zig/comments/1lpqe3a/what_is_the_simplest_and_most_elegant_zig_code/
+
+fn activeFieldSize(u: anytype) usize {
+    return switch (u) {
+        inline else => |field| @sizeOf(@TypeOf(field)),
+    };
+}
+
+test "inline else in switch" {
+    const TestUnion = union(enum) {
+        small: u8,
+        large: i64,
+        text: []const u8,
+    };
+
+    const small_variant = TestUnion{ .small = 42 };
+    const large_variant = TestUnion{ .large = 12345 };
+    const text_variant = TestUnion{ .text = "hello" };
+
+    try expect(activeFieldSize(small_variant) == 1); // u8
+    try expect(activeFieldSize(large_variant) == 8); // i64
+    try expect(activeFieldSize(text_variant) == 16); // []const u8 (ptr + len)
+
+    // Works at compile time too
+    const ct_variant = comptime TestUnion{ .small = 255 };
+    comptime {
+        try expect(activeFieldSize(ct_variant) == 1);
+    }
+}
+test "metaprogramming with inline for and type introspection" {
+    // ECS component system inspired by roguelike example
+    const Component = struct { name: []const u8, field_count: u32 };
+    
+    const Health = struct { max_hp: i32, current_hp: i32 };
+    const Position = struct { x: f32, y: f32, z: f32 };
+    const Damage = struct { attack: i32 };
+    
+    const ComponentInfo = struct { name: []const u8, typ: type };
+    const component_types = [_]ComponentInfo{
+        .{ .name = "Health", .typ = Health },
+        .{ .name = "Position", .typ = Position },
+        .{ .name = "Damage", .typ = Damage },
+    };
+    
+    const json_components = [_]Component{
+        .{ .name = "Health", .field_count = 2 },
+        .{ .name = "Position", .field_count = 3 },
+        .{ .name = "Damage", .field_count = 1 },
+    };
+    
+    var matched_components: u32 = 0;
+    for (json_components) |component| {
+        inline for (component_types) |info| {
+            if (std.mem.eql(u8, component.name, info.name)) {
+                const type_info = @typeInfo(info.typ);
+                const actual_fields = type_info.@"struct".fields.len;
+                try expect(actual_fields == component.field_count);
+                matched_components += 1;
+            }
+        }
+    }
+    
+    try expect(matched_components == 3);
 }
