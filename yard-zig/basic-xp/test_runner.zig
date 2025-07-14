@@ -129,16 +129,13 @@ pub fn main() !void {
 }
 
 const Printer = struct {
-    out: std.fs.File.Writer,
-
     fn init() Printer {
-        return .{
-            .out = std.io.getStdErr().writer(),
-        };
+        return .{};
     }
 
     fn fmt(self: Printer, comptime format: []const u8, args: anytype) void {
-        std.fmt.format(self.out, format, args) catch unreachable;
+        _ = self;
+        std.debug.print(format, args);
     }
 
     fn status(self: Printer, s: Status, comptime format: []const u8, args: anytype) void {
@@ -148,9 +145,8 @@ const Printer = struct {
             .skip => "\x1b[33m",
             else => "",
         };
-        const out = self.out;
-        out.writeAll(color) catch @panic("writeAll failed?!");
-        std.fmt.format(out, format, args) catch @panic("std.fmt.format failed?!");
+        std.debug.print("{s}", .{color});
+        std.debug.print(format, args);
         self.fmt("\x1b[0m", .{});
     }
 };

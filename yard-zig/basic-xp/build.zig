@@ -97,6 +97,7 @@ pub fn build(b: *std.Build) !void {
     // but does not run it.
     const lib_unit_tests = b.addTest(.{
         .root_module = lib_mod,
+        .test_runner = .{ .path = b.path("test_runner.zig"), .mode = .simple },
     });
     lib_unit_tests.linkLibC();
 
@@ -104,6 +105,7 @@ pub fn build(b: *std.Build) !void {
 
     const exe_unit_tests = b.addTest(.{
         .root_module = exe_mod,
+        .test_runner = .{ .path = b.path("test_runner.zig"), .mode = .simple },
     });
     exe_unit_tests.linkLibC();
 
