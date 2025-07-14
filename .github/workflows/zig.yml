@@ -16,19 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: asdf-vm/actions/setup@v3
-        with:
-          asdf_branch: v0.15.0
       - uses: taiki-e/install-action@v2
         with:
-          tool: just@1.39.0
+          tool: just@1.39.0,mise
       - name: Install Zig
         run: |
           cd yard-zig/basic-xp
-          just prep-asdf
-          asdf install
+          mise install
       - name: Run tests
         run: |
-          export PATH="$HOME/.asdf/shims:$PATH"
           cd yard-zig/basic-xp
+          eval "$(mise activate bash)"
           just test
