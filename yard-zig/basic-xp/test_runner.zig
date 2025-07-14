@@ -56,11 +56,16 @@ pub fn main() !void {
     const printer = Printer.init();
     printer.fmt("\x1b[0K", .{}); // beginning of line and clear to end of line
 
-    var pass: usize = 0;
-    var fail: usize = 0;
-    var skip: usize = 0;
-    var leak: usize = 0;
+    var total_pass: usize = 0;
+    var total_fail: usize = 0;
+    var total_skip: usize = 0;
+    var total_leak: usize = 0;
+    
     var current_file: []const u8 = "";
+    var file_pass: usize = 0;
+    var file_fail: usize = 0;
+    var file_skip: usize = 0;
+    var file_leak: usize = 0;
 
     for (builtin.test_functions) |t| {
         std.testing.allocator_instance = .{};
@@ -74,28 +79,53 @@ pub fn main() !void {
 
         const test_file = getTestFileName(t.name);
         if (!std.mem.eql(u8, current_file, test_file)) {
+            // Report previous file's results if we have any
+            if (current_file.len > 0) {
+                const file_total = file_pass + file_fail;
+                if (file_total > 0) {
+                    const file_status: Status = if (file_fail == 0) .pass else .fail;
+                    printer.status(file_status, "{s}: {d} of {d} test{s} passed", .{ current_file, file_pass, file_total, if (file_total != 1) "s" else "" });
+                    if (file_skip > 0) {
+                        printer.status(.skip, ", {d} skipped", .{file_skip});
+                    }
+                    if (file_leak > 0) {
+                        printer.status(.fail, ", {d} leaked", .{file_leak});
+                    }
+                    printer.fmt("\n", .{});
+                }
+            }
+            
+            // Reset counters for new file
             current_file = test_file;
+            file_pass = 0;
+            file_fail = 0;
+            file_skip = 0;
+            file_leak = 0;
         }
 
         printer.fmt("{s} ", .{t.name});
         const result = t.func();
 
         if (std.testing.allocator_instance.deinit() == .leak) {
-            leak += 1;
+            file_leak += 1;
+            total_leak += 1;
             printer.status(.fail, "\n{s}\n\"{s}\" - Memory Leak\n{s}\n", .{ BORDER, t.name, BORDER });
         }
 
         if (result) |_| {
-            pass += 1;
+            file_pass += 1;
+            total_pass += 1;
         } else |err| {
             switch (err) {
                 error.SkipZigTest => {
-                    skip += 1;
+                    file_skip += 1;
+                    total_skip += 1;
                     status = .skip;
                 },
                 else => {
                     status = .fail;
-                    fail += 1;
+                    file_fail += 1;
+                    total_fail += 1;
                     printer.status(.fail, "\n{s}\n\"{s}\" - {s}\n{s}\n", .{ BORDER, t.name, @errorName(err), BORDER });
                     if (@errorReturnTrace()) |trace| {
                         std.debug.dumpStackTrace(trace.*);
@@ -110,22 +140,39 @@ pub fn main() !void {
         printer.status(status, "[{s}]\n", .{@tagName(status)});
     }
 
-    const total_tests = pass + fail;
-    const status: Status = if (fail == 0) .pass else .fail;
+    // Report the last file's results
+    if (current_file.len > 0) {
+        const file_total = file_pass + file_fail;
+        if (file_total > 0) {
+            const file_status: Status = if (file_fail == 0) .pass else .fail;
+            printer.status(file_status, "{s}: {d} of {d} test{s} passed", .{ current_file, file_pass, file_total, if (file_total != 1) "s" else "" });
+            if (file_skip > 0) {
+                printer.status(.skip, ", {d} skipped", .{file_skip});
+            }
+            if (file_leak > 0) {
+                printer.status(.fail, ", {d} leaked", .{file_leak});
+            }
+            printer.fmt("\n", .{});
+        }
+    }
+
+    const total_tests = total_pass + total_fail;
+    const status: Status = if (total_fail == 0) .pass else .fail;
 
     // there might be no test matching the filter
     if (total_tests == 0) {
         std.process.exit(0);
     }
 
-    printer.status(status, "{s}: {d} of {d} test{s} passed\n", .{ current_file, pass, total_tests, if (total_tests != 1) "s" else "" });
-    if (skip > 0) {
-        printer.status(.skip, "{s}: {d} test{s} skipped\n", .{ current_file, skip, if (skip != 1) "s" else "" });
+    // Overall summary
+    printer.status(status, "Total: {d} of {d} test{s} passed\n", .{ total_pass, total_tests, if (total_tests != 1) "s" else "" });
+    if (total_skip > 0) {
+        printer.status(.skip, "Total: {d} test{s} skipped\n", .{ total_skip, if (total_skip != 1) "s" else "" });
     }
-    if (leak > 0) {
-        printer.status(.fail, "{s}: {d} test{s} leaked\n", .{ current_file, leak, if (leak != 1) "s" else "" });
+    if (total_leak > 0) {
+        printer.status(.fail, "Total: {d} test{s} leaked\n", .{ total_leak, if (total_leak != 1) "s" else "" });
     }
-    std.process.exit(if (fail == 0) 0 else 1);
+    std.process.exit(if (total_fail == 0) 0 else 1);
 }
 
 const Printer = struct {
