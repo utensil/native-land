@@ -26,6 +26,21 @@ prep-mise:
   EOF
   # mise supports zig with a core plugin
 
+# https://github.com/zigtools/zls/issues/2402
+# note that this installs a local zls
+[no-cd]
+prep-zls:
+    #!/usr/bin/env zsh
+    set -e
+    which zig || mise install || (echo "zig not found in this environment, failed to install zls" && exit 1)
+    ZIG_VERSION=`zig version`
+    ZIG_VERSION_ESCAPED=`echo $ZIG_VERSION|sed -e 's/\+/%2B/g'`
+    # ZIG_ARCH=`zig env|jq -r '.target | split(".")[0]'`
+    # echo "$ZIG_VERSION $ZIG_VERSION_ESCAPED $ZIG_ARCH"
+    # curl "https://releases.zigtools.org/v1/zls/select-version?zig_version=$ZIG_VERSION_ESCAPED&compatibility=only-runtime"|jq ".\"$ZIG_ARCH\""
+    ZLS_VERSION=`curl "https://releases.zigtools.org/v1/zls/select-version?zig_version=$ZIG_VERSION_ESCAPED&compatibility=only-runtime"|jq -r ".version"`
+    mise use aqua:zigtools/zls@$ZLS_VERSION
+
 # [no-cd]
 # prep-zig VERSION:
 #   asdf install zig {{VERSION}}
