@@ -2,12 +2,10 @@
 
 // Modded from from https://gist.github.com/karlseguin/c6bea5b35e4e8d26af6f81c22cb5d76b
 
-// in your build.zig, you can specify a custom test runner:
+// in your build.zig, you can specify a custom test runner (Zig 0.15+ syntax):
 // const tests = b.addTest(.{
-//   .target = target,
-//   .optimize = optimize,
+//   .root_module = your_module,
 //   .test_runner = .{ .path = b.path("test_runner.zig"), .mode = .simple }, // add this line
-//   .root_source_file = b.path("src/main.zig"),
 // });
 
 const std = @import("std");
