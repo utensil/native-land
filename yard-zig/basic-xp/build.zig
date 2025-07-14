@@ -117,33 +117,4 @@ pub fn build(b: *std.Build) !void {
     test_step.dependOn(&run_exe_unit_tests.step);
 
     // Create a function to recursively find and add Zig files to the test step
-    var arena = std.heap.ArenaAllocator.init(b.allocator);
-    defer arena.deinit();
-    const allocator = arena.allocator();
-
-    const src_dir_name = "src";
-    const src_dir = try std.fs.cwd().openDir(src_dir_name, .{
-        .iterate = true,
-    });
-    var walker = try src_dir.walk(allocator);
-    defer walker.deinit();
-
-    while (try walker.next()) |entry| {
-        if (std.mem.endsWith(u8, entry.basename, ".zig") and
-            !std.mem.eql(u8, entry.basename, "main.zig") and
-            !std.mem.eql(u8, entry.basename, "root.zig"))
-        {
-            const full_path = try std.fs.path.join(b.allocator, &.{ src_dir_name, entry.path });
-            const test_exe = b.addTest(.{
-                .root_source_file = b.path(full_path),
-                .target = target,
-                .optimize = optimize,
-                .test_runner = .{ .path = b.path("test_runner.zig"), .mode = .simple },
-            });
-            test_exe.linkLibC();
-
-            const run_test = b.addRunArtifact(test_exe);
-            test_step.dependOn(&run_test.step);
-        }
-    }
 }
