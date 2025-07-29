@@ -283,21 +283,55 @@ clean-all:
     echo "All build artifacts cleaned."
 
 # AGENT-NOTE: Standard container-use build/test for all Zig projects
+# AGENT-NOTE: Robust container-use build/test for all Zig projects
+# This recipe ensures Zig and just are installed in the container, auto-detects architecture,
+# downloads the correct Zig binary if missing, and then builds/tests all yard-zig projects.
 [no-cd]
 init-cu:
-    if ! command -v zig >/dev/null; then \
-        echo "Zig not found, please install Zig in your container or environment."; \
-        exit 1; \
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # Ensure Zig is installed (auto-detect arch and download if missing)
+    if ! command -v zig >/dev/null; then
+        echo "Zig not found, attempting to install..."
+        ARCH=$(uname -m)
+        ZIG_VERSION="0.12.0"
+        if [ "$ARCH" = "x86_64" ]; then
+            ZIG_ARCH="x86_64-linux"
+        elif [ "$ARCH" = "aarch64" ]; then
+            ZIG_ARCH="aarch64-linux"
+        else
+            echo "Unsupported architecture: $ARCH"; exit 1
+        fi
+        ZIG_URL="https://ziglang.org/download/${ZIG_VERSION}/zig-${ZIG_VERSION}-${ZIG_ARCH}.tar.xz"
+        echo "Downloading Zig from $ZIG_URL..."
+        curl -L "$ZIG_URL" -o /tmp/zig.tar.xz
+        mkdir -p /opt/zig
+        tar -xf /tmp/zig.tar.xz -C /opt/zig --strip-components=1
+        export PATH="/opt/zig:$PATH"
+        echo 'export PATH="/opt/zig:$PATH"' >> "$HOME/.profile"
     fi
-    if ! command -v just >/dev/null; then \
-        echo "just not found, please install just in your container or environment."; \
-        exit 1; \
+    if ! command -v just >/dev/null; then
+        echo "just not found, attempting to install..."
+        JUST_VERSION="1.25.2"
+        ARCH=$(uname -m)
+        if [ "$ARCH" = "x86_64" ]; then
+            JUST_ARCH="x86_64-unknown-linux-musl"
+        elif [ "$ARCH" = "aarch64" ]; then
+            JUST_ARCH="aarch64-unknown-linux-musl"
+        else
+            echo "Unsupported architecture: $ARCH"; exit 1
+        fi
+        JUST_URL="https://github.com/casey/just/releases/download/v${JUST_VERSION}/just-${JUST_ARCH}.tar.gz"
+        echo "Downloading just from $JUST_URL..."
+        curl -L "$JUST_URL" -o /tmp/just.tar.gz
+        tar -xzf /tmp/just.tar.gz -C /usr/local/bin just
+        chmod +x /usr/local/bin/just
     fi
-    for d in */; do \
-        if [ -f "$d/build.zig" ]; then \
-            echo "Building $d..."; \
-            (cd "$d" && zig build); \
-            echo "Testing $d..."; \
-            (cd "$d" && zig build test); \
-        fi; \
+    for d in */; do 
+        if [ -f "$d/build.zig" ]; then 
+            echo "Building $d..."; 
+            (cd "$d" && zig build); 
+            echo "Testing $d..."; 
+            (cd "$d" && zig build test); 
+        fi; 
     done
