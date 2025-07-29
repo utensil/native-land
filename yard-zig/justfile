@@ -283,6 +283,27 @@ clean-all:
     echo "All build artifacts cleaned."
 
 # AGENT-NOTE: Standard container-use build/test for all Zig projects
+# AGENT-NOTE: Manual bootstrap for container-use environments (run before init-cu)
+# This task installs just and required tools in a fresh container (esp. ARM64/aarch64 Ubuntu)
+# Run this manually before `just init-cu` if just is not present.
+[no-cd]
+bootstrap-cu:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    apt-get update && apt-get install -y curl tar xz-utils wget
+    # Try to install just using the official script (may fail in CI)
+    if ! command -v just >/dev/null; then
+        echo "Attempting to install just using official script..."
+        mkdir -p ~/bin
+        if curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin; then
+            export PATH="$PATH:$HOME/bin"
+            echo 'export PATH="$PATH:$HOME/bin"' >> "$HOME/.profile"
+        else
+            echo "Official install.sh failed. Consider building just from source or using a prebuilt binary."
+            echo "See https://github.com/casey/just#building for build instructions."
+        fi
+    fi
+
 # AGENT-NOTE: Robust container-use build/test for all Zig projects
 # This recipe ensures Zig and just are installed in the container, auto-detects architecture,
 # downloads the correct Zig binary if missing, and then builds/tests all yard-zig projects.
